@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleBSUIR", "ScheduleBSUIR\ScheduleBSUIR.csproj", "{629FC360-1D19-4FE3-915F-BE0919F1474B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629FC360-1D19-4FE3-915F-BE0919F1474B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E897E767-93A7-4E25-AA76-48948875C9C2}
+	EndGlobalSection
+EndGlobal

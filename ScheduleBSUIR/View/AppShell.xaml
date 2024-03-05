@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="ScheduleBSUIR.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:ScheduleBSUIR.View"
+    xmlns:vm="clr-namespace:ScheduleBSUIR.ViewModel"
+    x:DataType="vm:ShellViewModel"
+    Shell.FlyoutBehavior="Flyout"
+    Title="BSUIR Schedule"
+    Items="{Binding FlyoutItems}">
+
+    <FlyoutItem Title="Add new group">
+        <ShellContent ContentTemplate="{DataTemplate local:AddGroupPage}" />
+    </FlyoutItem>
+    
+    <FlyoutItem Title="221701">
+        <ShellContent Title="Schedule" ContentTemplate="{DataTemplate local:TimetablePage}" />
+        <ShellContent Title="Exams" ContentTemplate="{DataTemplate local:ExamsPage}" />
+    </FlyoutItem>
+</Shell>
