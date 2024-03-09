@@ -1,15 +1,25 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ScheduleBSUIR.Model;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
+using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.ViewModel
 {
     public partial class AddGroupViewModel : BaseViewModel
     {
-        private string _groupName = "221701";
+        private TimetablePage _timetablePage;
+        private ExamsPage _examsPage;
+        private GroupsService _groupsService;
+
+        public ObservableCollection<StudentGroup> FilteredGroupList = [];
+        public List<StudentGroup> GroupList = [];
+        [ObservableProperty]
+        private string _groupName = string.Empty;
 
         [RelayCommand]
-        public async Task AddGroup(TimetableViewModel timetableViewmodel)
+        public async Task AddGroup()
         {
             if (IsBusy)
                 return;
@@ -18,20 +28,24 @@ namespace ScheduleBSUIR.ViewModel
             {
                 IsBusy = true;
 
-                timetableViewmodel.Id = new StudentGroupId(_groupName);
+                if(Shell.Current.Items.FirstOrDefault(i => i.Route == GroupName) is null)
+                {
+                    _timetablePage.ViewModel.TimetableOwnerId = new StudentGroupId(GroupName);
 
-                //((ShellViewModel)Shell.Current.BindingContext).FlyoutItems.Add(
-                //    new FlyoutItem
-                //    {
-                //        Title = _groupName,
-                //        Items = {
-                //            new TimetablePage(timetableViewmodel),
-                //            new ExamsPage()
-                //        }
-                //    }
-                //);
+                    FlyoutItem content = new()
+                    {
+                        Title = GroupName,
+                        Route = GroupName,
+                        Items = {
+                            _timetablePage,
+                            _examsPage
+                        }
+                    };
 
-                await Shell.Current.DisplayAlert("Error!", "Addded", "Ok");
+                    Shell.Current.Items.Add(content);
+                }
+
+                await Shell.Current.GoToAsync($"//{GroupName}");
             }
             catch (Exception ex)
             {
@@ -41,6 +55,18 @@ namespace ScheduleBSUIR.ViewModel
             {
                 IsBusy = false;
             }
+        }
+
+        public async Task UpdateGroups()
+        {
+            GroupList = await _groupsService.GetGroups();
+        }
+
+        public AddGroupViewModel(TimetablePage timetablePage, ExamsPage examsPage, GroupsService groupsService)
+        {
+            _timetablePage = timetablePage;
+            _examsPage = examsPage;
+            _groupsService = groupsService;
         }
     }
 }

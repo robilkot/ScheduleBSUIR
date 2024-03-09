@@ -4,6 +4,7 @@
              x:Class="ScheduleBSUIR.View.TimetablePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.ViewModel"
              x:DataType="vm:TimetableViewModel"
+             Shell.NavBarIsVisible="False"
              Title="Schedule">
 
     <FlexLayout BindingContext="">

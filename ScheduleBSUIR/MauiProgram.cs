@@ -25,11 +25,13 @@ namespace ScheduleBSUIR
 #endif
             builder.Services.AddSingleton<AddGroupPage>();
             builder.Services.AddSingleton<TimetablePage>();
+            builder.Services.AddSingleton<ExamsPage>();
 
             builder.Services.AddSingleton<AddGroupViewModel>();
             builder.Services.AddSingleton<TimetableViewModel>();
 
             builder.Services.AddSingleton<TimetableService>();
+            builder.Services.AddSingleton<GroupsService>();
 
             return builder.Build();
         }

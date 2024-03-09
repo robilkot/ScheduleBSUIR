@@ -13,7 +13,7 @@ namespace ScheduleBSUIR.ViewModel
         [ObservableProperty]
         private Timetable _timetable = null!;
         [ObservableProperty]
-        private TypedId _id = null!;
+        private TypedId _timetableOwnerId = null!;
 
         public TimetableViewModel(TimetableService timetableService)
         {
@@ -30,7 +30,7 @@ namespace ScheduleBSUIR.ViewModel
             {
                 IsBusy = true;
 
-                Timetable = await _timetableService.GetTimetable(Id);
+                Timetable = await _timetableService.GetTimetable(TimetableOwnerId);
             }
             catch (Exception ex)
             {

@@ -1,28 +1,22 @@
 ﻿using ScheduleBSUIR.Model;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace ScheduleBSUIR.Services
 {
-    public class TimetableService
+    public class GroupsService
     {
-        public async Task<Timetable> GetTimetable(TypedId id)
+        public async Task<List<StudentGroup>> GetGroups()
         {
-            var requestUrl = id switch
-            {
-                StudentGroupId => Constants.Urls.StudentGroupTimetable,
-                EmployeeId => Constants.Urls.EmployeeTimetable,
-                _ => throw new NotImplementedException("Unknown TypedId-derived type provided"),
-            };
-
-            requestUrl = string.Format(requestUrl, id.Id);
+            var requestUrl = Constants.Urls.Groups;
 
             var client = new HttpClient()
             {
                 Timeout = TimeSpan.FromSeconds(5),
             };
 
-            Timetable timetable = null!;
+            List<StudentGroup> groups = null!;
 
             try
             {
@@ -34,8 +28,8 @@ namespace ScheduleBSUIR.Services
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                timetable = await JsonSerializer.DeserializeAsync<Timetable>(json.Content.ReadAsStream(), options)
-                    ?? throw new WebException("Couldn't get timetable");
+                groups = await JsonSerializer.DeserializeAsync<List<StudentGroup>>(json.Content.ReadAsStream(), options)
+                    ?? throw new WebException("Couldn't get student groups list");
             }
             catch (WebException ex)
             {
@@ -46,7 +40,7 @@ namespace ScheduleBSUIR.Services
                 // todo: timeout and retry handling
             }
 
-            return timetable;
+            return groups;
         }
     }
 }

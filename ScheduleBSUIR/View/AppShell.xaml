@@ -13,9 +13,4 @@
     <FlyoutItem Title="Add new group">
         <ShellContent ContentTemplate="{DataTemplate local:AddGroupPage}" />
     </FlyoutItem>
-    
-    <FlyoutItem Title="221701">
-        <ShellContent Title="Schedule" ContentTemplate="{DataTemplate local:TimetablePage}" />
-        <ShellContent Title="Exams" ContentTemplate="{DataTemplate local:ExamsPage}" />
-    </FlyoutItem>
 </Shell>
