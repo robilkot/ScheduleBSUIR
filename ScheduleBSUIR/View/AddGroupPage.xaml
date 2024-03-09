@@ -2,50 +2,67 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleBSUIR.View.AddGroupPage"
+             xmlns:view="clr-namespace:ScheduleBSUIR.View"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.ViewModel"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Model"
              x:DataType="viewmodel:AddGroupViewModel"
              Title="Find group timetable">
-    
-    <AbsoluteLayout WidthRequest="400"
-                    HeightRequest="250"
-                    BackgroundColor="Black"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
-        <VerticalStackLayout AbsoluteLayout.LayoutBounds="0.5, 0, Autosize, Autosize"
+
+    <AbsoluteLayout
+                    
+                    AbsoluteLayout.LayoutFlags="PositionProportional">
+
+        <VerticalStackLayout AbsoluteLayout.LayoutBounds="0.5,0.5,380,Autosize"
                              AbsoluteLayout.LayoutFlags="PositionProportional"
-                             HorizontalOptions="Start"
-                             Margin="25"
-                             Spacing="15">
-            <Label
-                   FontSize="Large"
-                    Text="Let's find group!"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" />
+                        Padding="50, 50, 50, 50"
+                        Spacing="10"
+                             Background="Black">
+        <Label FontSize="Large"
+            Text="Let's select group!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            Padding="0,0,0,20"/>
+
+        <Entry
+            x:Name="GroupNameEntry"
+            IsTextPredictionEnabled="False"
+            MinimumWidthRequest="100"
+            Keyboard="Numeric"
+            MaxLength="6"
+            Text="{Binding GroupName}"
+            TextChanged="GroupNameEntry_TextChanged"
+            Placeholder="Enter number and press Enter">
+        </Entry>
+
+        <Button Text="Find timetable"
+            Command="{Binding AddGroupCommand}"/>
+
+        <Label Text="Found groups:"
+                HorizontalTextAlignment="Center"
+               Padding="0,15,0,0"
+                TextColor="{StaticResource Gray400}"/>
             
-            <Entry IsTextPredictionEnabled="False"
-                    MinimumWidthRequest="100"
-                    Keyboard="Numeric"
-                    MaxLength="6"
-                    Placeholder="Enter number and press Enter"></Entry>
+        <CollectionView
+        x:Name="GroupNameSuggestions"
+        MaximumHeightRequest="250"
+        ItemsSource="{Binding GroupHeadersList}"
+        SelectionMode="Single"
+        SelectionChanged="CollectionView_SelectionChanged"
+          >
 
-            <ListView ItemsSource="{Binding GroupList}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <StackLayout>
-                                    <Label Text="{Binding Name}"/>
-                                </StackLayout>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:StudentGroup">
+                    <Label Text="{Binding Name}"
+                           HorizontalTextAlignment="Center"
+                           Margin="2"
+                           TextColor="{StaticResource White}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-            <!--<Button 
-                    Text="Add timetable"
-                    Command="{Binding AddGroupCommand}"/>-->
+    </VerticalStackLayout>
         
-        </VerticalStackLayout>
     </AbsoluteLayout>
+
+    
 </ContentPage>

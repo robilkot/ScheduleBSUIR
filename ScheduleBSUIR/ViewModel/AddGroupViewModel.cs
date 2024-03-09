@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Model;
 using ScheduleBSUIR.Services;
@@ -7,14 +8,14 @@ using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.ViewModel
 {
-    public partial class AddGroupViewModel : BaseViewModel
+    public partial class AddGroupViewModel(TimetablePage timetablePage, ExamsPage examsPage, GroupsService groupsService) : BaseViewModel
     {
-        private TimetablePage _timetablePage;
-        private ExamsPage _examsPage;
-        private GroupsService _groupsService;
+        private TimetablePage _timetablePage = timetablePage;
+        private ExamsPage _examsPage = examsPage;
+        private GroupsService _groupsService = groupsService;
 
-        public ObservableCollection<StudentGroup> FilteredGroupList = [];
-        public List<StudentGroup> GroupList = [];
+        [ObservableProperty]
+        private List<StudentGroupHeader> _groupHeadersList = [];
         [ObservableProperty]
         private string _groupName = string.Empty;
 
@@ -27,6 +28,12 @@ namespace ScheduleBSUIR.ViewModel
             try
             {
                 IsBusy = true;
+
+                if(!GroupHeadersList.Any(g => g.Name == GroupName))
+                {
+                    await Shell.Current.DisplayAlert("Information", "Non-existing group specified", "OK");
+                    return;
+                };
 
                 if(Shell.Current.Items.FirstOrDefault(i => i.Route == GroupName) is null)
                 {
@@ -57,16 +64,9 @@ namespace ScheduleBSUIR.ViewModel
             }
         }
 
-        public async Task UpdateGroups()
+        public async Task UpdateGroups(string? groupNameFilter = null)
         {
-            GroupList = await _groupsService.GetGroups();
-        }
-
-        public AddGroupViewModel(TimetablePage timetablePage, ExamsPage examsPage, GroupsService groupsService)
-        {
-            _timetablePage = timetablePage;
-            _examsPage = examsPage;
-            _groupsService = groupsService;
+            GroupHeadersList = await _groupsService.GetGroupHeaders(groupNameFilter);
         }
     }
 }

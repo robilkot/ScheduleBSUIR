@@ -6,7 +6,8 @@ namespace ScheduleBSUIR.Services
 {
     public class TimetableService
     {
-        public async Task<Timetable> GetTimetable(TypedId id)
+        // todo: caching
+        public async Task<Timetable> GetTimetable(TypedId id, bool forceUpdate = false)
         {
             var requestUrl = id switch
             {

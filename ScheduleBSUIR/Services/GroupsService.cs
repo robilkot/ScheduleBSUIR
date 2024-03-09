@@ -7,16 +7,21 @@ namespace ScheduleBSUIR.Services
 {
     public class GroupsService
     {
-        public async Task<List<StudentGroup>> GetGroups()
+        public async Task<List<StudentGroupHeader>> GetGroupHeaders(string? groupNameFilter = null)
         {
-            var requestUrl = Constants.Urls.Groups;
+            var requestUrl = Constants.Urls.GroupsHeaders;
+
+            if (!string.IsNullOrEmpty(groupNameFilter))
+            {
+                requestUrl += groupNameFilter;
+            }
 
             var client = new HttpClient()
             {
                 Timeout = TimeSpan.FromSeconds(5),
             };
 
-            List<StudentGroup> groups = null!;
+            List<StudentGroupHeader> groups = null!;
 
             try
             {
@@ -28,7 +33,7 @@ namespace ScheduleBSUIR.Services
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 };
 
-                groups = await JsonSerializer.DeserializeAsync<List<StudentGroup>>(json.Content.ReadAsStream(), options)
+                groups = await JsonSerializer.DeserializeAsync<List<StudentGroupHeader>>(json.Content.ReadAsStream(), options)
                     ?? throw new WebException("Couldn't get student groups list");
             }
             catch (WebException ex)
