@@ -2,7 +2,7 @@
 {
     public class Timetable
     {
-        public object? EmployeeDto { get; set; }
+        public Employee? EmployeeDto { get; set; }
         public StudentGroup? StudentGroupDto { get; set; }
         public Dictionary<string, List<Schedule>>? Schedules { get; set; }
         public List<Schedule>? Exams { get; set; }

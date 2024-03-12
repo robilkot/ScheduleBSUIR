@@ -3,11 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleBSUIR.View.TimetablePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.ViewModel"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Model"
              x:DataType="vm:TimetableViewModel"
              Shell.NavBarIsVisible="False"
              Title="Schedule">
 
-    <FlexLayout BindingContext="">
-
-    </FlexLayout>
+    <CollectionView ItemsSource="{Binding DailySchedules}"
+                    Margin="50">
+        <CollectionView.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <DataTemplate>
+                
+                <CollectionView BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
+                                ItemsSource="{Binding}"
+                                Margin="50">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="model:Schedule">
+                            <Label Text="{Binding Subject, StringFormat='subj: {0}'}"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </CollectionView>
+                
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 </ContentPage>
