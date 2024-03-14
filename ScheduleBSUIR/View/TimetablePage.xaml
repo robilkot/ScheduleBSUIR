@@ -8,22 +8,68 @@
              Shell.NavBarIsVisible="False"
              Title="Schedule">
 
-    <CollectionView ItemsSource="{Binding DailySchedules}"
-                    Margin="50">
-        <CollectionView.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DailySchedules}"
+                           Margin="35">
+        <BindableLayout.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
             <DataTemplate>
-                
-                <CollectionView BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
-                                ItemsSource="{Binding}"
-                                Margin="50">
-                    <BindableLayout.ItemTemplate>
+
+                <VerticalStackLayout
+                                BindableLayout.ItemsSource="{Binding}"
+                                Spacing="3"
+                                     Margin="5,0,5,0"
+                                >
+                    <BindableLayout.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
                         <DataTemplate x:DataType="model:Schedule">
-                            <Label Text="{Binding Subject, StringFormat='subj: {0}'}"/>
+                            <Frame CornerRadius="10"
+                                   Padding="0"
+                                   BackgroundColor="Gray">
+                                <Grid ColumnDefinitions="8,*,60"
+                                      BackgroundColor="Black">
+                                    <Rectangle Grid.Column="0" Fill="Orange"></Rectangle>
+                                    
+                                    <Grid Grid.Column="1" RowDefinitions="2*,*,*"
+                                          Margin="12,7,10,10">
+                                        <Label Grid.Row="0" FontSize="20">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} ({1})">
+                                                    <Binding Path="Subject" />
+                                                    <Binding Path="LessonTypeAbbrev"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+                                        <Label Grid.Row="0" FontSize="20" IsVisible="{Binding Announcement}" Text="Announcement!"/>
+
+                                        <!--<Grid Grid.Row="1"
+                                              ColumnDefinitions="*, 3*">
+                                            <Label Grid.Column="0" FontSize="16" Text="{Binding Auditories[0]}"/>
+                                            <Label Grid.Column="1" FontSize="12" Text="{Binding Employees[0].LastName}"/>
+                                        </Grid>-->
+                                        <CollectionView Grid.Row="1"
+                                                        Margin="0"
+                                                  ItemsSource="{Binding Auditories}">
+                                            <CollectionView.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+                                                <DataTemplate>
+                                                    <Label Text="{Binding}"/>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                            <CollectionView.EmptyView>
+                                                <Label Text="Not specified"/>
+                                            </CollectionView.EmptyView>
+                                        </CollectionView>
+
+                                        <Label Grid.Row="2" Text="{Binding Note}" IsVisible="{Binding Announcement}"/>
+                                    </Grid>
+
+                                    <Frame Grid.Column="2" Padding="0" Margin="5" CornerRadius="25" WidthRequest="50" HeightRequest="50">
+                                        <Image Source="{Binding Employees[0].PhotoLink}" Aspect="AspectFit"/>
+                                    </Frame>
+                                </Grid>
+                            </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
-                </CollectionView>
-                
+                </VerticalStackLayout>
+
             </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+        </BindableLayout.ItemTemplate>
+    </HorizontalStackLayout>
 </ContentPage>

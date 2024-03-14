@@ -13,9 +13,15 @@ public partial class TimetablePage : ContentPage
 		BindingContext = vm;
 		ViewModel = vm;
 	}
-    protected override async void OnAppearing()
+    //protected override async void OnAppearing()
+    //{
+    //    base.OnAppearing();
+    //    await ViewModel.GetTimetableAsync();
+    //}
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnAppearing();
+        base.OnNavigatedTo(args);
         await ViewModel.GetTimetableAsync();
     }
 }

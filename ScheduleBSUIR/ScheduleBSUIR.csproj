@@ -57,6 +57,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="View\Model\**" />
+	  <Compile Remove="View\Model\**" />
+	  <EmbeddedResource Remove="View\Model\**" />
+	  <MauiCss Remove="View\Model\**" />
+	  <MauiXaml Remove="View\Model\**" />
+	  <None Remove="View\Model\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
@@ -83,10 +92,6 @@
 	  <MauiXaml Update="View\TimetablePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="View\Model\" />
 	</ItemGroup>
 
 </Project>
