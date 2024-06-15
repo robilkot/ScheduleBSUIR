@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
+
+    <DataTemplate
+        x:Key="InactiveLessonTemplate"
+        x:DataType="{x:Type model:Schedule}">
+        <Border
+            StrokeShape="RoundRectangle 8"
+            StrokeThickness="0"
+            HeightRequest="70"
+            BackgroundColor="#121212"
+            Padding="10,5">
+            <Grid
+                ColumnSpacing="8"
+                ColumnDefinitions="auto,auto,*,auto">
+
+                <Grid
+                    Grid.Column="0"
+                    VerticalOptions="Center"
+                    Margin="8,0,0,0"
+                    RowSpacing="2"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="0"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding StartLessonTime}">
+                    </Label>
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="13"
+                        Text="{Binding EndLessonTime}">
+                    </Label>
+                </Grid>
+
+                <RoundRectangle
+                    Grid.Column="1"
+                    HeightRequest="60"
+                    WidthRequest="10"
+                    CornerRadius="5"
+                    BackgroundColor="Orange">
+                </RoundRectangle>
+
+                <Grid
+                    Grid.Column="2"
+                    VerticalOptions="Center"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        Grid.Row="0"
+                        Style="{StaticResource LabelBodyHeaderStyle}"
+                        Text="{Binding Subject}">
+                    </Label>
+                    <Label
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodySecondaryStyle}"
+                        Text="{Binding Auditories[0]}">
+                    </Label>
+                </Grid>
+
+                <Image
+                    Grid.Column="3"
+                    VerticalOptions="Center"
+                    HeightRequest="50"
+                    Aspect="AspectFill"
+                    Source="{Binding Employees[0].PhotoLink}">
+                    <Image.Clip>
+                        <EllipseGeometry
+                            Center="25,25"
+                            RadiusX="25"
+                            RadiusY="25"/>
+                    </Image.Clip>
+                </Image>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="ActiveLessonTemplate"
+        x:DataType="{x:Type model:Schedule}">
+        <Border
+            StrokeShape="RoundRectangle 8"
+            StrokeDashArray="8,8"
+            Stroke="{StaticResource InactiveGray}"
+            StrokeThickness="1"
+            HeightRequest="45"
+            BackgroundColor="#121212"
+            Padding="10,5">
+            <Grid
+                ColumnSpacing="12"
+                ColumnDefinitions="auto,auto,*">
+
+                <Grid
+                    Grid.Column="0"
+                    VerticalOptions="Center"
+                    RowSpacing="2"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="0"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="13"
+                        TextColor="{StaticResource InactiveGray}"
+                        Text="{Binding StartLessonTime}">
+                    </Label>
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="11"
+                        TextColor="{StaticResource InactiveGray}"
+                        Text="{Binding EndLessonTime}">
+                    </Label>
+                </Grid>
+
+                <RoundRectangle
+                    Grid.Column="1"
+                    HeightRequest="30"
+                    WidthRequest="5"
+                    CornerRadius="2.5"
+                    BackgroundColor="Orange">
+                </RoundRectangle>
+
+                <Label
+                    Grid.Column="2"
+                    VerticalOptions="Center"
+                    Grid.Row="0"
+                    FontSize="18"
+                    TextColor="{StaticResource InactiveGray}"
+                    Style="{StaticResource LabelBodyHeaderStyle}"
+                    Text="{Binding Subject}">
+                </Label>
+            </Grid>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
