@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ScheduleBSUIR.ViewModel
+namespace ScheduleBSUIR.Viewmodels
 {
     public partial class BaseViewModel : ObservableObject
     {

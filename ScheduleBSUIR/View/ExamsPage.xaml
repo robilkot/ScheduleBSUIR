@@ -2,13 +2,45 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleBSUIR.View.ExamsPage"
-             Shell.NavBarIsVisible="False"
-             Title="Exams">
-    
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             x:DataType="vm:ExamsPageViewModel">
+    <ScrollView
+        Padding="10">
+        <VerticalStackLayout
+            Spacing="40"
+            BindableLayout.ItemsSource="{Binding Timetable.Exams}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate
+                    x:DataType="{x:Type model:Schedule}">
+                    <Border
+                        Padding="8">
+                        <Grid
+                            ColumnSpacing="5"
+                            ColumnDefinitions="auto,*">
+                            <Image
+                                Grid.Column="0">
+                                
+                            </Image>
+                            <Grid
+                                Grid.Column="1"
+                                RowSpacing="5"
+                                RowDefinitions="auto,auto">
+                                <Label
+                                    Grid.Row="0"
+                                    Text="{Binding LessonTypeAbbrev}">
+                                    
+                                </Label>
+                                <Label
+                                    Grid.Row="1"
+                                    Text="{Binding Employees[0].LastName}">
+                                    
+                                </Label>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

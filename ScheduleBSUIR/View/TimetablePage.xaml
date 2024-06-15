@@ -2,74 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ScheduleBSUIR.View.TimetablePage"
-             xmlns:vm="clr-namespace:ScheduleBSUIR.ViewModel"
-             xmlns:model="clr-namespace:ScheduleBSUIR.Model"
+             xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Models"
              x:DataType="vm:TimetableViewModel"
-             Shell.NavBarIsVisible="False"
              Title="Schedule">
-
-    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DailySchedules}"
-                           Margin="35">
-        <BindableLayout.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
-            <DataTemplate>
-
-                <VerticalStackLayout
-                                BindableLayout.ItemsSource="{Binding}"
-                                Spacing="3"
-                                     Margin="5,0,5,0"
-                                >
-                    <BindableLayout.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
-                        <DataTemplate x:DataType="model:Schedule">
-                            <Frame CornerRadius="10"
-                                   Padding="0"
-                                   BackgroundColor="Gray">
-                                <Grid ColumnDefinitions="8,*,60"
-                                      BackgroundColor="Black">
-                                    <Rectangle Grid.Column="0" Fill="Orange"></Rectangle>
-                                    
-                                    <Grid Grid.Column="1" RowDefinitions="2*,*,*"
-                                          Margin="12,7,10,10">
-                                        <Label Grid.Row="0" FontSize="20">
-                                            <Label.Text>
-                                                <MultiBinding StringFormat="{}{0} ({1})">
-                                                    <Binding Path="Subject" />
-                                                    <Binding Path="LessonTypeAbbrev"/>
-                                                </MultiBinding>
-                                            </Label.Text>
-                                        </Label>
-                                        <Label Grid.Row="0" FontSize="20" IsVisible="{Binding Announcement}" Text="Announcement!"/>
-
-                                        <!--<Grid Grid.Row="1"
-                                              ColumnDefinitions="*, 3*">
-                                            <Label Grid.Column="0" FontSize="16" Text="{Binding Auditories[0]}"/>
-                                            <Label Grid.Column="1" FontSize="12" Text="{Binding Employees[0].LastName}"/>
-                                        </Grid>-->
-                                        <CollectionView Grid.Row="1"
-                                                        Margin="0"
-                                                  ItemsSource="{Binding Auditories}">
-                                            <CollectionView.ItemTemplate BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
-                                                <DataTemplate>
-                                                    <Label Text="{Binding}"/>
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                            <CollectionView.EmptyView>
-                                                <Label Text="Not specified"/>
-                                            </CollectionView.EmptyView>
-                                        </CollectionView>
-
-                                        <Label Grid.Row="2" Text="{Binding Note}" IsVisible="{Binding Announcement}"/>
-                                    </Grid>
-
-                                    <Frame Grid.Column="2" Padding="0" Margin="5" CornerRadius="25" WidthRequest="50" HeightRequest="50">
-                                        <Image Source="{Binding Employees[0].PhotoLink}" Aspect="AspectFit"/>
-                                    </Frame>
-                                </Grid>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-
-            </DataTemplate>
-        </BindableLayout.ItemTemplate>
-    </HorizontalStackLayout>
+    <Grid>
+        
+    </Grid>
+    
+    
 </ContentPage>

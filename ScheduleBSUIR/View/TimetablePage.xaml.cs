@@ -1,27 +1,15 @@
-using ScheduleBSUIR.Services;
-using ScheduleBSUIR.ViewModel;
+using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;
 
 public partial class TimetablePage : ContentPage
 {
-    public readonly TimetableViewModel ViewModel;
+    private readonly TimetableViewModel _viewModel;
     public TimetablePage(TimetableViewModel vm)
-	{
-		InitializeComponent();
-
-		BindingContext = vm;
-		ViewModel = vm;
-	}
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
-    //    await ViewModel.GetTimetableAsync();
-    //}
-
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnNavigatedTo(args);
-        await ViewModel.GetTimetableAsync();
+        InitializeComponent();
+
+        BindingContext = vm;
+        _viewModel = vm;
     }
 }

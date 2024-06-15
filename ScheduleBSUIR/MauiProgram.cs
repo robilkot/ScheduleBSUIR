@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
-using ScheduleBSUIR.ViewModel;
+using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR
 {
@@ -23,15 +23,16 @@ namespace ScheduleBSUIR
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddSingleton<AddGroupPage>();
-            builder.Services.AddSingleton<TimetablePage>();
-            builder.Services.AddSingleton<ExamsPage>();
 
-            builder.Services.AddSingleton<AddGroupViewModel>();
+            builder.Services.AddTransient<TimetablePage>();
+            builder.Services.AddTransient<ExamsPage>();
+
             builder.Services.AddSingleton<TimetableViewModel>();
+            builder.Services.AddSingleton<ExamsPageViewModel>();
 
+            //builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<TimetableService>();
-            builder.Services.AddSingleton<GroupsService>();
+            builder.Services.AddSingleton<WebService>();
 
             return builder.Build();
         }
