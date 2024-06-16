@@ -4,19 +4,32 @@
              x:Class="ScheduleBSUIR.View.ExamsPage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.View.TemplateSelectors"
              x:DataType="vm:ExamsPageViewModel"
              BackgroundColor="Black">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <templateSelectors:ActiveTemplateSelector
+                ActiveTemplate="{StaticResource ActiveLessonTemplate}"
+                InactiveTemplate="{StaticResource InactiveLessonTemplate}"
+                x:Key="LessonTemplateSelector"/>
+            <templateSelectors:ActiveTemplateSelector
+                ActiveTemplate="{StaticResource ActiveHeaderTemplate}"
+                InactiveTemplate="{StaticResource InactiveHeaderTemplate}"
+                x:Key="HeaderTemplateSelector"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <CollectionView
-        Margin="15,0"
+        Margin="15,0,15,80"
         ItemsSource="{Binding Exams}"
-        ItemTemplate="{StaticResource ActiveLessonTemplate}"
-        IsGrouped="True">
+        ItemTemplate="{StaticResource LessonTemplateSelector}"
+        IsGrouped="True"
+        GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
         <CollectionView.ItemsLayout>
             <LinearItemsLayout
                 Orientation="Vertical"
-                ItemSpacing="20">
+                ItemSpacing="5">
             </LinearItemsLayout>
         </CollectionView.ItemsLayout>
         <CollectionView.Header>
@@ -43,14 +56,5 @@
                 </Label>
             </Grid>
         </CollectionView.Header>
-        <CollectionView.GroupHeaderTemplate>
-            <DataTemplate
-                x:DataType="{x:Type uimodel:ScheduleGroup}">
-                <Label
-                    Grid.Row="0"
-                    Style="{StaticResource LabelBodyHeaderStyle}"
-                    Text="{Binding Name}"/>
-            </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
     </CollectionView>
 </ContentPage>

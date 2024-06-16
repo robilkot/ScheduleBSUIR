@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using ScheduleBSUIR.Viewmodels;
@@ -33,6 +34,8 @@ namespace ScheduleBSUIR
             //builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<TimetableService>();
             builder.Services.AddSingleton<WebService>();
+
+            builder.Services.AddSingleton<IDateTimeProvider, DateTimeProviderService>();
 
             return builder.Build();
         }
