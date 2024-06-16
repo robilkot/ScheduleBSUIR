@@ -6,9 +6,9 @@
         public StudentGroup? StudentGroupDto { get; set; }
         public Dictionary<string, List<Schedule>>? Schedules { get; set; }
         public List<Schedule>? Exams { get; set; }
-        public string? StartDate { get; set; }
-        public string? EndDate { get; set; }
-        public string? StartExamsDate { get; set; }
-        public string? EndExamsDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? StartExamsDate { get; set; }
+        public DateTime? EndExamsDate { get; set; }
     }
 }

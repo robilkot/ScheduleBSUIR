@@ -9,7 +9,7 @@
 
     <DataTemplate
         x:Key="ActiveLessonTemplate"
-        x:DataType="{x:Type model:Schedule}">
+        x:DataType="model:Schedule">
         <Border
             StrokeShape="RoundRectangle 8"
             StrokeThickness="0"
@@ -30,14 +30,14 @@
                         HorizontalOptions="End"
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
-                        Text="{Binding StartLessonTime}">
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}'}">
                     </Label>
                     <Label
                         HorizontalOptions="End"
                         Grid.Row="1"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="13"
-                        Text="{Binding EndLessonTime}">
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}'}">
                     </Label>
                 </Grid>
 
@@ -65,26 +65,45 @@
                     </Label>
                 </Grid>
 
-                <Image
+                <HorizontalStackLayout
                     Grid.Column="3"
-                    VerticalOptions="Center"
-                    HeightRequest="50"
-                    Aspect="AspectFill"
-                    Source="{Binding Employees[0].PhotoLink}">
-                    <Image.Clip>
-                        <EllipseGeometry
-                            Center="25,25"
-                            RadiusX="25"
-                            RadiusY="25"/>
-                    </Image.Clip>
-                </Image>
+                    Spacing="-25"
+                    HorizontalOptions="End"
+                    BindableLayout.ItemsSource="{Binding Employees}">
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="model:Employee">
+                            <Image
+                                VerticalOptions="Center"
+                                HeightRequest="50"
+                                Aspect="AspectFill"
+                                Source="{Binding PhotoLink}">
+
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="25,25"
+                                        RadiusX="25"
+                                        RadiusY="25"/>
+                                </Image.Clip>
+
+                                <Image.Shadow>
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.5"
+                                        Radius="20"/>
+                                </Image.Shadow>
+                            </Image>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
             </Grid>
         </Border>
     </DataTemplate>
 
     <DataTemplate
         x:Key="InactiveLessonTemplate"
-        x:DataType="{x:Type model:Schedule}">
+        x:DataType="model:Schedule">
         <Border
             Opacity="0.35"
             StrokeShape="RoundRectangle 8"
@@ -108,14 +127,14 @@
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="13"
-                        Text="{Binding StartLessonTime}">
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}'}">
                     </Label>
                     <Label
                         HorizontalOptions="End"
                         Grid.Row="1"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="11"
-                        Text="{Binding EndLessonTime}">
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}'}">
                     </Label>
                 </Grid>
 

@@ -20,41 +20,78 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <CollectionView
-        Margin="15,0,15,80"
-        ItemsSource="{Binding Exams}"
-        ItemTemplate="{StaticResource LessonTemplateSelector}"
-        IsGrouped="True"
-        GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
-        <CollectionView.ItemsLayout>
-            <LinearItemsLayout
-                Orientation="Vertical"
-                ItemSpacing="5">
-            </LinearItemsLayout>
-        </CollectionView.ItemsLayout>
-        <CollectionView.Header>
+    <Grid>
+        <CollectionView
+            Grid.Row="1"
+            IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+            Margin="15,0"
+            ItemsSource="{Binding Exams}"
+            ItemTemplate="{StaticResource LessonTemplateSelector}"
+            IsGrouped="True"
+            GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+                    Orientation="Vertical"
+                    ItemSpacing="5">
+                </LinearItemsLayout>
+            </CollectionView.ItemsLayout>
+            
+            <CollectionView.Header>
+                <Grid
+                    Margin="0,20,0,0"
+                    RowDefinitions="auto,auto"
+                    RowSpacing="10">
+                    <Label
+                        Grid.Row="0"
+                        Style="{StaticResource LabelHeaderStyle}"
+                        Text="{Binding Timetable.StudentGroupDto.Name}"/>
+                    <Label
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodySecondaryStyle}">
+                        <Label.Text>
+                            <MultiBinding
+                                StringFormat="Сессия: {0} - {1}">
+                                <Binding
+                                    StringFormat="{}{0:dd MMMM}"
+                                    Path="Timetable.StartExamsDate"/>
+                                <Binding
+                                    StringFormat="{}{0:dd MMMM yyyy} г."
+                                    Path="Timetable.EndExamsDate"/>
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+            </CollectionView.Header>
+        </CollectionView>
+
+        <!--EmptyView doesn't work as intended (margins are incorrect)-->
+        <AbsoluteLayout
+            IsVisible="{Binding Exams, Converter={StaticResource IsNullOrEmptyConverter}}">
             <Grid
-                Margin="0,20,0,0"
-                RowDefinitions="auto,auto"
-                RowSpacing="10">
-                <Label
+                VerticalOptions="Center"
+                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Opacity="0.5"
+                RowSpacing="20"
+                RowDefinitions="auto,auto">
+                <Image
+                    WidthRequest="100"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
                     Grid.Row="0"
-                    Style="{StaticResource LabelHeaderStyle}"
-                    Text="{Binding Timetable.StudentGroupDto.Name}"/>
+                    Source="party"/>
                 <Label
                     Grid.Row="1"
-                    Style="{StaticResource LabelBodySecondaryStyle}">
-                    <Label.Text>
-                        <MultiBinding
-                            StringFormat="Сессия: {0} - {1}">
-                            <Binding
-                                Path="Timetable.StartExamsDate"/>
-                            <Binding
-                                Path="Timetable.EndExamsDate"/>
-                        </MultiBinding>
-                    </Label.Text>
-                </Label>
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource LabelBodyHeaderStyle}"
+                    Text="Экзаменов больше нет"/>
             </Grid>
-        </CollectionView.Header>
-    </CollectionView>
+            <AbsoluteLayout.GestureRecognizers>
+                <TapGestureRecognizer
+                    Command="{Binding GetTimetableCommand}"
+                    CommandParameter="{Binding TestId}"/>
+            </AbsoluteLayout.GestureRecognizers>
+        </AbsoluteLayout>
+    </Grid>
+
 </ContentPage>

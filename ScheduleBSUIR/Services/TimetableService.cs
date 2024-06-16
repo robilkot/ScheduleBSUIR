@@ -9,6 +9,8 @@ namespace ScheduleBSUIR.Services
         // todo: caching?
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
+            var lastUpdate = await _webService.GetTimetableLastUpdateAsync(id, cancellationToken);
+
             var timetable = await _webService.GetTimetableAsync(id, cancellationToken);
 
             return timetable ?? throw new ArgumentException("Timetable with given id not found", nameof(id));

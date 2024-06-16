@@ -29,27 +29,24 @@ namespace ScheduleBSUIR.View.TemplateSelectors
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            bool isActive = true;
-
-            if (!_cachedResults.TryGetValue(item, out isActive))
+            if (!_cachedResults.TryGetValue(item, out bool isActive))
             {
+                isActive = true;
+
                 try
                 {
-                    string dateString = item switch
+                    var dateTime = item switch
                     {
                         Schedule schedule => schedule.DateLesson,
-                        ScheduleGroup scheduleGroup => scheduleGroup[0].DateLesson,
+                        ScheduleGroup scheduleGroup => scheduleGroup.Day,
                         _ => throw new NotImplementedException(),
-                    } 
-                    ?? string.Empty;
+                    } ?? DateTime.MinValue;
 
-                    var scheduleDate = ApiDateTimeParser.Parse(dateString);
-
-                    isActive = scheduleDate.Date >= _dateTimeProvider.Now.Date;
+                    //isActive = dateTime >= _dateTimeProvider.Now.Date;
 
                     _cachedResults.Add(item, isActive);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     // todo: log

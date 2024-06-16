@@ -1,5 +1,7 @@
 ﻿using ScheduleBSUIR.Helpers;
+using ScheduleBSUIR.Helpers.JsonConverters;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.API;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -7,14 +9,30 @@ namespace ScheduleBSUIR.Services
 {
     public class WebService
     {
-        private static readonly JsonSerializerOptions s_deserializeOptions = new()
-        {
-            PropertyNameCaseInsensitive = false,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
+        private readonly JsonSerializerOptions _deserializeOptions;
+        public WebService()
+        { 
+            _deserializeOptions = new()
+            {
+                PropertyNameCaseInsensitive = false,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            };
 
-        // todo: method to get timetable change date
-        
+            _deserializeOptions.Converters.Add(new JsonDateTimeConverter());
+        }
+
+        public async Task<LastUpdateResponse> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
+        {
+            var requestUrl = id switch
+            {
+                StudentGroupId studentGroupId => UrlGenerator.StudentGroupTimetableLastUpdate(studentGroupId),
+                EmployeeId employeeId => UrlGenerator.EmployeeTimetableLastUpdate(employeeId),
+                _ => throw new UnreachableException()
+            };
+
+            return await GetDeserializedDataAsync<LastUpdateResponse>(requestUrl, cancellationToken);
+        }
+
         public async Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
             var requestUrl = id switch
@@ -34,7 +52,7 @@ namespace ScheduleBSUIR.Services
             return await GetDeserializedDataAsync<IEnumerable<StudentGroupHeader>>(requestUrl, cancellationToken);
         }
 
-        private async static Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
+        private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
         {
             using var client = new HttpClient()
             {
@@ -49,7 +67,7 @@ namespace ScheduleBSUIR.Services
             
             try
             {
-                result = await JsonSerializer.DeserializeAsync<T>(responseStream, s_deserializeOptions, cancellationToken);
+                result = await JsonSerializer.DeserializeAsync<T>(responseStream, _deserializeOptions, cancellationToken);
             }
             catch(Exception ex)
             {

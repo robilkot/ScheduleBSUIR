@@ -14,12 +14,10 @@ namespace ScheduleBSUIR.Helpers.Converters
         }
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if(value is not string dateString)
+            if(value is not DateTime dateTime)
             {
                 return null;
             }
-
-            var dateTime = ApiDateTimeParser.Parse(dateString);
 
             string resultString = string.Empty;
 
