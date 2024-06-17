@@ -1,6 +1,8 @@
-﻿namespace ScheduleBSUIR.Models
+﻿using ScheduleBSUIR.Models.DB;
+
+namespace ScheduleBSUIR.Models
 {
-    public class Timetable
+    public class Timetable : ICacheable
     {
         public Employee? EmployeeDto { get; set; }
         public StudentGroup? StudentGroupDto { get; set; }
@@ -10,5 +12,12 @@
         public DateTime? EndDate { get; set; }
         public DateTime? StartExamsDate { get; set; }
         public DateTime? EndExamsDate { get; set; }
+
+        public string PrimaryKey => EmployeeDto is not null 
+            ? EmployeeDto.Id.ToString()
+            : StudentGroupDto is not null 
+            ? StudentGroupDto.Name 
+            : String.Empty;
+        public DateTime UpdatedAt { get; set; }
     }
 }

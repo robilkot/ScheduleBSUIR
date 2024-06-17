@@ -33,7 +33,7 @@
                     Text="Все группы"/>
                 <Border
                     Grid.Row="1"
-                    Background="Gray"
+                    Background="{StaticResource DarkControlBackground}"
                     Padding="5,0"
                     StrokeShape="RoundRectangle 8">
                     <Grid

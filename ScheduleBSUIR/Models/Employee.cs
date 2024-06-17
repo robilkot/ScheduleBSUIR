@@ -1,6 +1,8 @@
-﻿namespace ScheduleBSUIR.Models
+﻿using ScheduleBSUIR.Models.DB;
+
+namespace ScheduleBSUIR.Models
 {
-    public class Employee
+    public class Employee : ICacheable
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -14,5 +16,9 @@
         public string UrlId { get; set; } = string.Empty;
         public string? Email { get; set; }
         public List<string>? JobPositions { get; set; }
+
+        public string PrimaryKey => Id.ToString();
+
+        public DateTime UpdatedAt { get; set; }
     }
 }

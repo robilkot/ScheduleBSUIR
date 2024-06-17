@@ -21,7 +21,7 @@ namespace ScheduleBSUIR.Services
             _deserializeOptions.Converters.Add(new JsonDateTimeConverter());
         }
 
-        public async Task<LastUpdateResponse> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
+        public async Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
         {
             var requestUrl = id switch
             {
@@ -69,9 +69,9 @@ namespace ScheduleBSUIR.Services
             {
                 result = await JsonSerializer.DeserializeAsync<T>(responseStream, _deserializeOptions, cancellationToken);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}");
             }
 
             return result;

@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using ScheduleBSUIR.Models.DB;
+using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
@@ -13,7 +14,14 @@ namespace ScheduleBSUIR.Services
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
 #if DEBUG
-            File.Delete(databasePath);
+            try
+            {
+                File.Delete(databasePath);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"File {databasePath} was NOT deleted: {ex.Message}");
+            }
 #endif
 
             _database = new LiteDatabase(databasePath);
@@ -29,11 +37,13 @@ namespace ScheduleBSUIR.Services
             }
             else
             {
-                collection.Insert(newObject);
+                collection.Insert(newObject.PrimaryKey, newObject);
             }
+
+            _database.Commit();
         }
 
-        public void AddOrUpdatec<T>(List<T> newObjects) where T : ICacheable, new()
+        public void AddOrUpdate<T>(List<T> newObjects) where T : ICacheable, new()
         {
             foreach (var newObject in newObjects)
             {
@@ -41,28 +51,32 @@ namespace ScheduleBSUIR.Services
             }
         }
 
-        public T? Get<T>(Guid primaryKey) where T : ICacheable, new()
+        public T? Get<T>(string primaryKey) where T : ICacheable, new()
         {
             var collection = _database.GetCollection<T>();
+
             return collection.FindById(primaryKey);
         }
 
         public List<T> GetAll<T>() where T : ICacheable, new()
         {
             var collection = _database.GetCollection<T>();
+
             return collection.FindAll().ToList();
         }
 
-        public void Remove<T>(T obj) where T : ICacheable
+        public void Remove<T>(T obj) where T : ICacheable, new()
         {
-            var collection = _database.GetCollection<T>();
-            collection.Delete(obj.PrimaryKey);
+            Remove<T>(obj.PrimaryKey);
         }
 
-        public void Remove<T>(Guid primaryKey) where T : ICacheable, new()
+        public void Remove<T>(string primaryKey) where T : ICacheable, new()
         {
             var collection = _database.GetCollection<T>();
+
             collection.Delete(primaryKey);
+
+            _database.Commit();
         }
 
         public void Remove<T>(List<T> objects) where T : ICacheable
@@ -78,7 +92,10 @@ namespace ScheduleBSUIR.Services
         public void RemoveAll<T>() where T : ICacheable, new()
         {
             var collection = _database.GetCollection<T>();
+
             collection.DeleteAll();
+
+            _database.Commit();
         }
     }
 }
