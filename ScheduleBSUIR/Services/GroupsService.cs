@@ -9,8 +9,9 @@ namespace ScheduleBSUIR.Services
         // todo: caching?
         public async Task<IEnumerable<StudentGroupHeader>> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken)
         {
-            return await _webService.GetGroupHeadersAsync(groupNameFilter, cancellationToken) 
-                ?? Enumerable.Empty<StudentGroupHeader>();
+            var headers = await _webService.GetGroupHeadersAsync(groupNameFilter, cancellationToken);
+
+            return headers ?? Enumerable.Empty<StudentGroupHeader>();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ScheduleBSUIR.View.TemplateSelectors
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        // OnSelectTemplate gets called each frame actually.
+        // OnSelectTemplate gets called on each collectionview actually (even scrolling).
         // Benchmarks:
         // ELAPSED FOR 1000 CALLS: 00:00:00.0506691 without cache
         // ELAPSED FOR 1000 CALLS: 00:00:00.0168000 with cache
@@ -42,7 +42,7 @@ namespace ScheduleBSUIR.View.TemplateSelectors
                         _ => throw new NotImplementedException(),
                     } ?? DateTime.MinValue;
 
-                    //isActive = dateTime >= _dateTimeProvider.Now.Date;
+                    isActive = dateTime >= _dateTimeProvider.Now.Date;
 
                     _cachedResults.Add(item, isActive);
                 }

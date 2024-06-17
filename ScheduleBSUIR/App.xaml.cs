@@ -4,13 +4,11 @@ namespace ScheduleBSUIR
 {
     public partial class App : Application
     {
-        public App(IServiceProvider serviceProvider)
+        public App()
         {
             InitializeComponent();
 
-            var examsPage = serviceProvider.GetService<ExamsPage>();
-
-            MainPage = examsPage;
+            MainPage = new AppShell();
         }
     }
 }

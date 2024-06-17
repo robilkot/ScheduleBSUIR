@@ -17,6 +17,7 @@
 
     <Color x:Key="SecondaryGray">#BBBBBB</Color>
     <Color x:Key="InactiveGray">#6E6E6E</Color>
+    <Color x:Key="DarkControlBackground">#121212</Color>
 
     <Color x:Key="LectureColor">#31ce57</Color>
     <Color x:Key="PracticeColor">#ff463a</Color>

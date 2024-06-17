@@ -4,10 +4,9 @@
              x:Class="ScheduleBSUIR.View.TimetablePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="vm:TimetableViewModel"
-             Title="Schedule">
+             x:DataType="vm:TimetableViewModel">
     <Grid>
-        
+        <!--todo: remaining items treshold for pagination-->
     </Grid>
     
     

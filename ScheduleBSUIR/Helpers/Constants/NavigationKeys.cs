@@ -1,4 +1,4 @@
-﻿namespace ScheduleBSUIR.Helpers
+﻿namespace ScheduleBSUIR.Helpers.Constants
 {
     public static class NavigationKeys
     {

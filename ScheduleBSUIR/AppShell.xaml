@@ -3,18 +3,19 @@
     x:Class="ScheduleBSUIR.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ScheduleBSUIR.View">
-    
+    xmlns:local="clr-namespace:ScheduleBSUIR.View"
+    Shell.FlyoutBehavior="Disabled">
+
     <TabBar>
-        <ShellContent
-            Content="{DataTemplate local:ExamsPage}"
-            Route="Exams"
+        <Tab
+            Title="Groups">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:GroupListPage}"/>
+        </Tab>
+        <Tab
             Title="Exams">
-        </ShellContent>
-        <ShellContent
-            Content="{DataTemplate local:TimetablePage}"
-            Route="Timetable"
-            Title="Timetable">
-        </ShellContent>
+            <ShellContent
+                ContentTemplate="{DataTemplate local:ExamsPage}"/>
+        </Tab>
     </TabBar>
 </Shell>

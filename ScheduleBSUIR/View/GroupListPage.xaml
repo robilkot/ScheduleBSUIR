@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScheduleBSUIR.View.GroupListPage"
+             xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
+             xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
+             x:DataType="viewmodel:GroupListPageViewModel"
+             BackgroundColor="Black">
+
+    <CollectionView
+        Grid.Row="1"
+        Margin="15,0"
+        IsGrouped="True"
+        VerticalScrollBarVisibility="Always"
+        ItemsSource="{Binding FilteredGroups}">
+
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout
+                Orientation="Vertical"
+                ItemSpacing="0">
+            </LinearItemsLayout>
+        </CollectionView.ItemsLayout>
+
+        <CollectionView.Header>
+            <Grid
+                Margin="0,20,0,0"
+                RowDefinitions="auto,auto"
+                RowSpacing="10">
+                <Label
+                    Grid.Row="0"
+                    Style="{StaticResource LabelHeaderStyle}"
+                    Text="Все группы"/>
+                <Border
+                    Grid.Row="1"
+                    Background="Gray"
+                    Padding="5,0"
+                    StrokeShape="RoundRectangle 8">
+                    <Grid
+                        ColumnSpacing="5"
+                        ColumnDefinitions="auto,*">
+                        <Image
+                            Grid.Column="0"
+                            WidthRequest="20"
+                            Source="party"/>
+                        <Entry
+                            Grid.Column="1"
+                            Keyboard="Numeric"
+                            VerticalOptions="Center"
+                            TextChanged="SearchEntry_textChanged"
+                            Placeholder="221701">
+                        </Entry>
+                    </Grid>
+                </Border>
+            </Grid>
+        </CollectionView.Header>
+
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate
+                x:DataType="uimodel:StudentGroupHeaderGroup">
+                <Grid
+                    Margin="0,20,0,0"
+                    RowSpacing="5"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        Margin="15,0"
+                        Grid.Row="0"
+                        FontSize="13"
+                        Style="{StaticResource LabelBodySecondaryStyle}"
+                        Text="{Binding Header}"/>
+                    <Border
+                        Grid.Row="1"
+                        HeightRequest="16"
+                        Background="{StaticResource DarkControlBackground}"
+                        StrokeThickness="0"
+                        Margin="0,0,0,-8"
+                        StrokeShape="RoundRectangle 8,8,0,0">
+                    </Border>
+                </Grid>
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate
+                x:DataType="model:StudentGroupHeader">
+                <Border
+                    Background="{StaticResource DarkControlBackground}"
+                    StrokeThickness="0"
+                    Padding="15,10">
+                    <Label
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding Name}"/>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer
+                            x:DataType="viewmodel:GroupListPageViewModel"
+                            Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:GroupListPageViewModel}}, Path=SelectGroupCommand}"
+                            CommandParameter="{Binding }"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+        <CollectionView.GroupFooterTemplate>
+            <DataTemplate>
+                <Border
+                    HeightRequest="16"
+                    Background="{StaticResource DarkControlBackground}"
+                    StrokeThickness="0"
+                    Margin="0,-8,0,0"
+                    StrokeShape="RoundRectangle 0,0,8,8">
+                </Border>
+            </DataTemplate>
+        </CollectionView.GroupFooterTemplate>
+    </CollectionView>
+</ContentPage>

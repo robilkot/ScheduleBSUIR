@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers;
+using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;

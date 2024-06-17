@@ -25,13 +25,15 @@ namespace ScheduleBSUIR
             builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddTransient<TimetablePage>();
+            builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<ExamsPage>();
+            builder.Services.AddTransient<TimetablePage>();
 
-            builder.Services.AddSingleton<TimetableViewModel>();
+            builder.Services.AddSingleton<GroupListPageViewModel>();
             builder.Services.AddSingleton<ExamsPageViewModel>();
+            builder.Services.AddSingleton<TimetableViewModel>();
 
-            //builder.Services.AddSingleton<GroupsService>();
+            builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<TimetableService>();
             builder.Services.AddSingleton<WebService>();
 
