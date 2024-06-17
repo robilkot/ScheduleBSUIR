@@ -21,6 +21,18 @@
     </ContentPage.Resources>
 
     <Grid>
+        <!--todo: skeleton of timetable-->
+        <AbsoluteLayout
+            IsVisible="{Binding IsBusy}">
+            <Label
+                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Opacity="0.5"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource LabelBodyHeaderStyle}"
+                Text="Загрузка..."/>
+        </AbsoluteLayout>
+
         <CollectionView
             Grid.Row="1"
             IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
@@ -62,6 +74,17 @@
                     </Label>
                 </Grid>
             </CollectionView.Header>
+
+            <CollectionView.Triggers>
+                <DataTrigger
+                    TargetType="CollectionView"
+                    Binding="{Binding IsBusy}"
+                    Value="True">
+                    <Setter
+                        Property="IsVisible"
+                        Value="False"/>
+                </DataTrigger>
+            </CollectionView.Triggers>
         </CollectionView>
 
         <!--EmptyView doesn't work as intended (margins are incorrect)-->
@@ -86,11 +109,17 @@
                     Style="{StaticResource LabelBodyHeaderStyle}"
                     Text="Экзаменов больше нет"/>
             </Grid>
-            <AbsoluteLayout.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding GetTimetableCommand}"
-                    CommandParameter="{Binding TestId}"/>
-            </AbsoluteLayout.GestureRecognizers>
+
+            <AbsoluteLayout.Triggers>
+                <DataTrigger
+                    TargetType="AbsoluteLayout"
+                    Binding="{Binding IsBusy}"
+                    Value="True">
+                    <Setter
+                        Property="IsVisible"
+                        Value="False"/>
+                </DataTrigger>
+            </AbsoluteLayout.Triggers>
         </AbsoluteLayout>
     </Grid>
 

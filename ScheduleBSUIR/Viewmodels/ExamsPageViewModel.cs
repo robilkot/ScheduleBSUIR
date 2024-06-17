@@ -18,10 +18,6 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private List<ScheduleGroup> _exams = null!;
 
-
-        [ObservableProperty]
-        private TypedId _testId = new StudentGroupId("221701");
-
         public ExamsPageViewModel(TimetableService timetableService)
         {
             _timetableService = timetableService;
