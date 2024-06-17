@@ -35,6 +35,7 @@ namespace ScheduleBSUIR
 
             builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<TimetableService>();
+            builder.Services.AddSingleton<DbService>();
             builder.Services.AddSingleton<WebService>();
 
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProviderService>();

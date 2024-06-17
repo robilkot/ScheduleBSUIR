@@ -49,7 +49,7 @@ namespace ScheduleBSUIR.Viewmodels
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
 
                 var daysExams = Timetable.Exams?
-                    .GroupBy(schedule => schedule.DateLesson ?? DateTime.MinValue)
+                    .GroupBy(schedule => schedule.DateLesson ?? DateTimeOffset.MinValue)
                     .ToDictionary(g => g.Key, g => g.ToList());
 
                 Exams = daysExams?
