@@ -2,7 +2,7 @@
 {
     public class StudentGroupHeader
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string? SpecialityAbbrev { get; set; }
         public int Id { get; set; }
     }

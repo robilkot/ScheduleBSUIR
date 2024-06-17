@@ -2,11 +2,11 @@
 {
     public class StudentGroup
     {
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int FacultyId { get; set; }
         public string? FacultyAbbrev { get; set; }
         public int SpecialityDepartmentEducationFormId { get; set; }
-        public required string SpecialityName { get; set; }
+        public string SpecialityName { get; set; } = string.Empty;
         public string? SpecialityAbbrev { get; set; }
         public int? Course { get; set; }
         public int Id { get; set; }

@@ -2,16 +2,16 @@
 {
     public class Employee
     {
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public required string MiddleName { get; set; }
-        public required string Degree { get; set; }
-        public required string DegreeAbbrev { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string MiddleName { get; set; } = string.Empty;
+        public string Degree { get; set; } = string.Empty;
+        public string DegreeAbbrev { get; set; } = string.Empty;
         public string? Rank { get; set; }
         public string? PhotoLink { get; set; }
-        public required string CalendarId { get; set; }
+        public string CalendarId { get; set; } = string.Empty;
         public int Id { get; set; }
-        public required string UrlId { get; set; }
+        public string UrlId { get; set; } = string.Empty;
         public string? Email { get; set; }
         public List<string>? JobPositions { get; set; }
     }
