@@ -23,9 +23,9 @@
 
             <dx:DXCollectionView.Header>
                 <Grid
-                    Margin="0,100,0,0"
+                    Margin="0,100,0,20"
                     RowDefinitions="auto,auto"
-                    RowSpacing="10">
+                    RowSpacing="20">
                     <Label
                         Grid.Row="0"
                         Style="{StaticResource LabelHeaderStyle}"
@@ -43,7 +43,10 @@
                                 Source="party"/>
                             <Entry
                                 Grid.Column="1"
-                                Keyboard="Numeric"
+                                Keyboard="Plain"
+                                HeightRequest="50"
+                                FontSize="16"
+                                ClearButtonVisibility="WhileEditing"
                                 VerticalOptions="Center"
                                 TextChanged="SearchEntry_textChanged"
                                 Placeholder="221701">

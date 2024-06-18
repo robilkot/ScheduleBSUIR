@@ -7,6 +7,8 @@
              xmlns:view="clr-namespace:ScheduleBSUIR.View"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+             xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
+             xmlns:dx="http://schemas.devexpress.com/maui"
              x:DataType="vm:TimetablePageViewModel"
              Shell.NavBarIsVisible="False"
              Background="Black">
@@ -19,113 +21,115 @@
             <converters:ValueToBoolConverter
                 x:Key="ExamsTabSelected"
                 TrueValue="{x:Static constants:TimetableTabs.Exams}"/>
+            <converters:TimetableToHeaderTextConverter
+                x:Key="TimetableToHeaderTextConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid>
-        <Border
+        <!-- Navbar -->
+        <Grid
+            ZIndex="1"
+            Padding="15,0"
             VerticalOptions="Start"
-            Margin="0,20"
-            WidthRequest="200"
-            HeightRequest="40"
-            Background="Gray"
-            ZIndex="1">
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer
-                    Tapped="TapGestureRecognizer_Tapped"/>
-            </Border.GestureRecognizers>
-            <Label
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                Style="{StaticResource LabelBodyPrimaryStyle}"
-                Text="{Binding SelectedTab}"/>
-        </Border>
+            ColumnDefinitions="auto,*,auto">
+            
+            <Grid.Background>
+                <LinearGradientBrush
+                    StartPoint="0,0"
+                    EndPoint="0,1">
+                    <GradientStop
+                        Color="#AA000000"
+                        Offset="0.0" />
+                    <GradientStop 
+                        Color="Transparent"
+                        Offset="1.0" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            
+            <ImageButton
+                Grid.Column="0"
+                Source="party"
+                WidthRequest="40"
+                HeightRequest="40"/>
+
+            <Border
+                Grid.Column="1"
+                Margin="0,20"
+                WidthRequest="200"
+                HeightRequest="40"
+                Background="{StaticResource DarkControlBackground}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="TapGestureRecognizer_Tapped"/>
+                </Border.GestureRecognizers>
+                <Label
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                    Text="{Binding SelectedTab}"/>
+            </Border>
+
+            <ImageButton
+                Grid.Column="2"
+                Source="party"
+                WidthRequest="40"
+                HeightRequest="40"/>
+        </Grid>
 
         <!-- Skeleton of timetable -->
-        <!--<VerticalStackLayout
-            Spacing="5"
+        <dx:DXCollectionView
+            ItemSpacing="5"
             IsVisible="{Binding IsBusy}"
             Margin="15,0">
+            <dx:DXCollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:Int16}">
+                    <x:Int16>0</x:Int16>
+                    <x:Int16>0</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>2</x:Int16>
+                    <x:Int16>2</x:Int16>
+                </x:Array>
+            </dx:DXCollectionView.ItemsSource>
 
-            <Grid
-                Margin="0,20,0,20"
-                RowDefinitions="auto,auto"
-                RowSpacing="10">
-                <Label
-                    Grid.Row="0"
-                    Style="{StaticResource LabelHeaderStyle}"
-                    Text="{Binding TimetableHeader}"/>
-                <Border
-                    Grid.Row="1"
-                    WidthRequest="200"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}"
-                    HeightRequest="16"/>
-            </Grid>
+            <dx:DXCollectionView.Header>
+                <Grid
+                    Margin="0,100,0,20"
+                    RowDefinitions="auto,auto"
+                    RowSpacing="10">
+                    <Label
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelHeaderStyle}"
+                        Text="{Binding TimetableHeader, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+                    <Border
+                        Grid.Row="1"
+                        WidthRequest="240"
+                        HorizontalOptions="Start"
+                        HeightRequest="18"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}"/>
+                </Grid>
+            </dx:DXCollectionView.Header>
 
-            <Grid
-                RowSpacing="5"
-                RowDefinitions="auto,auto">
-                <Border
-                    Grid.Row="0"
-                    Margin="0,20,0,0"
-                    WidthRequest="240"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkControlBackground}"
-                    HeightRequest="20"/>
+            <!--<dx:DXCollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Border
+                        Grid.Row="0"
+                        Margin="0,20,0,0"
+                        WidthRequest="240"
+                        HorizontalOptions="Start"
+                        BackgroundColor="{StaticResource DarkControlBackground}"
+                        HeightRequest="20"/>
+                </DataTemplate>
+            </dx:DXCollectionView.GroupHeaderTemplate>-->
 
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Spacing="5"
-                    BindableLayout.ItemTemplate="{StaticResource SkeletonLessonTemplate}">
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:Int16}">
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                        </x:Array>
-                    </BindableLayout.ItemsSource>
-                </VerticalStackLayout>
-            </Grid>
+            <dx:DXCollectionView.ItemTemplate>
+                <StaticResource Key="SkeletonLessonTemplate"/>
+            </dx:DXCollectionView.ItemTemplate>
 
-            <Grid
-                RowSpacing="5"
-                RowDefinitions="auto,auto">
-                <Border
-                    Grid.Row="0"
-                    Margin="0,20,0,0"
-                    WidthRequest="240"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkControlBackground}"
-                    HeightRequest="20"/>
-
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Spacing="5"
-                    BindableLayout.ItemTemplate="{StaticResource SkeletonLessonTemplate}">
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:Int16}">
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                        </x:Array>
-                    </BindableLayout.ItemsSource>
-                </VerticalStackLayout>
-            </Grid>
-
-        </VerticalStackLayout>-->
-
-        <!--simple loading screen-->
-        <AbsoluteLayout
-            IsVisible="{Binding IsBusy}">
-            <Label
-                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                Opacity="0.5"
-                HorizontalTextAlignment="Center"
-                Style="{StaticResource LabelBodyHeaderStyle}"
-                Text="Загрузка..."/>
-        </AbsoluteLayout>
+        </dx:DXCollectionView>
 
         <ContentView
             IsVisible="False"
@@ -141,7 +145,7 @@
                 </DataTrigger>
             </ContentView.Triggers>
         </ContentView>
-        
+
         <ContentView
             IsVisible="False"
             Content="{view:SchedulePage}">
@@ -157,6 +161,4 @@
             </ContentView.Triggers>
         </ContentView>
     </Grid>
-
-    <!--todo: remaining items treshold for pagination-->
 </ContentPage>

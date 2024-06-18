@@ -145,7 +145,7 @@
         x:DataType="model:Schedule">
         <Border
             Opacity="0.35"
-            StrokeDashArray="8,8"
+            StrokeDashArray="16,8"
             Stroke="White"
             StrokeThickness="1"
             HeightRequest="45"
