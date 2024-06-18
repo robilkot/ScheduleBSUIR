@@ -3,6 +3,7 @@ using ScheduleBSUIR.Helpers.JsonConverters;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.API;
 using System.Diagnostics;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace ScheduleBSUIR.Services
@@ -54,26 +55,30 @@ namespace ScheduleBSUIR.Services
 
         private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
         {
+            T? result = default;
+
             using var client = new HttpClient()
             {
                 Timeout = TimeSpan.FromSeconds(5),
             };
 
-            var response = await client.GetAsync(url, cancellationToken);
-
-            var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-
-            T? result = default;
-            
             try
             {
+                var response = await client.GetAsync(url, cancellationToken);
+
+                var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
                 result = await JsonSerializer.DeserializeAsync<T>(responseStream, _deserializeOptions, cancellationToken);
+            }
+            catch (TimeoutException timeoutException)
+            {
+                Debug.WriteLine($"{nameof(GetDeserializedDataAsync)} timed out: {timeoutException.Message}");
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}");
             }
-
+            
             return result;
         }
     }

@@ -27,7 +27,7 @@ namespace ScheduleBSUIR.Services
             _database = new LiteDatabase(databasePath);
         }
 
-        public void AddOrUpdate<T>(T newObject) where T : ICacheable, new()
+        public void AddOrUpdate<T>(T newObject) where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 
@@ -43,7 +43,7 @@ namespace ScheduleBSUIR.Services
             _database.Commit();
         }
 
-        public void AddOrUpdate<T>(List<T> newObjects) where T : ICacheable, new()
+        public void AddOrUpdate<T>(List<T> newObjects) where T : ICacheable
         {
             foreach (var newObject in newObjects)
             {
@@ -51,26 +51,26 @@ namespace ScheduleBSUIR.Services
             }
         }
 
-        public T? Get<T>(string primaryKey) where T : ICacheable, new()
+        public T? Get<T>(string primaryKey) where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 
             return collection.FindById(primaryKey);
         }
 
-        public List<T> GetAll<T>() where T : ICacheable, new()
+        public List<T> GetAll<T>() where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 
             return collection.FindAll().ToList();
         }
 
-        public void Remove<T>(T obj) where T : ICacheable, new()
+        public void Remove<T>(T obj) where T : ICacheable
         {
             Remove<T>(obj.PrimaryKey);
         }
 
-        public void Remove<T>(string primaryKey) where T : ICacheable, new()
+        public void Remove<T>(string primaryKey) where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 
@@ -89,7 +89,7 @@ namespace ScheduleBSUIR.Services
             }
         }
 
-        public void RemoveAll<T>() where T : ICacheable, new()
+        public void RemoveAll<T>() where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 

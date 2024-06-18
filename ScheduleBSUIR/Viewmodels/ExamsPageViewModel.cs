@@ -29,7 +29,10 @@ namespace ScheduleBSUIR.Viewmodels
         {
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
             {
-                GetTimetableCommand.Execute((TypedId)id);
+                //Task.Run(() =>
+                //{
+                    GetTimetableCommand.Execute((TypedId)id);
+                //});
             }
         }
 

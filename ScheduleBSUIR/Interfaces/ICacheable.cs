@@ -4,5 +4,6 @@
     {
         public string PrimaryKey { get; }
         public DateTime UpdatedAt { get; set; }
+        public DateTime AccessedAt { get; set; }
     }
 }
