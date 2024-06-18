@@ -4,99 +4,26 @@
              x:Class="ScheduleBSUIR.View.ExamsPage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="vm:ExamsPageViewModel">
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             x:DataType="vm:TimetablePageViewModel">
 
     <Grid>
-        <!-- Skeleton of timetable -->
-        <VerticalStackLayout
-            Spacing="5"
-            IsVisible="{Binding IsBusy}"
-            Margin="15,0">
-
-            <Grid
-                Margin="0,20,0,20"
-                RowDefinitions="auto,auto"
-                RowSpacing="10">
-                <Label
-                    Grid.Row="0"
-                    Style="{StaticResource LabelHeaderStyle}"
-                    Text="{Binding TimetableHeader}"/>
-                <Border
-                    Grid.Row="1"
-                    WidthRequest="200"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}"
-                    HeightRequest="16"/>
-            </Grid>
-
-            <Grid
-                RowSpacing="5"
-                RowDefinitions="auto,auto">
-                <Border
-                    Grid.Row="0"
-                    Margin="0,20,0,0"
-                    WidthRequest="240"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkControlBackground}"
-                    HeightRequest="20"/>
-
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Spacing="5"
-                    BindableLayout.ItemTemplate="{StaticResource SkeletonLessonTemplate}">
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:Int16}">
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                        </x:Array>
-                    </BindableLayout.ItemsSource>
-                </VerticalStackLayout>
-            </Grid>
-
-            <Grid
-                RowSpacing="5"
-                RowDefinitions="auto,auto">
-                <Border
-                    Grid.Row="0"
-                    Margin="0,20,0,0"
-                    WidthRequest="240"
-                    HorizontalOptions="Start"
-                    BackgroundColor="{StaticResource DarkControlBackground}"
-                    HeightRequest="20"/>
-
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Spacing="5"
-                    BindableLayout.ItemTemplate="{StaticResource SkeletonLessonTemplate}">
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:Int16}">
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                        </x:Array>
-                    </BindableLayout.ItemsSource>
-                </VerticalStackLayout>
-            </Grid>
-
-        </VerticalStackLayout>
-
-        <CollectionView
+        <dx:DXCollectionView
             Grid.Row="1"
             Margin="15,0"
-            IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-            ItemsSource="{Binding Exams}"
+            IsVisible="{Binding Timetable.Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+            ItemsSource="{Binding Timetable.Exams}"
+            ItemSpacing="5"
             ItemTemplate="{StaticResource LessonTemplateSelector}"
-            IsGrouped="True"
             GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout
-                    Orientation="Vertical"
-                    ItemSpacing="5">
-                </LinearItemsLayout>
-            </CollectionView.ItemsLayout>
-            
-            <CollectionView.Header>
+
+            <dx:DXCollectionView.GroupDescription>
+                <dx:GroupDescription 
+                    FieldName="DateLesson"
+                    GroupInterval="Date"/>
+            </dx:DXCollectionView.GroupDescription>
+
+            <dx:DXCollectionView.Header>
                 <Grid
                     Margin="0,20,0,0"
                     RowDefinitions="auto,auto"
@@ -104,7 +31,7 @@
                     <Label
                         Grid.Row="0"
                         Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding TimetableHeader}"/>
+                        Text="{Binding Timetable, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}">
@@ -121,23 +48,23 @@
                         </Label.Text>
                     </Label>
                 </Grid>
-            </CollectionView.Header>
+            </dx:DXCollectionView.Header>
 
-            <CollectionView.Triggers>
+            <dx:DXCollectionView.Triggers>
                 <DataTrigger
-                    TargetType="CollectionView"
+                    TargetType="dx:DXCollectionView"
                     Binding="{Binding IsBusy}"
                     Value="True">
                     <Setter
                         Property="IsVisible"
                         Value="False"/>
                 </DataTrigger>
-            </CollectionView.Triggers>
-        </CollectionView>
+            </dx:DXCollectionView.Triggers>
+        </dx:DXCollectionView>
 
-        <!--EmptyView doesn't work as intended (margins are incorrect)-->
+        <!--todo: No empty view on dxcv?-->
         <AbsoluteLayout
-            IsVisible="{Binding Exams, Converter={StaticResource IsNullOrEmptyConverter}}">
+            IsVisible="{Binding Timetable.Exams, Converter={StaticResource IsNullOrEmptyConverter}}">
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"

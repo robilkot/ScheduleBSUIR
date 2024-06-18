@@ -15,13 +15,17 @@ public partial class TimetablePage : ContentPage
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        if (_viewModel.SelectedTab == Helpers.Constants.TimetableTabs.Schedule)
+        try
         {
-            _viewModel.SelectedTab = Helpers.Constants.TimetableTabs.Exams;
-        } 
-        else
-        {
-            _viewModel.SelectedTab = Helpers.Constants.TimetableTabs.Schedule;
+            if (_viewModel.SelectedTab == Helpers.Constants.TimetableTabs.Schedule)
+            {
+                _viewModel.SelectedTab = Helpers.Constants.TimetableTabs.Exams;
+            } 
+            else
+            {
+                _viewModel.SelectedTab = Helpers.Constants.TimetableTabs.Schedule;
+            }
         }
+        finally { }
     }
 }

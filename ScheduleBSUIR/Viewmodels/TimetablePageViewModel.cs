@@ -3,24 +3,27 @@ using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
+using System.Diagnostics;
 
 namespace ScheduleBSUIR.Viewmodels
 {
     public partial class TimetablePageViewModel(
-        ExamsPageViewModel examsPageViewModel,
         SchedulePageViewModel scheduleViewModel,
         TimetableService timetableService)
         : BaseViewModel, IQueryAttributable
     {
-        private readonly ExamsPageViewModel _examsViewModel = examsPageViewModel;
         private readonly SchedulePageViewModel _scheduleViewModel = scheduleViewModel;
         private readonly TimetableService _timetableService = timetableService;
 
         [ObservableProperty]
-        private TimetableTabs _selectedTab = TimetableTabs.Schedule;
+        private TimetableTabs _selectedTab = TimetableTabs.Exams;
 
         [ObservableProperty]
         private Timetable? _timetable;
+
+        // This property exists to display group number/employee name before timetable is loaded
+        [ObservableProperty]
+        private string _timetableHeader = string.Empty;
 
         [RelayCommand]
         public async Task GetTimetable(TypedId? id)
@@ -28,15 +31,15 @@ namespace ScheduleBSUIR.Viewmodels
             if (id is null)
                 return;
 
+            if(IsBusy) 
+                return;
+
             IsBusy = true;
-            _examsViewModel.IsBusy = true;
-            _scheduleViewModel.IsBusy = true;
 
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
 
-                _examsViewModel.SetExamsCommand.Execute(Timetable);
                 _scheduleViewModel.SetScheduleCommand.Execute(Timetable);
             }
             catch
@@ -46,23 +49,19 @@ namespace ScheduleBSUIR.Viewmodels
             finally
             {
                 IsBusy = false;
-                _examsViewModel.IsBusy = false;
-                _scheduleViewModel.IsBusy = false;
             }
         }
 
-        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
                 && query.TryGetValue(NavigationKeys.TimetableHeader, out var timetableHeader))
             {
-                _examsViewModel.TimetableHeader = (string)timetableHeader;
-
-                // Let transition smoothly finish before doing heavy-lifting
-                await Task.Delay(50);
+                // todo: use TimetableToHeaderTextConverter to unify header formatting?
+                TimetableHeader = (string)timetableHeader;
 
                 // Exceptions must be handled inside of command
-                GetTimetableCommand.Execute((TypedId)id);
+                _ = GetTimetable((TypedId)id);
             }
         }
     }

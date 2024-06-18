@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Models.UI;
+using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -11,10 +11,7 @@ namespace ScheduleBSUIR.Viewmodels
         private Timetable _timetable = null!;
 
         [ObservableProperty]
-        private List<ScheduleGroup> _schedule = [];
-
-        [ObservableProperty]
-        private string _timetableHeader = string.Empty;
+        private ObservableCollection<Schedule> _schedule = [];
 
         [RelayCommand]
         public void SetSchedule(Timetable? timetable)

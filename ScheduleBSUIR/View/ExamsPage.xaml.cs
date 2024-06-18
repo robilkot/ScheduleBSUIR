@@ -4,10 +4,10 @@ namespace ScheduleBSUIR.View;
 
 public partial class ExamsPage : ContentView
 {
-	private readonly ExamsPageViewModel _viewmodel;
+	private readonly TimetablePageViewModel _viewmodel;
 	public ExamsPage()
 	{
-        var viewmodel = App.Current.Handler.MauiContext.Services.GetRequiredService<ExamsPageViewModel>();
+        var viewmodel = App.Current.Handler.MauiContext.Services.GetRequiredService<TimetablePageViewModel>();
 		
 		InitializeComponent();
 

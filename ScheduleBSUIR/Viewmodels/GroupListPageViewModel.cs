@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
@@ -13,13 +12,12 @@ namespace ScheduleBSUIR.Viewmodels
     {
         private GroupsService _groupsService;
 
-        private IEnumerable<StudentGroupHeader> _allGroupsHeaders = [];
-        private IEnumerable<StudentGroupHeader> _filteredGroupHeaders = [];
+        private List<StudentGroupHeader> _allGroupsHeaders = [];
 
         private string _currentGroupFilter = string.Empty;
 
         [ObservableProperty]
-        private ObservableCollection<StudentGroupHeaderGroup> _filteredGroups = [];
+        private List<StudentGroupHeader> _filteredGroups = [];
 
         [ObservableProperty]
         private string _groupName = string.Empty;
@@ -60,11 +58,9 @@ namespace ScheduleBSUIR.Viewmodels
                 var groupHeaders = await _groupsService.GetGroupHeadersAsync(groupNameFilter, cancellationToken);
 
                 _allGroupsHeaders = groupHeaders.ToList();
-                _filteredGroupHeaders = _allGroupsHeaders;
+                FilteredGroups = _allGroupsHeaders;
 
                 GroupName = string.Empty;
-
-                UpdateGrouping();
             }
             finally
             {
@@ -78,32 +74,15 @@ namespace ScheduleBSUIR.Viewmodels
             // Filter narrowed => can search in already filtered collection
             if (groupNameFilter.Length > _currentGroupFilter.Length)
             {
-                _filteredGroupHeaders = _filteredGroupHeaders.Where(header => header.Name.StartsWith(groupNameFilter));
+                FilteredGroups = FilteredGroups.Where(header => header.Name.StartsWith(groupNameFilter)).ToList();
             }
             // Else we have to search in all headers :(
             else
             {
-                _filteredGroupHeaders = _allGroupsHeaders.Where(header => header.Name.StartsWith(groupNameFilter));
+                FilteredGroups = _allGroupsHeaders.Where(header => header.Name.StartsWith(groupNameFilter)).ToList();
             }
 
             _currentGroupFilter = groupNameFilter;
-
-            UpdateGrouping();
-        }
-
-        private void UpdateGrouping()
-        {
-            var groupedHeaders = _filteredGroupHeaders
-                .GroupBy(header => header.Name[..3])
-                .Select(grouping => new StudentGroupHeaderGroup(grouping.Key, grouping));
-
-            FilteredGroups.Clear();
-
-            foreach (var group in groupedHeaders)
-            {
-                // await Task.Delay(50);
-                FilteredGroups.Add(group);
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using DevExpress.Maui;
 using Microsoft.Extensions.Logging;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Services;
@@ -15,6 +16,8 @@ namespace ScheduleBSUIR
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseDevExpress()
+                .UseDevExpressCollectionView()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -31,7 +34,6 @@ namespace ScheduleBSUIR
             builder.Services.AddTransient<TimetablePage>();
 
             builder.Services.AddSingleton<GroupListPageViewModel>();
-            builder.Services.AddSingleton<ExamsPageViewModel>();
             builder.Services.AddSingleton<SchedulePageViewModel>();
             builder.Services.AddSingleton<TimetablePageViewModel>();
 

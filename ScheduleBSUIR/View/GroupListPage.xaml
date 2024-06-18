@@ -4,25 +4,18 @@
              x:Class="ScheduleBSUIR.View.GroupListPage"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
              x:DataType="viewmodel:GroupListPageViewModel"
+             xmlns:dx="http://schemas.devexpress.com/maui"
              BackgroundColor="Black">
 
-    <CollectionView
+    <dx:DXCollectionView
         Grid.Row="1"
         Margin="15,0"
-        IsGrouped="True"
-        VerticalScrollBarVisibility="Always"
+        ItemSeparatorColor="{StaticResource DarkLightControlBackground}"
+        ItemSeparatorThickness="1"
         ItemsSource="{Binding FilteredGroups}">
 
-        <CollectionView.ItemsLayout>
-            <LinearItemsLayout
-                Orientation="Vertical"
-                ItemSpacing="0">
-            </LinearItemsLayout>
-        </CollectionView.ItemsLayout>
-
-        <CollectionView.Header>
+        <dx:DXCollectionView.Header>
             <Grid
                 Margin="0,20,0,0"
                 RowDefinitions="auto,auto"
@@ -52,34 +45,27 @@
                     </Grid>
                 </Border>
             </Grid>
-        </CollectionView.Header>
+        </dx:DXCollectionView.Header>
 
-        <CollectionView.GroupHeaderTemplate>
+        <dx:DXCollectionView.GroupDescription>
+            <dx:GroupDescription 
+                FieldName="DisplayGroup"
+                GroupInterval="Value"/>
+        </dx:DXCollectionView.GroupDescription>
+
+        <dx:DXCollectionView.GroupHeaderTemplate>
             <DataTemplate
-                x:DataType="uimodel:StudentGroupHeaderGroup">
-                <Grid
-                    Margin="0,20,0,0"
-                    RowSpacing="5"
-                    RowDefinitions="auto,auto">
-                    <Label
-                        Margin="15,0"
-                        Grid.Row="0"
-                        FontSize="13"
-                        Style="{StaticResource LabelBodySecondaryStyle}"
-                        Text="{Binding Header}"/>
-                    <Border
-                        Grid.Row="1"
-                        HeightRequest="16"
-                        Background="{StaticResource DarkControlBackground}"
-                        StrokeThickness="0"
-                        Margin="0,0,0,-8"
-                        StrokeShape="RoundRectangle 8,8,0,0">
-                    </Border>
-                </Grid>
+                x:DataType="dx:GroupInfo">
+                <Label
+                    Margin="15,20,15,5"
+                    Grid.Row="0"
+                    FontSize="13"
+                    Style="{StaticResource LabelBodySecondaryStyle}"
+                    Text="{Binding GroupValue}"/>
             </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
+        </dx:DXCollectionView.GroupHeaderTemplate>
 
-        <CollectionView.ItemTemplate>
+        <dx:DXCollectionView.ItemTemplate>
             <DataTemplate
                 x:DataType="model:StudentGroupHeader">
                 <Border
@@ -89,10 +75,19 @@
                     <Border.StrokeShape>
                         <Rectangle/>
                     </Border.StrokeShape>
-                    <Label
-                        VerticalOptions="Center"
-                        Style="{StaticResource LabelBodyPrimaryStyle}"
-                        Text="{Binding Name}"/>
+                    <Grid
+                        ColumnSpacing="10"
+                        ColumnDefinitions="*,auto">
+                        <Label
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Text="{Binding Name}"/>
+                        <Image
+                            Grid.Column="1"
+                            HeightRequest="16"
+                            Source="party"/>
+                    </Grid>
 
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer
@@ -102,9 +97,9 @@
                     </Border.GestureRecognizers>
                 </Border>
             </DataTemplate>
-        </CollectionView.ItemTemplate>
+        </dx:DXCollectionView.ItemTemplate>
 
-        <CollectionView.GroupFooterTemplate>
+        <!--<dx:DXCollectionView.GroupFooterTemplate>
             <DataTemplate>
                 <Border
                     HeightRequest="16"
@@ -114,6 +109,6 @@
                     StrokeShape="RoundRectangle 0,0,8,8">
                 </Border>
             </DataTemplate>
-        </CollectionView.GroupFooterTemplate>
-    </CollectionView>
+        </dx:DXCollectionView.GroupFooterTemplate>-->
+    </dx:DXCollectionView>
 </ContentPage>

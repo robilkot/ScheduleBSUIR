@@ -1,10 +1,8 @@
-﻿using ScheduleBSUIR.Helpers;
+﻿using DevExpress.Maui.CollectionView;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using System.Diagnostics;
-using System.Globalization;
 
 namespace ScheduleBSUIR.View.TemplateSelectors
 {
@@ -18,8 +16,8 @@ namespace ScheduleBSUIR.View.TemplateSelectors
         // ELAPSED FOR 1000 CALLS: 00:00:00.0168000 with cache
         private readonly Dictionary<object, bool> _cachedResults = [];
 
-        public DataTemplate ActiveTemplate { get; set; }
-        public DataTemplate InactiveTemplate { get; set; }
+        public DataTemplate ActiveTemplate { get; set; } = null!;
+        public DataTemplate InactiveTemplate { get; set; } = null!;
 
         public ActiveTemplateSelector()
         {
@@ -38,7 +36,7 @@ namespace ScheduleBSUIR.View.TemplateSelectors
                     var dateTime = item switch
                     {
                         Schedule schedule => schedule.DateLesson,
-                        ScheduleGroup scheduleGroup => scheduleGroup.Day,
+                        GroupInfo scheduleGroup => (DateTime)scheduleGroup.GroupValue,
                         _ => throw new NotImplementedException(),
                     } ?? DateTime.MinValue;
 

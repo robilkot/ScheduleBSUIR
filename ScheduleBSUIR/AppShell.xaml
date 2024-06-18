@@ -12,10 +12,10 @@
             <ShellContent
                 ContentTemplate="{DataTemplate local:GroupListPage}"/>
         </Tab>
-        <Tab
+        <!--<Tab
             Title="Exams">
             <ShellContent
                 ContentTemplate="{DataTemplate local:ExamsPage}"/>
-        </Tab>
+        </Tab>-->
     </TabBar>
 </Shell>
