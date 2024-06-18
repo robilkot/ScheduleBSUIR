@@ -4,17 +4,20 @@
              x:Class="ScheduleBSUIR.View.ExamsPage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:dx="http://schemas.devexpress.com/maui"
              x:DataType="vm:TimetablePageViewModel">
 
-    <Grid>
+    <Grid
+        Margin="15,0">
         <dx:DXCollectionView
             Grid.Row="1"
-            Margin="15,0"
             IsVisible="{Binding Timetable.Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
             ItemsSource="{Binding Timetable.Exams}"
             ItemSpacing="5"
             ItemTemplate="{StaticResource LessonTemplateSelector}"
+            AllowGroupCollapse="False"
+            UseRippleEffect="True"
             GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
 
             <dx:DXCollectionView.GroupDescription>
@@ -25,13 +28,12 @@
 
             <dx:DXCollectionView.Header>
                 <Grid
-                    Margin="0,20,0,0"
+                    Margin="0,100,0,20"
                     RowDefinitions="auto,auto"
                     RowSpacing="10">
-                    <Label
+                    <controls:TimetableHeader
                         Grid.Row="0"
-                        Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding Timetable, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+                        Timetable="{Binding Timetable}"/>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}">

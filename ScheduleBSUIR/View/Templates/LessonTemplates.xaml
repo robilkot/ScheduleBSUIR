@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
-             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.View.TemplateSelectors"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
+             xmlns:markupExtensions="clr-namespace:ScheduleBSUIR.Helpers.MarkupExtensions"
              x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
     <converters:ScheduleToColorConverter
         x:Key="ScheduleToColorConverter"/>
@@ -75,13 +76,13 @@
                     </Label>
                 </Grid>
 
-                <RoundRectangle
+                <Border
                     Grid.Column="1"
                     HeightRequest="60"
                     WidthRequest="8"
-                    CornerRadius="4"
+                    StrokeShape="RoundRectangle 4"
                     BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}}">
-                </RoundRectangle>
+                </Border>
 
                 <Grid
                     Grid.Column="2"
@@ -91,7 +92,7 @@
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyHeaderStyle}"
                         Text="{Binding Subject}">
-                    </Label>
+                        </Label>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}"
@@ -111,8 +112,12 @@
                             <Image
                                 VerticalOptions="Center"
                                 HeightRequest="50"
-                                Aspect="AspectFill"
-                                Source="{Binding PhotoLink}">
+                                Source="{Binding PhotoLink}"
+                                Aspect="AspectFill">
+                                
+                                <!--<Image.Source>
+                                    <markupExtensions:CachedImageSource Uri="{Binding PhotoLink}"/>
+                                </Image.Source>-->
 
                                 <Image.Clip>
                                     <EllipseGeometry
@@ -182,9 +187,8 @@
                 <Label
                     Grid.Column="2"
                     VerticalOptions="Center"
-                    Grid.Row="0"
-                    FontSize="18"
                     Style="{StaticResource LabelBodyHeaderStyle}"
+                    FontSize="18"
                     Text="{Binding Subject}">
                 </Label>
             </Grid>

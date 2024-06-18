@@ -4,7 +4,6 @@ using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
-using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -22,16 +21,24 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private string _groupName = string.Empty;
 
+        [ObservableProperty]
+        private bool _isRefreshing = false;
+
         public GroupListPageViewModel(GroupsService groupsService)
         {
             _groupsService = groupsService;
 
-            UpdateAllGroupsCommand.Execute(string.Empty);
+            RefreshCommand.Execute(string.Empty);
         }
 
         [RelayCommand]
         public void SelectGroup(StudentGroupHeader selectedGroup)
         {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
             Preferences.Set(PreferencesKeys.SelectedGroupName, selectedGroup.Name);
 
             StudentGroupId groupId = new(selectedGroup.Name);
@@ -43,10 +50,12 @@ namespace ScheduleBSUIR.Viewmodels
             };
 
             Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
+
+            IsBusy = false;
         }
 
         [RelayCommand]
-        public async Task UpdateAllGroups(string groupNameFilter = "", CancellationToken cancellationToken = default)
+        public async Task Refresh(string groupNameFilter = "", CancellationToken cancellationToken = default)
         {
             if (IsBusy)
                 return;
@@ -65,6 +74,7 @@ namespace ScheduleBSUIR.Viewmodels
             finally
             {
                 IsBusy = false;
+                IsRefreshing = false;
             }
         }
 

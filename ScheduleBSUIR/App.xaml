@@ -10,8 +10,6 @@
                 x:Key="IsNotNullOrEmptyConverter"/>
             <converters:IsNullOrEmptyConverter
                 x:Key="IsNullOrEmptyConverter"/>
-            <converters:TimetableToHeaderTextConverter
-                x:Key="TimetableToHeaderTextConverter"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />

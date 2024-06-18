@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
-using System.Diagnostics;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -31,7 +30,7 @@ namespace ScheduleBSUIR.Viewmodels
             if (id is null)
                 return;
 
-            if(IsBusy) 
+            if (IsBusy)
                 return;
 
             IsBusy = true;

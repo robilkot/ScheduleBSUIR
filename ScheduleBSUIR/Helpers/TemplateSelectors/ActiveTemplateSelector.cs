@@ -4,12 +4,13 @@ using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
 using System.Diagnostics;
 
-namespace ScheduleBSUIR.View.TemplateSelectors
+namespace ScheduleBSUIR.Helpers.TemplateSelectors
 {
     class ActiveTemplateSelector : DataTemplateSelector
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
+        // todo: check this on DXCollectionView
         // OnSelectTemplate gets called on each collectionview actually (even scrolling).
         // Benchmarks:
         // ELAPSED FOR 1000 CALLS: 00:00:00.0506691 without cache

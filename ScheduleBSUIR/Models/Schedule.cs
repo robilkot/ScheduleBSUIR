@@ -1,4 +1,7 @@
-﻿namespace ScheduleBSUIR.Models
+﻿using LiteDB;
+using System.Text.Json.Serialization;
+
+namespace ScheduleBSUIR.Models
 {
     public class Schedule
     {
