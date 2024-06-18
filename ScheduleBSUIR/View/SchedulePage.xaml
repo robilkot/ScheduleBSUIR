@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScheduleBSUIR.View.ExamsPage"
+             x:Class="ScheduleBSUIR.View.SchedulePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="vm:ExamsPageViewModel">
+             x:DataType="vm:SchedulePageViewModel">
 
     <Grid>
         <!-- Skeleton of timetable -->
@@ -81,63 +81,10 @@
 
         </VerticalStackLayout>
 
-        <CollectionView
-            Grid.Row="1"
-            Margin="15,0"
-            IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-            ItemsSource="{Binding Exams}"
-            ItemTemplate="{StaticResource LessonTemplateSelector}"
-            IsGrouped="True"
-            GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout
-                    Orientation="Vertical"
-                    ItemSpacing="5">
-                </LinearItemsLayout>
-            </CollectionView.ItemsLayout>
-            
-            <CollectionView.Header>
-                <Grid
-                    Margin="0,20,0,0"
-                    RowDefinitions="auto,auto"
-                    RowSpacing="10">
-                    <Label
-                        Grid.Row="0"
-                        Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding TimetableHeader}"/>
-                    <Label
-                        Grid.Row="1"
-                        Style="{StaticResource LabelBodySecondaryStyle}">
-                        <Label.Text>
-                            <MultiBinding
-                                StringFormat="Сессия: {0} - {1}">
-                                <Binding
-                                    StringFormat="{}{0:dd MMMM}"
-                                    Path="Timetable.StartExamsDate"/>
-                                <Binding
-                                    StringFormat="{}{0:dd MMMM yyyy} г."
-                                    Path="Timetable.EndExamsDate"/>
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </Grid>
-            </CollectionView.Header>
-
-            <CollectionView.Triggers>
-                <DataTrigger
-                    TargetType="CollectionView"
-                    Binding="{Binding IsBusy}"
-                    Value="True">
-                    <Setter
-                        Property="IsVisible"
-                        Value="False"/>
-                </DataTrigger>
-            </CollectionView.Triggers>
-        </CollectionView>
-
+    
         <!--EmptyView doesn't work as intended (margins are incorrect)-->
         <AbsoluteLayout
-            IsVisible="{Binding Exams, Converter={StaticResource IsNullOrEmptyConverter}}">
+            IsVisible="{Binding Schedule, Converter={StaticResource IsNullOrEmptyConverter}}">
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
@@ -155,7 +102,7 @@
                     Grid.Row="1"
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource LabelBodyHeaderStyle}"
-                    Text="Экзаменов больше нет"/>
+                    Text="Занятий больше нет"/>
             </Grid>
 
             <AbsoluteLayout.Triggers>

@@ -27,11 +27,13 @@ namespace ScheduleBSUIR
 
             builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<ExamsPage>();
+            builder.Services.AddTransient<SchedulePage>();
             builder.Services.AddTransient<TimetablePage>();
 
             builder.Services.AddSingleton<GroupListPageViewModel>();
             builder.Services.AddSingleton<ExamsPageViewModel>();
-            builder.Services.AddSingleton<TimetableViewModel>();
+            builder.Services.AddSingleton<SchedulePageViewModel>();
+            builder.Services.AddSingleton<TimetablePageViewModel>();
 
             builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<TimetableService>();

@@ -3,16 +3,49 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.View.TemplateSelectors"
              x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
     <converters:ScheduleToColorConverter
         x:Key="ScheduleToColorConverter"/>
+
+    <DataTemplate
+        x:Key="SkeletonLessonTemplate"
+        x:DataType="model:Schedule">
+        <Border
+            BackgroundColor="{StaticResource DarkControlBackground}"
+            HeightRequest="70"
+            Padding="10,5">
+            <Grid
+                ColumnSpacing="10"
+                ColumnDefinitions="*, auto">
+                <Grid
+                    VerticalOptions="Center"
+                    Grid.Column="0"
+                    RowSpacing="10"
+                    RowDefinitions="auto,auto">
+                    <Border
+                        Grid.Row="0"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}"
+                        HeightRequest="16"/>
+                    <Border
+                        Grid.Row="1"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}"
+                        HeightRequest="16"/>
+                </Grid>
+                <Ellipse
+                    Grid.Column="1"
+                    BackgroundColor="{StaticResource DarkLightControlBackground}"
+                    WidthRequest="50"
+                    HeightRequest="50"/>
+            </Grid>
+        </Border>
+    </DataTemplate>
     
     <!--todo: announcements-->
     <DataTemplate
         x:Key="ActiveLessonTemplate"
         x:DataType="model:Schedule">
         <Border
-            StrokeShape="RoundRectangle 8"
             StrokeThickness="0"
             HeightRequest="70"
             BackgroundColor="{StaticResource DarkControlBackground}"
@@ -107,7 +140,6 @@
         x:DataType="model:Schedule">
         <Border
             Opacity="0.35"
-            StrokeShape="RoundRectangle 8"
             StrokeDashArray="8,8"
             Stroke="White"
             StrokeThickness="1"
@@ -158,4 +190,10 @@
             </Grid>
         </Border>
     </DataTemplate>
+
+
+    <templateSelectors:ActiveTemplateSelector
+        ActiveTemplate="{StaticResource ActiveLessonTemplate}"
+        InactiveTemplate="{StaticResource InactiveLessonTemplate}"
+        x:Key="LessonTemplateSelector"/>
 </ResourceDictionary>

@@ -4,10 +4,72 @@
              x:Class="ScheduleBSUIR.View.TimetablePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="vm:TimetableViewModel">
+             xmlns:view="clr-namespace:ScheduleBSUIR.View"
+             xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+             x:DataType="vm:TimetablePageViewModel"
+             Shell.NavBarIsVisible="False"
+             Background="Black">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ValueToBoolConverter
+                x:Key="ScheduleTabSelected"
+                TrueValue="{x:Static constants:TimetableTabs.Schedule}"/>
+            <converters:ValueToBoolConverter
+                x:Key="ExamsTabSelected"
+                TrueValue="{x:Static constants:TimetableTabs.Exams}"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Grid>
-        <!--todo: remaining items treshold for pagination-->
+        <Border
+            VerticalOptions="Start"
+            Margin="0,20"
+            WidthRequest="200"
+            HeightRequest="40"
+            Background="Orange"
+            ZIndex="1">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer
+                    Tapped="TapGestureRecognizer_Tapped"/>
+            </Border.GestureRecognizers>
+            <Label
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Text="{Binding SelectedTab}"/>
+        </Border>
+        
+        <ContentView
+            IsVisible="False"
+            Content="{view:ExamsPage}">
+            <ContentView.Triggers>
+                <DataTrigger
+                    TargetType="ContentView"
+                    Binding="{Binding SelectedTab, Converter={StaticResource ExamsTabSelected}}"
+                    Value="True">
+                    <Setter
+                        Property="IsVisible"
+                        Value="True"/>
+                </DataTrigger>
+            </ContentView.Triggers>
+        </ContentView>
+        
+        <ContentView
+            IsVisible="False"
+            Content="{view:SchedulePage}">
+            <ContentView.Triggers>
+                <DataTrigger
+                    TargetType="ContentView"
+                    Binding="{Binding SelectedTab, Converter={StaticResource ScheduleTabSelected}}"
+                    Value="True">
+                    <Setter
+                        Property="IsVisible"
+                        Value="True"/>
+                </DataTrigger>
+            </ContentView.Triggers>
+        </ContentView>
     </Grid>
-    
-    
+
+    <!--todo: remaining items treshold for pagination-->
 </ContentPage>

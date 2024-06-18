@@ -5,39 +5,38 @@ using ScheduleBSUIR.Models.UI;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class ExamsPageViewModel : BaseViewModel
+    public partial class SchedulePageViewModel : BaseViewModel
     {
         [ObservableProperty]
         private Timetable _timetable = null!;
 
         [ObservableProperty]
-        private List<ScheduleGroup> _exams = [];
+        private List<ScheduleGroup> _schedule = [];
 
         [ObservableProperty]
         private string _timetableHeader = string.Empty;
 
         [RelayCommand]
-        public void SetExams(Timetable? timetable)
+        public void SetSchedule(Timetable? timetable)
         {
             if (timetable is null)
                 return;
+
+            IsBusy = true;
 
             Timetable = timetable;
 
             try
             {
-                var daysExams = Timetable.Exams?
-                    .GroupBy(schedule => schedule.DateLesson ?? DateTime.MinValue)
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                Exams = daysExams?
-                    .Select(kvp => new ScheduleGroup(kvp.Key, kvp.Value))
-                    .ToList()
-                    ?? [];
+                // todo: schedules by day
             }
             catch
             {
                 // todo: log
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.View.TemplateSelectors"
              x:Class="ScheduleBSUIR.View.Templates.HeaderTemplates">
     
     <converters:DateToHeaderTextConverter
@@ -27,4 +28,10 @@
             FontSize="15"
             Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
     </DataTemplate>
+
+
+    <templateSelectors:ActiveTemplateSelector
+        ActiveTemplate="{StaticResource ActiveHeaderTemplate}"
+        InactiveTemplate="{StaticResource InactiveHeaderTemplate}"
+        x:Key="HeaderTemplateSelector"/>
 </ResourceDictionary>

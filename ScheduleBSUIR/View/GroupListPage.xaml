@@ -34,8 +34,7 @@
                 <Border
                     Grid.Row="1"
                     Background="{StaticResource DarkControlBackground}"
-                    Padding="5,0"
-                    StrokeShape="RoundRectangle 8">
+                    Padding="5,0">
                     <Grid
                         ColumnSpacing="5"
                         ColumnDefinitions="auto,*">
@@ -87,6 +86,9 @@
                     Background="{StaticResource DarkControlBackground}"
                     StrokeThickness="0"
                     Padding="15,10">
+                    <Border.StrokeShape>
+                        <Rectangle/>
+                    </Border.StrokeShape>
                     <Label
                         VerticalOptions="Center"
                         Style="{StaticResource LabelBodyPrimaryStyle}"

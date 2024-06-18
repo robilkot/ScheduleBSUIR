@@ -40,10 +40,11 @@ namespace ScheduleBSUIR.Viewmodels
 
             Dictionary<string, object> navigationParameters = new()
             {
-                { NavigationKeys.TimetableId, groupId }
+                { NavigationKeys.TimetableId, groupId },
+                { NavigationKeys.TimetableHeader, selectedGroup.Name },
             };
 
-            Shell.Current.GoToAsync(nameof(ExamsPage), true, navigationParameters);
+            Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
         }
 
         [RelayCommand]
