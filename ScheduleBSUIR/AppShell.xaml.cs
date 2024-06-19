@@ -9,7 +9,6 @@ namespace ScheduleBSUIR
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(GroupListPage), typeof(GroupListPage));
-            Routing.RegisterRoute(nameof(ExamsPage), typeof(ExamsPage));
             Routing.RegisterRoute(nameof(TimetablePage), typeof(TimetablePage));
         }
     }

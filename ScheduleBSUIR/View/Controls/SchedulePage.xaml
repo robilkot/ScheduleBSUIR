@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScheduleBSUIR.View.SchedulePage"
+             x:Class="ScheduleBSUIR.View.Controls.SchedulePage"
              xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="vm:SchedulePageViewModel">
+             x:DataType="vm:TimetablePageViewModel">
 
     <Grid>
         <!--EmptyView doesn't work as intended (margins are incorrect)-->
+            <!--IsVisible="{Binding Schedule, Converter={StaticResource IsNullOrEmptyConverter}}">-->
         <AbsoluteLayout
-            IsVisible="{Binding Schedule, Converter={StaticResource IsNullOrEmptyConverter}}">
+            IsVisible="True">
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"

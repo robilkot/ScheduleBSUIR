@@ -1,17 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel(
-        SchedulePageViewModel scheduleViewModel,
-        TimetableService timetableService)
-        : BaseViewModel, IQueryAttributable
+    public partial class TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService)
+        : BaseViewModel(loggingService), IQueryAttributable
     {
-        private readonly SchedulePageViewModel _scheduleViewModel = scheduleViewModel;
         private readonly TimetableService _timetableService = timetableService;
 
         [ObservableProperty]
@@ -19,6 +17,10 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private Timetable? _timetable;
+
+        [ObservableProperty]
+        private List<Schedule>? _exams;
+
 
         // This property exists to display group number/employee name before timetable is loaded
         [ObservableProperty]
@@ -35,11 +37,13 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsBusy = true;
 
+            _loggingService.LogInfo($"getting timetable with id {id}");
+
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
 
-                _scheduleViewModel.SetScheduleCommand.Execute(Timetable);
+                Exams = Timetable.Exams;
             }
             catch
             {

@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using ScheduleBSUIR.Interfaces;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class BaseViewModel : ObservableObject
+    public partial class BaseViewModel(ILoggingService loggingService) : ObservableObject
     {
+        protected readonly ILoggingService _loggingService = loggingService;
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsNotBusy))]
         private bool _isBusy = false;

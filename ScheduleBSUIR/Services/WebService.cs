@@ -1,18 +1,21 @@
 ﻿using ScheduleBSUIR.Helpers;
 using ScheduleBSUIR.Helpers.JsonConverters;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.API;
 using System.Diagnostics;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace ScheduleBSUIR.Services
 {
     public class WebService
     {
+        private readonly ILoggingService _loggingService;
         private readonly JsonSerializerOptions _deserializeOptions;
-        public WebService()
-        { 
+        public WebService(ILoggingService loggingService)
+        {
+            _loggingService = loggingService;
+
             _deserializeOptions = new()
             {
                 PropertyNameCaseInsensitive = false,
@@ -72,13 +75,13 @@ namespace ScheduleBSUIR.Services
             }
             catch (TimeoutException timeoutException)
             {
-                Debug.WriteLine($"{nameof(GetDeserializedDataAsync)} timed out: {timeoutException.Message}");
+                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} timed out: {timeoutException.Message}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}");
+                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}");
             }
-            
+
             return result;
         }
     }

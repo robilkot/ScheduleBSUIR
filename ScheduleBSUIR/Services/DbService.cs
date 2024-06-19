@@ -1,6 +1,6 @@
 ﻿using LiteDB;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models.DB;
-using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
@@ -8,9 +8,12 @@ namespace ScheduleBSUIR.Services
     {
         private const string DatabaseFilename = "ScheduleBSUIR.db";
         private readonly LiteDatabase _database;
+        private readonly ILoggingService _loggingService;
 
-        public DbService()
+        public DbService(ILoggingService loggingService)
         {
+            _loggingService = loggingService;
+
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
 #if DEBUG
@@ -20,7 +23,7 @@ namespace ScheduleBSUIR.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"File {databasePath} was NOT deleted: {ex.Message}");
+                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}");
             }
 #endif
 

@@ -1,13 +1,13 @@
 ﻿using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
-    public class TimetableService(WebService webService, DbService dbService, IDateTimeProvider dateTimeProvider)
+    public class TimetableService(WebService webService, DbService dbService, IDateTimeProvider dateTimeProvider, ILoggingService loggingService)
     {
         private readonly WebService _webService = webService;
         private readonly DbService _dbService = dbService;
+        private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
@@ -22,13 +22,13 @@ namespace ScheduleBSUIR.Services
             if (cachedTimetable is not null
                 && lastUpdateResponse?.LastUpdateDate <= cachedTimetable.UpdatedAt)
             {
-                Debug.WriteLine("Cached timetable found!");
+                _loggingService.LogInfo($"Cached timetable found for {id}");
                 timetable = cachedTimetable;
             }
             // Else obtain from api
             else
             {
-                Debug.WriteLine("Cached timetable NOT found!");
+                _loggingService.LogInfo($"Cached timetable NOT found for {id}");
                 timetable = await _webService.GetTimetableAsync(id, cancellationToken);
 
                 if (timetable is null)
@@ -44,7 +44,7 @@ namespace ScheduleBSUIR.Services
             timetable.AccessedAt = _dateTimeProvider.Now;
 
             _dbService.AddOrUpdate(timetable);
-            Debug.WriteLine("Updated timetable in DB");
+            _loggingService.LogInfo($"Updated DB timetable for {id}");
 
             return timetable;
         }

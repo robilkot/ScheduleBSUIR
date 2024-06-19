@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
@@ -24,7 +25,8 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private bool _isRefreshing = false;
 
-        public GroupListPageViewModel(GroupsService groupsService)
+        public GroupListPageViewModel(GroupsService groupsService, ILoggingService loggingService)
+            : base(loggingService)
         {
             _groupsService = groupsService;
 

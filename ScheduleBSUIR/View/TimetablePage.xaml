@@ -9,6 +9,9 @@
              xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+             mtk:LeakMonitorBehavior.Cascade="True"
+             mtk:TearDownBehavior.Cascade="True"
              x:DataType="vm:TimetablePageViewModel"
              Shell.NavBarIsVisible="False"
              Background="Black">
@@ -133,7 +136,8 @@
 
         <ContentView
             IsVisible="False"
-            Content="{view:ExamsPage}">
+            BindingContext="{Binding .}"
+            Content="{controls:ExamsPage}">
             <ContentView.Triggers>
                 <DataTrigger
                     TargetType="ContentView"
@@ -148,7 +152,8 @@
 
         <ContentView
             IsVisible="False"
-            Content="{view:SchedulePage}">
+            BindingContext="{Binding .}"
+            Content="{controls:SchedulePage}">
             <ContentView.Triggers>
                 <DataTrigger
                     TargetType="ContentView"

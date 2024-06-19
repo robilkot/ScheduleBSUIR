@@ -16,7 +16,7 @@
     </ContentView.Resources>
 
     <Grid
-        ColumnSpacing="15"
+        ColumnSpacing="10"
         ColumnDefinitions="auto,auto">
         <Label
             Grid.Column="0"
@@ -26,6 +26,8 @@
         <Label
             Grid.Column="1"
             VerticalOptions="Center"
+            LineBreakMode="WordWrap"
+            WidthRequest="220"
             Style="{StaticResource LabelBodySecondaryStyle}"
             Text="{Binding Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
     </Grid>
