@@ -15,12 +15,13 @@ namespace ScheduleBSUIR.Services
         {
             OpenLog();
         }
-        public void LogInfo(object? message)
+        public void LogInfo(object? message, bool displayCaller = true)
         {
-            var className = new StackTrace().GetFrame(2)?.GetMethod()?.ReflectedType!.Name;
-            //var methodName = new StackTrace().GetFrame(2)?.GetMethod()?.Name;
-
-            string log = $"[{className}] {message}";
+            var caller = displayCaller ?
+                new StackTrace().GetFrame(2)?.GetMethod()?.ReflectedType!.Name
+                : "info";
+            
+            string log = $"[{caller}] {message}";
 
             _localLog += log += '\n';
 
@@ -31,9 +32,9 @@ namespace ScheduleBSUIR.Services
             }
         }
 
-        public void LogError(object? message)
+        public void LogError(object? message, bool displayCaller = true)
         {
-            LogInfo(message);
+            LogInfo(message, displayCaller);
         }
 
         public string GetLocalLog() => _localLog;
@@ -56,7 +57,7 @@ namespace ScheduleBSUIR.Services
             }
             catch (Exception ex)
             {
-                LogError($"Error saving log: {ex.Message}");
+                LogError($"Error saving log: {ex.Message}", displayCaller: false);
             }
         }
         private void OpenLog()
@@ -74,7 +75,7 @@ namespace ScheduleBSUIR.Services
             }
             catch (Exception ex)
             {
-                LogError($"Error opening log: {ex.Message}");
+                LogError($"Error opening log: {ex.Message}", displayCaller: false);
             }
         }
     }

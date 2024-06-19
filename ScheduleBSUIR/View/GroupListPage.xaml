@@ -37,14 +37,15 @@
                     <Border
                         Grid.Row="1"
                         Background="{StaticResource DarkControlBackground}"
-                        Padding="5,0">
+                        Padding="10,0">
                         <Grid
                             ColumnSpacing="5"
                             ColumnDefinitions="auto,*">
                             <Image
                                 Grid.Column="0"
                                 WidthRequest="20"
-                                Source="search"/>
+                                Opacity="0.5"
+                                Source="dark_search"/>
                             <Entry
                                 Grid.Column="1"
                                 Keyboard="Plain"
@@ -101,7 +102,8 @@
                             <Image
                                 Grid.Column="1"
                                 HeightRequest="16"
-                                Source="arrow_right"/>
+                                Opacity="0.5"
+                                Source="dark_arrow_right"/>
                         </Grid>
 
                         <Border.GestureRecognizers>

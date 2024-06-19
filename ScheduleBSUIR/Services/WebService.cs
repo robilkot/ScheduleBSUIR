@@ -75,11 +75,11 @@ namespace ScheduleBSUIR.Services
             }
             catch (TimeoutException timeoutException)
             {
-                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} timed out: {timeoutException.Message}");
+                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} timed out: {timeoutException.Message}", displayCaller: false);
             }
             catch (Exception ex)
             {
-                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}");
+                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}", displayCaller: false);
             }
 
             return result;

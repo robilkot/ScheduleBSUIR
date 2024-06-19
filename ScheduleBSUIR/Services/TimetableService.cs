@@ -14,7 +14,7 @@ namespace ScheduleBSUIR.Services
         {
             var lastUpdateResponse = await _webService.GetTimetableLastUpdateAsync(id, cancellationToken);
 
-            _loggingService.LogInfo($"Timetable for {id} last changed at {lastUpdateResponse?.LastUpdateDate}");
+            _loggingService.LogInfo($"Timetable for {id} last changed at {lastUpdateResponse?.LastUpdateDate}", displayCaller: false);
 
             var cachedTimetable = _dbService.Get<Timetable>(id.ToString());
 
@@ -24,13 +24,13 @@ namespace ScheduleBSUIR.Services
             if (cachedTimetable is not null
                 && lastUpdateResponse?.LastUpdateDate <= cachedTimetable.UpdatedAt)
             {
-                _loggingService.LogInfo($"Cached timetable found for {id}");
+                _loggingService.LogInfo($"Cached timetable found for {id}", displayCaller: false);
                 timetable = cachedTimetable;
             }
             // Else obtain from api
             else
             {
-                _loggingService.LogInfo($"Cached timetable NOT found for {id}");
+                _loggingService.LogInfo($"Cached timetable NOT found for {id}", displayCaller: false);
                 timetable = await _webService.GetTimetableAsync(id, cancellationToken);
 
                 if (timetable is null)
@@ -46,9 +46,22 @@ namespace ScheduleBSUIR.Services
             timetable.AccessedAt = _dateTimeProvider.Now;
 
             _dbService.AddOrUpdate(timetable);
-            _loggingService.LogInfo($"Updated DB timetable for {id}");
+            _loggingService.LogInfo($"Updated DB timetable for {id}", displayCaller: false);
 
             return timetable;
+        }
+
+        public async Task AddToFavorites(Timetable timetable)
+        {
+            timetable.Favorited = true;
+
+            // todo: save to db
+        }
+        public async Task RemoveFromFavorites(Timetable timetable)
+        {
+            timetable.Favorited = false;
+
+            // todo: save to db
         }
     }
 }

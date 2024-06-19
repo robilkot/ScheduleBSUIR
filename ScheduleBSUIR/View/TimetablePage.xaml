@@ -25,6 +25,10 @@
             <convertersCommon:ValueToBoolConverter
                 x:Key="ExamsTabSelected"
                 TrueValue="{x:Static constants:TimetableTabs.Exams}"/>
+            <convertersCommon:BoolToValueConverter
+                x:Key="BookmarkSelected"
+                TrueValue="dark_bookmark_active"
+                FalseValue="dark_bookmark_inactive"/>
             <converters:TimetableToHeaderTextConverter
                 x:Key="TimetableToHeaderTextConverter"/>
         </ResourceDictionary>
@@ -50,10 +54,12 @@
                         Offset="1.0" />
                 </LinearGradientBrush>
             </Grid.Background>
-            
+
             <ImageButton
                 Grid.Column="0"
-                Source="arrow_left"
+                Padding="10"
+                Source="dark_arrow_left"
+                Command="{Binding NavigateBackCommand}"
                 WidthRequest="40"
                 HeightRequest="40"/>
 
@@ -76,7 +82,10 @@
 
             <ImageButton
                 Grid.Column="2"
-                Source="bookmark_inactive"
+                Padding="10"
+                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"
+                Command="{Binding ToogleBookmarkCommand}"
                 WidthRequest="40"
                 HeightRequest="40"/>
         </Grid>

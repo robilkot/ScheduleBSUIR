@@ -23,7 +23,7 @@ namespace ScheduleBSUIR.Services
             }
             catch (Exception ex)
             {
-                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}");
+                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
             }
 #endif
 

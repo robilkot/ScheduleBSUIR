@@ -16,6 +16,9 @@ namespace ScheduleBSUIR.Viewmodels
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
 
         [ObservableProperty]
+        private bool _favorited = false;
+
+        [ObservableProperty]
         private Timetable? _timetable;
 
         [ObservableProperty]
@@ -37,22 +40,54 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsBusy = true;
 
-            _loggingService.LogInfo($"getting timetable with id {id}");
+            _loggingService.LogInfo($"Getting timetable with id {id}", displayCaller: false);
 
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
 
+                Favorited = Timetable.Favorited;
+
                 Exams = Timetable.Exams;
             }
-            catch
+            catch (Exception ex)
             {
-                // todo: log
+                _loggingService.LogError($"GetTimetable threw: {ex.Message}", displayCaller: false);
             }
             finally
             {
                 IsBusy = false;
             }
+        }
+
+        [RelayCommand]
+        public async Task NavigateBack()
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+
+        [RelayCommand]
+        public async Task ToogleBookmark()
+        {
+            if(Timetable is null)
+                return;
+
+            if(Favorited)
+            {
+                await _timetableService.RemoveFromFavorites(Timetable);
+
+                Vibration.Default.Vibrate(80f);
+            } 
+            else
+            {
+                await _timetableService.AddToFavorites(Timetable);
+
+                Vibration.Default.Vibrate(80f);
+                await Task.Delay(150);
+                Vibration.Default.Vibrate(50f);
+            }
+
+            Favorited = Timetable.Favorited;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
