@@ -1,14 +1,15 @@
 ﻿using System.Globalization;
 
-namespace ScheduleBSUIR.Helpers.Converters
+namespace ScheduleBSUIR.Helpers.Converters.Common
 {
-    class ValueToBoolConverter : IValueConverter
+    class BoolToValueConverter : IValueConverter
     {
         public object? TrueValue { get; set; }
+        public object? FalseValue { get; set; }
 
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            return value?.Equals(TrueValue) ?? false;
+            return (bool)value! ? TrueValue : FalseValue;
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ScheduleBSUIR"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:convertersCommon="clr-namespace:ScheduleBSUIR.Helpers.Converters.Common"
              x:Class="ScheduleBSUIR.App">
     <Application.Resources>
         <ResourceDictionary>
-            <converters:IsNotNullOrEmptyConverter
+            <convertersCommon:IsNotNullOrEmptyConverter
                 x:Key="IsNotNullOrEmptyConverter"/>
-            <converters:IsNullOrEmptyConverter
+            <convertersCommon:IsNullOrEmptyConverter
                 x:Key="IsNullOrEmptyConverter"/>
 
             <ResourceDictionary.MergedDictionaries>

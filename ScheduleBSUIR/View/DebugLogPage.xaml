@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+             x:Class="ScheduleBSUIR.View.DebugLogPage"
+             x:DataType="vm:DebugLogPageViewModel"
+             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+             mtk:LeakMonitorBehavior.Cascade="True"
+             mtk:TearDownBehavior.Cascade="True"
+             Shell.NavBarIsVisible="False"
+             Background="Black">
+    <RefreshView
+        IsRefreshing="{Binding IsRefreshing}"
+        Command="{Binding RefreshCommand}">
+        <Grid
+            Padding="10,5"
+            RowDefinitions="*, 70">
+            
+            <ScrollView Grid.Row="0">
+                <Label 
+                    Text="{Binding Log}"
+                    FontSize="14"
+                    TextColor="White">
+                </Label>
+            </ScrollView>
+            <Grid
+                Grid.Row="1"
+                HeightRequest="70"
+                ColumnSpacing="5"
+                ColumnDefinitions="5*,2*">
+                <Button 
+                    Grid.Column="0"
+                    Text="Copy log"
+                    HeightRequest="50"
+                    TextColor="White"
+                    Background="DimGray"
+                    Clicked="CopyButton_Clicked"/>
+                <Button 
+                    Grid.Column="1"
+                    Text="Clear log"
+                    HeightRequest="50"
+                    TextColor="White"
+                    Background="#992222"
+                    Clicked="ClearButton_Clicked"/>
+            </Grid>
+        </Grid>
+    </RefreshView>
+</ContentPage>

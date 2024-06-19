@@ -4,5 +4,7 @@
     {
         void LogError(object? message);
         void LogInfo(object? message);
+        string GetLocalLog();
+        void ClearLocalLog();
     }
 }

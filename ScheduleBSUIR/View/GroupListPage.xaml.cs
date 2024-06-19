@@ -7,10 +7,10 @@ public partial class GroupListPage : ContentPage
 	private readonly GroupListPageViewModel _viewmodel;
     public GroupListPage(GroupListPageViewModel viewModel)
 	{
-		InitializeComponent();
-
 		BindingContext = viewModel;
 		_viewmodel = viewModel;
+
+		InitializeComponent();
 	}
 
     private void SearchEntry_textChanged(object sender, TextChangedEventArgs e)

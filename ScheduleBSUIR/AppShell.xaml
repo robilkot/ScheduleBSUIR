@@ -4,6 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:view="clr-namespace:ScheduleBSUIR.View"
+    xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+    mtk:LeakMonitorBehavior.Cascade="True"
+    mtk:TearDownBehavior.Cascade="True"
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
@@ -12,10 +15,11 @@
             <ShellContent
                 ContentTemplate="{DataTemplate view:GroupListPage}"/>
         </Tab>
-        <!--<Tab
-            Title="Exams">
+        <Tab
+            IsVisible="True"
+            Title="Debug">
             <ShellContent
-                ContentTemplate="{DataTemplate view:ExamsPage}"/>
-        </Tab>-->
+                ContentTemplate="{DataTemplate view:DebugLogPage}"/>
+        </Tab>
     </TabBar>
 </Shell>

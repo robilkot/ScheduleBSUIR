@@ -1,16 +1,16 @@
 ﻿using System.Globalization;
 
-namespace ScheduleBSUIR.Helpers.Converters
+namespace ScheduleBSUIR.Helpers.Converters.Common
 {
-    class IsNullOrEmptyConverter : IValueConverter
+    class IsNotNullOrEmptyConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is null)
-                return true;
+                return false;
             if (value is IEnumerable<object> enumerableValue)
-                return !enumerableValue.Any();
-            return string.IsNullOrWhiteSpace(value?.ToString());
+                return enumerableValue.Any();
+            return !string.IsNullOrWhiteSpace(value?.ToString());
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

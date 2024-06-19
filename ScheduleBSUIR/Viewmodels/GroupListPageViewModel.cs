@@ -34,7 +34,7 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public void SelectGroup(StudentGroupHeader selectedGroup)
+        public async Task SelectGroup(StudentGroupHeader selectedGroup)
         {
             if (IsBusy)
                 return;
@@ -51,7 +51,7 @@ namespace ScheduleBSUIR.Viewmodels
                 { NavigationKeys.TimetableHeader, selectedGroup.Name },
             };
 
-            Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
+            await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
 
             IsBusy = false;
         }
