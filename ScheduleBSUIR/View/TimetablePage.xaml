@@ -41,7 +41,7 @@
             Padding="15,0"
             VerticalOptions="Start"
             ColumnDefinitions="auto,*,auto">
-            
+
             <Grid.Background>
                 <LinearGradientBrush
                     StartPoint="0,0"
@@ -55,13 +55,18 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <ImageButton
+            <Grid
                 Grid.Column="0"
                 Padding="10"
-                Source="dark_arrow_left"
-                Command="{Binding NavigateBackCommand}"
                 WidthRequest="40"
-                HeightRequest="40"/>
+                HeightRequest="40">
+                <Image
+                    Source="dark_arrow_left"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding NavigateBackCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <Border
                 Grid.Column="1"
@@ -80,14 +85,19 @@
                     Text="{Binding SelectedTab}"/>
             </Border>
 
-            <ImageButton
+            <Grid
+                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="2"
                 Padding="10"
-                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"
-                Command="{Binding ToogleBookmarkCommand}"
                 WidthRequest="40"
-                HeightRequest="40"/>
+                HeightRequest="40">
+                <Image
+                    Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding ToogleBookmarkCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
         </Grid>
 
         <!-- Skeleton of timetable -->
@@ -144,36 +154,34 @@
 
         </dx:DXCollectionView>
 
-        <ContentView
+        <controls:ExamsPage
             IsVisible="False"
-            BindingContext="{Binding .}"
-            Content="{controls:ExamsPage}">
-            <ContentView.Triggers>
+            BindingContext="{Binding .}">
+            <controls:ExamsPage.Triggers>
                 <DataTrigger
-                    TargetType="ContentView"
+                    TargetType="controls:ExamsPage"
                     Binding="{Binding SelectedTab, Converter={StaticResource ExamsTabSelected}}"
                     Value="True">
                     <Setter
                         Property="IsVisible"
                         Value="True"/>
                 </DataTrigger>
-            </ContentView.Triggers>
-        </ContentView>
+            </controls:ExamsPage.Triggers>
+        </controls:ExamsPage>
 
-        <ContentView
+        <controls:SchedulePage
             IsVisible="False"
-            BindingContext="{Binding .}"
-            Content="{controls:SchedulePage}">
-            <ContentView.Triggers>
+            BindingContext="{Binding .}">
+            <controls:SchedulePage.Triggers>
                 <DataTrigger
-                    TargetType="ContentView"
+                    TargetType="controls:SchedulePage"
                     Binding="{Binding SelectedTab, Converter={StaticResource ScheduleTabSelected}}"
                     Value="True">
                     <Setter
                         Property="IsVisible"
                         Value="True"/>
                 </DataTrigger>
-            </ContentView.Triggers>
-        </ContentView>
+            </controls:SchedulePage.Triggers>
+        </controls:SchedulePage>
     </Grid>
 </ContentPage>

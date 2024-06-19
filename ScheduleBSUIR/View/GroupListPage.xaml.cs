@@ -1,3 +1,4 @@
+using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;

@@ -2,12 +2,15 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
-             xmlns:markupExtensions="clr-namespace:ScheduleBSUIR.Helpers.MarkupExtensions"
              x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
     <converters:ScheduleToColorConverter
         x:Key="ScheduleToColorConverter"/>
+
+    <converters:StringListToStringConverter
+        x:Key="StringListToStringConverter" />
 
     <DataTemplate
         x:Key="SkeletonLessonTemplate"
@@ -92,11 +95,11 @@
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyHeaderStyle}"
                         Text="{Binding Subject}">
-                        </Label>
+                    </Label>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}"
-                        Text="{Binding Auditories[0]}">
+                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}}">
                     </Label>
                 </Grid>
 
@@ -112,12 +115,14 @@
                             <Image
                                 VerticalOptions="Center"
                                 HeightRequest="50"
-                                Source="{Binding PhotoLink}"
                                 Aspect="AspectFill">
-                                
-                                <!--<Image.Source>
-                                    <markupExtensions:CachedImageSource Uri="{Binding PhotoLink}"/>
-                                </Image.Source>-->
+
+                                <Image.Source>
+                                    <UriImageSource
+                                        Uri="{Binding PhotoLink}"
+                                        CachingEnabled="True"
+                                        CacheValidity="10:00:00:00"/>
+                                </Image.Source>
 
                                 <Image.Clip>
                                     <EllipseGeometry
@@ -176,13 +181,13 @@
                     </Label>
                 </Grid>
 
-                <RoundRectangle
+                <Border
                     Grid.Column="1"
                     HeightRequest="30"
                     WidthRequest="5"
-                    CornerRadius="2.5"
+                    StrokeShape="RoundRectangle 2.5"
                     BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}}">
-                </RoundRectangle>
+                </Border>
 
                 <Label
                     Grid.Column="2"

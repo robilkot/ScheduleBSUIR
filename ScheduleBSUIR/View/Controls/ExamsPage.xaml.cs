@@ -1,4 +1,7 @@
 using CommunityToolkit.Mvvm.Messaging;
+using DevExpress.Maui.Controls;
+using DevExpress.Maui.Core.Internal;
+using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 
 namespace ScheduleBSUIR.View.Controls;
@@ -13,7 +16,7 @@ public partial class ExamsPage : ContentView
         {
             Dispatcher.Dispatch(() =>
             {
-                if(examsCollectionView is null)
+                if (examsCollectionView is null)
                     return;
 
                 // Decrement by two to make schedule visible
@@ -24,5 +27,28 @@ public partial class ExamsPage : ContentView
                 examsCollectionView.ScrollTo(handle);
             });
         });
+    }
+
+    private void examsCollectionView_SelectionChanged(object sender, DevExpress.Maui.CollectionView.CollectionViewSelectionChangedEventArgs e)
+    {
+        if (examsCollectionView.SelectedItem is null)
+        {
+            return;
+        }
+
+        sheetContent.BindingContext = (Schedule)examsCollectionView.SelectedItem;
+
+        examDetailSheet.State = BottomSheetState.HalfExpanded;
+        examDetailSheet.UpdateSizeToContent = true;
+
+        examsCollectionView.SelectedItem = null;
+    }
+
+    private void examDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
+    {
+        if (e.NewValue == BottomSheetState.Hidden)
+        {
+            sheetContent.BindingContext = null;
+        }
     }
 }

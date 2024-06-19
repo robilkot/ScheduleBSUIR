@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
@@ -9,7 +10,10 @@ using ScheduleBSUIR.Services;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
+    public partial class TimetablePageViewModel(
+        TimetableService timetableService,
+        ILoggingService loggingService,
+        IDateTimeProvider dateTimeProvider)
         : BaseViewModel(loggingService), IQueryAttributable
     {
         private readonly TimetableService _timetableService = timetableService;
@@ -26,7 +30,6 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private List<Schedule>? _exams;
-
 
         // This property exists to display group number/employee name before timetable is loaded
         [ObservableProperty]
@@ -47,6 +50,7 @@ namespace ScheduleBSUIR.Viewmodels
                 return foundSchedule is null ? null : Exams.IndexOf(foundSchedule);
             }
 
+            // todo
             if (SelectedTab == TimetableTabs.Schedule)
             {
                 //if (Exams is null)

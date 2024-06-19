@@ -18,6 +18,7 @@ namespace ScheduleBSUIR
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .UseDevExpress()
+                .UseDevExpressControls()
                 .UseDevExpressCollectionView()
                 .ConfigureFonts(fonts =>
                 {
@@ -28,16 +29,17 @@ namespace ScheduleBSUIR
 #if DEBUG
             builder.Logging.AddDebug();
 
-            //builder.UseLeakDetection(collectionTarget =>
-            //{
-            //    // This callback will run any time a leak is detected.
-            //    var logger = App.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
+            builder.UseLeakDetection(collectionTarget =>
+            {
+                //// This callback will run any time a leak is detected.
+                //var logger = App.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
 
-            //    logger?.LogInfo($"leaked {collectionTarget.Name}");
-            //});
+                //logger?.LogInfo($"leaked {collectionTarget.Name}");
+            });
 
-#endif
+#else
             builder.UseLeakDetection();
+#endif
 
             builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<TimetablePage>();

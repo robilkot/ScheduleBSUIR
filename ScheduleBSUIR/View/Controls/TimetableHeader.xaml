@@ -5,15 +5,6 @@
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              x:DataType="controls:TimetableHeader">
-    
-    <ContentView.Resources>
-        <ResourceDictionary>
-            <converters:TimetableToHeaderTextConverter
-                x:Key="TimetableToHeaderTextConverter"/>
-            <converters:TimetableToSubheaderTextConverter
-                x:Key="TimetableToSubheaderTextConverter"/>
-        </ResourceDictionary>
-    </ContentView.Resources>
 
     <Grid
         ColumnSpacing="10"
@@ -22,13 +13,13 @@
             Grid.Column="0"
             VerticalOptions="Center"
             Style="{StaticResource LabelHeaderStyle}"
-            Text="{Binding Timetable, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+            Text="{Binding ., Converter={converters:TimetableToHeaderTextConverter}}"/>
         <Label
             Grid.Column="1"
             VerticalOptions="Center"
             LineBreakMode="WordWrap"
             WidthRequest="220"
             Style="{StaticResource LabelBodySecondaryStyle}"
-            Text="{Binding Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
+            Text="{Binding ., Converter={converters:TimetableToSubheaderTextConverter}}"/>
     </Grid>
 </ContentView>
