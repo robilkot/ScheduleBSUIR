@@ -15,6 +15,7 @@
     <Grid
         Margin="15,0">
         <dx:DXCollectionView
+            x:Name="examsCollectionView"
             Grid.Row="1"
             IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
             ItemsSource="{Binding Exams}"

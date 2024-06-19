@@ -1,16 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService)
+    public partial class TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
         : BaseViewModel(loggingService), IQueryAttributable
     {
         private readonly TimetableService _timetableService = timetableService;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         [ObservableProperty]
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
@@ -28,6 +31,32 @@ namespace ScheduleBSUIR.Viewmodels
         // This property exists to display group number/employee name before timetable is loaded
         [ObservableProperty]
         private string _timetableHeader = string.Empty;
+
+        public int? GetNearestScheduleIndex()
+        {
+            if (Timetable is null)
+                return null;
+
+            if (SelectedTab == TimetableTabs.Exams)
+            {
+                if (Exams is null)
+                    return null;
+
+                var foundSchedule = Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+
+                return foundSchedule is null ? null : Exams.IndexOf(foundSchedule);
+            }
+
+            if (SelectedTab == TimetableTabs.Schedule)
+            {
+                //if (Exams is null)
+                //    return null;
+
+                //return Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+            }
+
+            return null;
+        }
 
         [RelayCommand]
         public async Task GetTimetable(TypedId? id)
@@ -69,15 +98,15 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task ToogleBookmark()
         {
-            if(Timetable is null)
+            if (Timetable is null)
                 return;
 
-            if(Favorited)
+            if (Favorited)
             {
                 await _timetableService.RemoveFromFavorites(Timetable);
 
                 Vibration.Default.Vibrate(80f);
-            } 
+            }
             else
             {
                 await _timetableService.AddToFavorites(Timetable);
@@ -99,7 +128,19 @@ namespace ScheduleBSUIR.Viewmodels
                 TimetableHeader = (string)timetableHeader;
 
                 // Exceptions must be handled inside of command
-                _ = GetTimetable((TypedId)id);
+                _ = Task.Run(async () =>
+                {
+                    await GetTimetable((TypedId)id);
+
+                    int? nearestScheduleIndex = GetNearestScheduleIndex();
+
+                    if (nearestScheduleIndex is not null)
+                    {
+                        ScrollToIndex message = new(nearestScheduleIndex.Value);
+
+                        WeakReferenceMessenger.Default.Send(message);
+                    }
+                });
             }
         }
     }
