@@ -43,7 +43,14 @@ namespace ScheduleBSUIR.Services
         {
             _localLog = string.Empty;
 
-            SaveLog();
+            try
+            {
+                File.Delete(LogFilePath);
+            }
+            catch (Exception ex)
+            {
+                LogError($"Error deleting log: {ex.Message}", displayCaller: false);
+            }
         }
 
         private void SaveLog()

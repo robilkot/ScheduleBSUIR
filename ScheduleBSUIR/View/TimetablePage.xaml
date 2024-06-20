@@ -82,7 +82,7 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     Style="{StaticResource LabelBodyPrimaryStyle}"
-                    Text="{Binding SelectedTab}"/>
+                    Text="{Binding Memory}"/>
             </Border>
 
             <Grid

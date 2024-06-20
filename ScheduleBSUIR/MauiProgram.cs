@@ -28,18 +28,16 @@ namespace ScheduleBSUIR
 
 #if DEBUG
             builder.Logging.AddDebug();
-
+#endif
             builder.UseLeakDetection(collectionTarget =>
             {
-                //// This callback will run any time a leak is detected.
-                //var logger = App.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
+                // This callback will run any time a leak is detected.
+                var logger = App.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
 
-                //logger?.LogInfo($"leaked {collectionTarget.Name}");
+                logger?.LogInfo($"Leaked {collectionTarget.Name}", displayCaller: false);
             });
-
-#else
-            builder.UseLeakDetection();
-#endif
+            
+            //builder.UseLeakDetection();
 
             builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<TimetablePage>();

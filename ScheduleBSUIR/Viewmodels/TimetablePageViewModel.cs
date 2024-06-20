@@ -31,6 +31,9 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private List<Schedule>? _exams;
 
+        [ObservableProperty]
+        private long _memory;
+
         // This property exists to display group number/employee name before timetable is loaded
         [ObservableProperty]
         private string _timetableHeader = string.Empty;
@@ -144,6 +147,8 @@ namespace ScheduleBSUIR.Viewmodels
 
                         WeakReferenceMessenger.Default.Send(message);
                     }
+
+                    Memory = GC.GetTotalMemory(true);
                 });
             }
         }

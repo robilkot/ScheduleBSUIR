@@ -14,8 +14,6 @@ namespace ScheduleBSUIR.Services
         {
             var lastUpdateResponse = await _webService.GetTimetableLastUpdateAsync(id, cancellationToken);
 
-            _loggingService.LogInfo($"Timetable for {id} last changed at {lastUpdateResponse?.LastUpdateDate.ToString("dd.MM.yyyy")}", displayCaller: false);
-
             var cachedTimetable = _dbService.Get<Timetable>(id.ToString());
 
             Timetable? timetable;
@@ -46,7 +44,6 @@ namespace ScheduleBSUIR.Services
             timetable.AccessedAt = _dateTimeProvider.Now;
 
             _dbService.AddOrUpdate(timetable);
-            _loggingService.LogInfo($"Updated DB timetable for {id}", displayCaller: false);
 
             return timetable;
         }

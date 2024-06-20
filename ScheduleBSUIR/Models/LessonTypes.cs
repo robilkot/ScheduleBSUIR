@@ -18,7 +18,7 @@ namespace ScheduleBSUIR.Models
                 new LessonType("УПз", "PracticeColor"),
                 new LessonType("ЛР", "LabColor"),
                 new LessonType("УЛР", "LabColor"),
-                new LessonType("Зачёт", "CreditColor"), // todo check if valid
+                new LessonType("Зачет", "CreditColor"),
                 new LessonType(UnknownTypeAbbreviation, "UnknownColor"), // todo check if valid
             ];
 
