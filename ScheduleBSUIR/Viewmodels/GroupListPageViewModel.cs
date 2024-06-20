@@ -38,7 +38,7 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public void Test()
         {
-            _dbService.GetAll<Timetable>();
+            _dbService.ClearDatabase();
         }
 
         [RelayCommand]

@@ -7,6 +7,7 @@ using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
+using System.Runtime.Versioning;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -26,17 +27,32 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _favorited = false;
 
         [ObservableProperty]
+        private bool _isRefreshing = false;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
         private Timetable? _timetable;
 
         [ObservableProperty]
         private List<Schedule>? _exams;
 
+        // DEBUG
         [ObservableProperty]
         private long _memory;
 
+        [ObservableProperty]
+        private TypedId _timetableId;
+
         // This property exists to display group number/employee name before timetable is loaded
         [ObservableProperty]
-        private string _timetableHeader = string.Empty;
+        private string _timetableHeader;
+
+        // Actually declared in BaseViewModel but we need NotifyPropertyChangedFor here
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
+        private bool _isBusy;
+
+        public bool IsSkeletonVisible => Timetable is null || IsBusy;
 
         public int? GetNearestScheduleIndex()
         {
@@ -91,7 +107,11 @@ namespace ScheduleBSUIR.Viewmodels
                 Timetable = null;
                 Exams = null;
 
+                // let skeleton appear before popup. maybe will become obosolete
+                await Task.Delay(100);
+
                 // todo: error popup?
+                await Shell.Current.DisplayAlert("Error", "Couldn't get timetable", "OK");
 
                 _loggingService.LogError($"GetTimetable threw: {ex.Message}", displayCaller: false);
             }
@@ -131,30 +151,35 @@ namespace ScheduleBSUIR.Viewmodels
             Favorited = Timetable.Favorited;
         }
 
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            await GetTimetable(TimetableId);
+
+            IsRefreshing = false;
+
+            // DEBUG
+            Memory = GC.GetTotalMemory(true);
+
+            int? nearestScheduleIndex = GetNearestScheduleIndex();
+
+            if (nearestScheduleIndex is not null)
+            {
+                ScrollToIndex message = new(nearestScheduleIndex.Value);
+
+                WeakReferenceMessenger.Default.Send(message);
+            }
+        }
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
-                && query.TryGetValue(NavigationKeys.TimetableHeader, out var timetableHeader))
+                && query.TryGetValue(NavigationKeys.TimetableHeader, out var header))
             {
-                // todo: use TimetableToHeaderTextConverter to unify header formatting?
-                TimetableHeader = (string)timetableHeader;
+                TimetableId = (TypedId)id;
+                TimetableHeader = (string)header;
 
-                // Exceptions must be handled inside of command
-                _ = Task.Run(async () =>
-                {
-                    await GetTimetable((TypedId)id);
-
-                    int? nearestScheduleIndex = GetNearestScheduleIndex();
-
-                    if (nearestScheduleIndex is not null)
-                    {
-                        ScrollToIndex message = new(nearestScheduleIndex.Value);
-
-                        WeakReferenceMessenger.Default.Send(message);
-                    }
-
-                    Memory = GC.GetTotalMemory(true);
-                });
+                RefreshCommand.Execute(null);
             }
         }
     }

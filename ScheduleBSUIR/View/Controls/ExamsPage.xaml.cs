@@ -14,17 +14,18 @@ public partial class ExamsPage : ContentView
 
         WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
         {
-            Dispatcher.Dispatch(() =>
+            // todo: does NOT scrolling properly
+            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
             {
                 if (examsCollectionView is null)
                     return;
 
                 // Decrement by two to make schedule visible
-                var indexToScrollTo = Math.Clamp(message.Value - 2, 0, int.MaxValue);
+                //var indexToScrollTo = Math.Clamp(message.Value - 2, 0, int.MaxValue);
 
-                var handle = examsCollectionView.GetItemHandle(indexToScrollTo);
+                var handle = examsCollectionView.GetItemHandle(message.Value);
 
-                examsCollectionView.ScrollTo(handle);
+                examsCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
             });
         });
     }

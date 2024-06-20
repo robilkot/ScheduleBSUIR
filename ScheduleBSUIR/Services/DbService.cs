@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using ScheduleBSUIR.Interfaces;
+using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.DB;
 using System.Diagnostics;
 
@@ -17,20 +18,25 @@ namespace ScheduleBSUIR.Services
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
-//#if DEBUG
-//            try
-//            {
-//                File.Delete(databasePath);
-//            }
-//            catch (Exception ex)
-//            {
-//                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
-//            }
-//#endif
+            //#if DEBUG
+            //            try
+            //            {
+            //                File.Delete(databasePath);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
+            //            }
+            //#endif
 
             _database = new LiteDatabase(databasePath);
         }
 
+        public void ClearDatabase()
+        {
+            RemoveAll<Timetable>();
+            //RemoveAll<StudentGroupHeader>();
+        }
         public void AddOrUpdate<T>(T newObject) where T : ICacheable
         {
             var collection = _database.GetCollection<T>();

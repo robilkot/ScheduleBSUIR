@@ -103,7 +103,10 @@
         <!-- Skeleton of timetable -->
         <dx:DXCollectionView
             ItemSpacing="5"
-            IsVisible="{Binding IsBusy}"
+            IsVisible="{Binding IsSkeletonVisible}"
+            IsPullToRefreshEnabled="True"
+            IsRefreshing="{Binding IsRefreshing}"
+            PullToRefreshCommand="{Binding RefreshCommand}"
             Margin="15,0">
             <dx:DXCollectionView.ItemsSource>
                 <x:Array Type="{x:Type x:Int16}">
@@ -126,7 +129,7 @@
                         Grid.Column="0"
                         VerticalOptions="Center"
                         Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding TimetableHeader, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+                        Text="{Binding TimetableHeader}"/>
                     <Border
                         Grid.Row="1"
                         WidthRequest="240"
@@ -151,7 +154,6 @@
             <dx:DXCollectionView.ItemTemplate>
                 <StaticResource Key="SkeletonLessonTemplate"/>
             </dx:DXCollectionView.ItemTemplate>
-
         </dx:DXCollectionView>
 
         <controls:ExamsPage

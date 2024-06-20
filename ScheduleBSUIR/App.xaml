@@ -11,6 +11,8 @@
                 x:Key="IsNotNullOrEmptyConverter"/>
             <convertersCommon:IsNullOrEmptyConverter
                 x:Key="IsNullOrEmptyConverter"/>
+            <convertersCommon:IsEmptyConverter
+                x:Key="IsEmptyConverter"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
