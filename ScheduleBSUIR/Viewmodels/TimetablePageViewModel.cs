@@ -88,6 +88,11 @@ namespace ScheduleBSUIR.Viewmodels
             }
             catch (Exception ex)
             {
+                Timetable = null;
+                Exams = null;
+
+                // todo: error popup?
+
                 _loggingService.LogError($"GetTimetable threw: {ex.Message}", displayCaller: false);
             }
             finally

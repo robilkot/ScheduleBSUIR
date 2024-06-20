@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models.DB;
+using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
@@ -16,16 +17,16 @@ namespace ScheduleBSUIR.Services
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
-#if DEBUG
-            try
-            {
-                File.Delete(databasePath);
-            }
-            catch (Exception ex)
-            {
-                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
-            }
-#endif
+//#if DEBUG
+//            try
+//            {
+//                File.Delete(databasePath);
+//            }
+//            catch (Exception ex)
+//            {
+//                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
+//            }
+//#endif
 
             _database = new LiteDatabase(databasePath);
         }
@@ -46,7 +47,7 @@ namespace ScheduleBSUIR.Services
             _database.Commit();
         }
 
-        public void AddOrUpdate<T>(List<T> newObjects) where T : ICacheable
+        public void AddOrUpdate<T>(IEnumerable<T> newObjects) where T : ICacheable
         {
             foreach (var newObject in newObjects)
             {
@@ -63,9 +64,15 @@ namespace ScheduleBSUIR.Services
 
         public List<T> GetAll<T>() where T : ICacheable
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             var collection = _database.GetCollection<T>();
 
-            return collection.FindAll().ToList();
+            var result = collection.FindAll().ToList();
+
+            _loggingService.LogInfo($"GetAll<T> worked in {stopwatch.Elapsed}");
+
+            return result;
         }
 
         public void Remove<T>(T obj) where T : ICacheable
@@ -82,7 +89,7 @@ namespace ScheduleBSUIR.Services
             _database.Commit();
         }
 
-        public void Remove<T>(List<T> objects) where T : ICacheable
+        public void Remove<T>(IEnumerable<T> objects) where T : ICacheable
         {
             var collection = _database.GetCollection<T>();
 

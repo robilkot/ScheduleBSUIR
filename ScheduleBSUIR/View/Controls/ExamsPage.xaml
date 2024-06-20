@@ -269,8 +269,9 @@
         </dx:BottomSheet>
 
         <!--todo: No empty view on dxcv?-->
+        <!--todo: show skeleton on error?-->
         <AbsoluteLayout
-            IsVisible="{Binding Exams, Converter={StaticResource IsNullOrEmptyConverter}}">
+            IsVisible="{Binding Timetable, Converter={StaticResource IsNullOrEmptyConverter}}">
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
