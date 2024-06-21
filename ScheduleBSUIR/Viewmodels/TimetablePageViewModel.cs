@@ -7,6 +7,7 @@ using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
+using System.Diagnostics;
 using System.Runtime.Versioning;
 
 namespace ScheduleBSUIR.Viewmodels
@@ -21,65 +22,54 @@ namespace ScheduleBSUIR.Viewmodels
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         [ObservableProperty]
-        private TimetableTabs _selectedTab = TimetableTabs.Exams;
-
-        [ObservableProperty]
-        private bool _favorited = false;
-
-        [ObservableProperty]
         private bool _isRefreshing = false;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
-        private Timetable? _timetable;
-
-        [ObservableProperty]
-        private List<Schedule>? _exams;
-
-        // DEBUG
-        [ObservableProperty]
-        private long _memory;
-
-        [ObservableProperty]
-        private TypedId _timetableId;
-
-        // This property exists to display group number/employee name before timetable is loaded
-        [ObservableProperty]
-        private string _timetableHeader;
+        private bool _isTimetableModePopupOpen = false;
 
         // Actually declared in BaseViewModel but we need NotifyPropertyChangedFor here
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
         private bool _isBusy;
 
+        [ObservableProperty]
+        private TimetableTabs _selectedTab = TimetableTabs.Exams;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Exams))]
+        private SubgroupType _selectedMode = SubgroupType.All;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Exams))]
+        [NotifyPropertyChangedFor(nameof(Favorited))]
+        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
+        private Timetable? _timetable;
+
+        public bool Favorited => Timetable?.Favorited ?? false;
         public bool IsSkeletonVisible => Timetable is null || IsBusy;
+        public List<Schedule>? Exams => SelectedMode switch 
+        { 
+            SubgroupType.All => Timetable?.Exams,
 
-        public int? GetNearestScheduleIndex()
-        {
-            if (Timetable is null)
-                return null;
+            SubgroupType.FirstSubgroup => Timetable?.Exams?
+                .Where(schedule => schedule is { NumSubgroup: SubgroupType.All or SubgroupType.FirstSubgroup } )
+                .ToList(),
 
-            if (SelectedTab == TimetableTabs.Exams)
-            {
-                if (Exams is null)
-                    return null;
+            SubgroupType.SecondSubgroup => Timetable?.Exams?
+                .Where(schedule => schedule is { NumSubgroup: SubgroupType.All or SubgroupType.SecondSubgroup })
+                .ToList(),
 
-                var foundSchedule = Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+            _ => throw new UnreachableException(),
+        };
 
-                return foundSchedule is null ? null : Exams.IndexOf(foundSchedule);
-            }
 
-            // todo
-            if (SelectedTab == TimetableTabs.Schedule)
-            {
-                //if (Exams is null)
-                //    return null;
+        [ObservableProperty]
+        private TypedId? _timetableId;
 
-                //return Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
-            }
+        // This property exists to display group number/employee name before timetable is loaded
+        [ObservableProperty]
+        private string _timetableHeader = string.Empty;
 
-            return null;
-        }
 
         [RelayCommand]
         public async Task GetTimetable(TypedId? id)
@@ -97,15 +87,10 @@ namespace ScheduleBSUIR.Viewmodels
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
-
-                Favorited = Timetable.Favorited;
-
-                Exams = Timetable.Exams;
             }
             catch (Exception ex)
             {
                 Timetable = null;
-                Exams = null;
 
                 // let skeleton appear before popup. maybe will become obosolete
                 await Task.Delay(100);
@@ -148,7 +133,21 @@ namespace ScheduleBSUIR.Viewmodels
                 Vibration.Default.Vibrate(50f);
             }
 
-            Favorited = Timetable.Favorited;
+            OnPropertyChanged(nameof(Favorited));
+        }
+
+        [RelayCommand]
+        public void ToggleMode(SubgroupType mode)
+        {
+            SelectedMode = mode;
+
+            IsTimetableModePopupOpen = false;
+        }
+
+        [RelayCommand]
+        public void ToggleTimetableModePopup()
+        {
+            IsTimetableModePopupOpen = !IsTimetableModePopupOpen;
         }
 
         [RelayCommand]
@@ -157,9 +156,6 @@ namespace ScheduleBSUIR.Viewmodels
             await GetTimetable(TimetableId);
 
             IsRefreshing = false;
-
-            // DEBUG
-            Memory = GC.GetTotalMemory(true);
 
             int? nearestScheduleIndex = GetNearestScheduleIndex();
 
@@ -181,6 +177,32 @@ namespace ScheduleBSUIR.Viewmodels
 
                 RefreshCommand.Execute(null);
             }
+        }
+        private int? GetNearestScheduleIndex()
+        {
+            if (Timetable is null)
+                return null;
+
+            if (SelectedTab == TimetableTabs.Exams)
+            {
+                if (Exams is null)
+                    return null;
+
+                var foundSchedule = Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+
+                return foundSchedule is null ? null : Exams.IndexOf(foundSchedule);
+            }
+
+            // todo
+            if (SelectedTab == TimetableTabs.Schedule)
+            {
+                //if (Exams is null)
+                //    return null;
+
+                //return Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+            }
+
+            return null;
         }
     }
 }

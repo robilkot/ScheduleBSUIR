@@ -1,5 +1,4 @@
-﻿using LiteDB;
-using System.Text.Json.Serialization;
+﻿using ScheduleBSUIR.Helpers.Constants;
 
 namespace ScheduleBSUIR.Models
 {
@@ -7,7 +6,7 @@ namespace ScheduleBSUIR.Models
     {
         public required List<int> WeekNumber { get; set; }
         public required List<StudentGroup> StudentGroups { get; set; }
-        public int NumSubgroup { get; set; }
+        public SubgroupType NumSubgroup { get; set; }
         public List<string>? Auditories { get; set; }
         public required DateTime StartLessonTime { get; set; }
         public required DateTime EndLessonTime { get; set; }

@@ -30,6 +30,13 @@ namespace ScheduleBSUIR.Services
             }
             else 
             {
+                bool cachedTimetableIsFavorite = false;
+
+                if(cachedTimetable is not null)
+                {
+                    cachedTimetableIsFavorite = cachedTimetable.Favorited;
+                }
+
                 var lastUpdateResponse = await _webService.GetTimetableLastUpdateAsync(id, cancellationToken);
 
                 // If timetable is not yet cached and NOT expired
@@ -47,7 +54,7 @@ namespace ScheduleBSUIR.Services
 
                     if (timetable is null)
                     {
-                        throw new ArgumentException("Couldn't obtain timetable with given id from web service", nameof(id));
+                        throw new ArgumentException($"Couldn't obtain timetable for {id} from web service");
                     }
 
                     // Update property for ICacheable interface
@@ -56,6 +63,9 @@ namespace ScheduleBSUIR.Services
 
                 // Update property for ICacheable interface
                 timetable.AccessedAt = _dateTimeProvider.Now;
+
+                // If we obtained timetable from web api, make sure favorited flag remains from locally stored timetable
+                timetable.Favorited = cachedTimetableIsFavorite;
 
                 _dbService.AddOrUpdate(timetable);
             }

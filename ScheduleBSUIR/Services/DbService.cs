@@ -18,17 +18,6 @@ namespace ScheduleBSUIR.Services
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
-            //#if DEBUG
-            //            try
-            //            {
-            //                File.Delete(databasePath);
-            //            }
-            //            catch (Exception ex)
-            //            {
-            //                _loggingService.LogError($"File {databasePath} was NOT deleted: {ex.Message}", displayCaller: false);
-            //            }
-            //#endif
-
             _database = new LiteDatabase(databasePath);
         }
 

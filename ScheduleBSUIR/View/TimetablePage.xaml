@@ -12,6 +12,7 @@
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              mtk:LeakMonitorBehavior.Cascade="True"
              mtk:TearDownBehavior.Cascade="True"
              Shell.NavBarIsVisible="False"
@@ -31,16 +32,20 @@
                 FalseValue="dark_bookmark_inactive"/>
             <converters:TimetableToHeaderTextConverter
                 x:Key="TimetableToHeaderTextConverter"/>
+            <toolkit:EnumToIntConverter 
+                x:Key="EnumToIntConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid>
         <!-- Navbar -->
         <Grid
+            x:Name="navBar"
             ZIndex="1"
             Padding="15,0"
             VerticalOptions="Start"
-            ColumnDefinitions="auto,*,auto">
+            ColumnSpacing="10"
+            ColumnDefinitions="auto,*,auto,auto">
 
             <Grid.Background>
                 <LinearGradientBrush
@@ -82,12 +87,56 @@
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     Style="{StaticResource LabelBodyPrimaryStyle}"
-                    Text="{Binding Memory}"/>
+                    Text="{Binding SelectedTab}"/>
             </Border>
 
             <Grid
-                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="2"
+                Padding="10"
+                WidthRequest="40"
+                HeightRequest="40">
+                <Grid
+                    ColumnDefinitions="auto,auto">
+                    <Label
+                        Grid.Column="0"
+                        IsVisible="True"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding SelectedMode, Converter={StaticResource EnumToIntConverter}}">
+                        <Label.Triggers>
+                            <DataTrigger
+                                TargetType="Label"
+                                Binding="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"
+                                Value="True">
+                                <Setter
+                                    Property="IsVisible"
+                                    Value="False"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Image
+                        Grid.Column="1"
+                        Source="dark_user">
+                        <Image.Triggers>
+                            <DataTrigger
+                                TargetType="Image"
+                                Binding="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"
+                                Value="True">
+                                <Setter
+                                    Property="Source"
+                                    Value="dark_users"/>
+                            </DataTrigger>
+                        </Image.Triggers>
+                    </Image>
+                </Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding ToggleTimetableModePopupCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <Grid
+                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                Grid.Column="3"
                 Padding="10"
                 WidthRequest="40"
                 HeightRequest="40">
@@ -98,6 +147,96 @@
                         Command="{Binding ToogleBookmarkCommand}"/>
                 </Grid.GestureRecognizers>
             </Grid>
+            
+            <dx:DXPopup
+                PlacementTarget="{x:Reference navBar}"
+                IsOpen="{Binding IsTimetableModePopupOpen}">
+                <dx:DXPopup.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Grid">
+                            <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
+                            <Setter Property="ColumnSpacing" Value="15"/>
+                            <Setter Property="HeightRequest" Value="36"/>
+                        </Style>
+                    </ResourceDictionary>
+                </dx:DXPopup.Resources>
+            
+                <Border
+                    Padding="20,10"
+                    BackgroundColor="{StaticResource DarkControlBackground}">
+                    <VerticalStackLayout
+                        Spacing="10">
+                        <VerticalStackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Image">
+                                    <Setter Property="WidthRequest" Value="20"/>
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Style>
+                            
+                                <Style TargetType="Label">
+                                    <Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>
+                                    <Setter Property="VerticalOptions" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </VerticalStackLayout.Resources>
+                    
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_user"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="Подгруппа 1"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.FirstSubgroup}}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ToggleModeCommand}"
+                                    CommandParameter="{x:Static constants:SubgroupType.FirstSubgroup}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_user"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="Подгруппа 2"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.SecondSubgroup}}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ToggleModeCommand}"
+                                    CommandParameter="{x:Static constants:SubgroupType.SecondSubgroup}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_users"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="Вся группа"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ToggleModeCommand}"
+                                    CommandParameter="{x:Static constants:SubgroupType.All}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+            </dx:DXPopup>
         </Grid>
 
         <!-- Skeleton of timetable -->
