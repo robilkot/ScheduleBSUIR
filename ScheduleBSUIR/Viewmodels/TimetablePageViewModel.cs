@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DevExpress.XtraEditors.Filtering;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -144,6 +145,8 @@ namespace ScheduleBSUIR.Viewmodels
         {
             SelectedMode = mode;
 
+            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)mode);
+
             IsTimetableModePopupOpen = false;
         }
 
@@ -172,6 +175,8 @@ namespace ScheduleBSUIR.Viewmodels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, 0);
+
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
                 && query.TryGetValue(NavigationKeys.TimetableHeader, out var header))
             {

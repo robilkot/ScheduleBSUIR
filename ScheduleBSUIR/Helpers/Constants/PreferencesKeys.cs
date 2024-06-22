@@ -3,5 +3,6 @@
     public static class PreferencesKeys
     {
         public const string SelectedGroupName = "SelectedGroupName";
+        public const string SelectedSubgroupType = "SelectedSubgroupType";
     }
 }

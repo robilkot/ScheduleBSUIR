@@ -32,6 +32,8 @@
                 FalseValue="dark_bookmark_inactive"/>
             <converters:TimetableToHeaderTextConverter
                 x:Key="TimetableToHeaderTextConverter"/>
+            <converters:SubgroupTypeToStringConverter
+                x:Key="SubgroupTypeToStringConverter"/>
             <toolkit:EnumToIntConverter 
                 x:Key="EnumToIntConverter" />
         </ResourceDictionary>
@@ -182,21 +184,21 @@
                                     <Setter Property="WidthRequest" Value="20"/>
                                     <Setter Property="Opacity" Value="0.5"/>
                                 </Style>
-                            
+
                                 <Style TargetType="Label">
                                     <Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>
                                     <Setter Property="VerticalOptions" Value="Center"/>
                                 </Style>
                             </ResourceDictionary>
                         </VerticalStackLayout.Resources>
-                    
+
                         <Grid>
                             <Image
                                 Grid.Column="0"
                                 Source="dark_user"/>
                             <Label
                                 Grid.Column="1"
-                                Text="Подгруппа 1"/>
+                                Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
@@ -214,7 +216,7 @@
                                 Source="dark_user"/>
                             <Label
                                 Grid.Column="1"
-                                Text="Подгруппа 2"/>
+                                Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
@@ -232,7 +234,7 @@
                                 Source="dark_users"/>
                             <Label
                                 Grid.Column="1"
-                                Text="Вся группа"/>
+                                Text="{Binding Source={x:Static constants:SubgroupType.All}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
