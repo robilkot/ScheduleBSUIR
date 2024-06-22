@@ -11,7 +11,6 @@ namespace ScheduleBSUIR.Viewmodels
     public partial class GroupListPageViewModel : BaseViewModel
     {
         private GroupsService _groupsService;
-        private DbService _dbService;
 
         private List<StudentGroupHeader> _allGroupsHeaders = [];
 
@@ -26,19 +25,12 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private bool _isRefreshing = false;
 
-        public GroupListPageViewModel(GroupsService groupsService, ILoggingService loggingService, DbService dbService)
+        public GroupListPageViewModel(GroupsService groupsService, ILoggingService loggingService)
             : base(loggingService)
         {
             _groupsService = groupsService;
-            _dbService = dbService;
 
             RefreshCommand.Execute(string.Empty);
-        }
-
-        [RelayCommand]
-        public void Test()
-        {
-            _dbService.ClearDatabase();
         }
 
         [RelayCommand]
@@ -74,7 +66,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             try
             {
-                var groupHeaders = await _groupsService.GetGroupHeadersAsync(groupNameFilter, cancellationToken);
+                var groupHeaders = await _groupsService.GetGroupHeadersAsync(cancellationToken);
 
                 _allGroupsHeaders = groupHeaders.ToList();
                 FilteredGroups = _allGroupsHeaders;

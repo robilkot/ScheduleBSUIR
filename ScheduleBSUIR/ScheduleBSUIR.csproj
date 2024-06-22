@@ -98,6 +98,9 @@
 	  <Compile Update="View\Controls\SchedulePage.xaml.cs">
 	    <DependentUpon>SchedulePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\EmployeesListPage.xaml.cs">
+	    <DependentUpon>EmployeesListPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\TimetablePage.xaml.cs">
 	    <DependentUpon>TimetablePage.xaml</DependentUpon>
 	  </Compile>
@@ -117,6 +120,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\DebugLogPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\EmployeesListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\GroupListPage.xaml">

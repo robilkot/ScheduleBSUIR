@@ -56,6 +56,13 @@ namespace ScheduleBSUIR.Services
             return await GetDeserializedDataAsync<IEnumerable<StudentGroupHeader>>(requestUrl, cancellationToken);
         }
 
+        public async Task<IEnumerable<Employee>?> GetEmployeesAsync(CancellationToken cancellationToken)
+        {
+            var requestUrl = UrlGenerator.Employees();
+
+            return await GetDeserializedDataAsync<IEnumerable<Employee>>(requestUrl, cancellationToken);
+        }
+
         private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
         {
             T? result = default;

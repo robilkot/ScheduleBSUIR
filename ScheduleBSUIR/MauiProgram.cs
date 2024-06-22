@@ -36,18 +36,21 @@ namespace ScheduleBSUIR
 
                 logger?.LogInfo($"Leaked {collectionTarget.Name}", displayCaller: false);
             });
-            
+
             //builder.UseLeakDetection();
 
+            builder.Services.AddTransient<EmployeesListPage>();
             builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<TimetablePage>();
             builder.Services.AddTransient<DebugLogPage>();
 
+            builder.Services.AddTransient<EmployeesListPageViewModel>();
             builder.Services.AddTransient<GroupListPageViewModel>();
             builder.Services.AddTransient<TimetablePageViewModel>();
             builder.Services.AddTransient<DebugLogPageViewModel>();
 
             builder.Services.AddSingleton<GroupsService>();
+            builder.Services.AddSingleton<EmployeesService>();
             builder.Services.AddSingleton<TimetableService>();
             builder.Services.AddSingleton<DbService>();
             builder.Services.AddSingleton<WebService>();

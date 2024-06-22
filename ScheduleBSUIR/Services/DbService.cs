@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
+    // todo async await
     public class DbService
     {
         private const string DatabaseFilename = "ScheduleBSUIR.db";
@@ -24,7 +25,8 @@ namespace ScheduleBSUIR.Services
         public void ClearDatabase()
         {
             RemoveAll<Timetable>();
-            //RemoveAll<StudentGroupHeader>();
+            RemoveAll<Employee>();
+            RemoveAll<StudentGroupHeader>();
         }
         public void AddOrUpdate<T>(T newObject) where T : ICacheable
         {
@@ -44,10 +46,14 @@ namespace ScheduleBSUIR.Services
 
         public void AddOrUpdate<T>(IEnumerable<T> newObjects) where T : ICacheable
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             foreach (var newObject in newObjects)
             {
                 AddOrUpdate(newObject);
             }
+
+            _loggingService.LogInfo($"AddOrUpdate<T> updated {newObjects.Count()} objects in {stopwatch.Elapsed}");
         }
 
         public T? Get<T>(string primaryKey) where T : ICacheable
@@ -65,7 +71,7 @@ namespace ScheduleBSUIR.Services
 
             var result = collection.FindAll().ToList();
 
-            _loggingService.LogInfo($"GetAll<T> worked in {stopwatch.Elapsed}");
+            _loggingService.LogInfo($"GetAll<T> got {collection.Count()} objects in {stopwatch.Elapsed}");
 
             return result;
         }

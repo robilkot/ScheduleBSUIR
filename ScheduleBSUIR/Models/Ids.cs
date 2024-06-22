@@ -4,6 +4,13 @@
     {
         public override string ToString() => Id;
     }
-    public sealed class StudentGroupId(string Id) : TypedId(Id);
-    public sealed class EmployeeId(string Id) : TypedId(Id);
+    public sealed class StudentGroupId(string Id) : TypedId(Id)
+    {
+        public StudentGroupId(StudentGroup group) : this(group.Name) { }
+        public StudentGroupId(StudentGroupHeader group) : this(group.Name) { }
+    }
+    public sealed class EmployeeId(string urlId) : TypedId(urlId)
+    {
+        public EmployeeId(Employee employee) : this(employee.UrlId) { }
+    }
 }

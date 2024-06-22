@@ -9,7 +9,7 @@ namespace ScheduleBSUIR.Services
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
 
-        public async Task<IEnumerable<StudentGroupHeader>> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken)
+        public async Task<IEnumerable<StudentGroupHeader>> GetGroupHeadersAsync(CancellationToken cancellationToken)
         {
             IEnumerable<StudentGroupHeader>? headers;
 
@@ -24,18 +24,18 @@ namespace ScheduleBSUIR.Services
                     throw new FileNotFoundException("No cached groups list found for offline access");
                 }
 
-                headers = cachedHeaders.Where(group => group.Name.StartsWith(groupNameFilter));
+                headers = cachedHeaders;
             }
             // Obtain from api and cache if we are connected
             else
             {
                 _loggingService.LogInfo($"Obtaining groups list from web api", displayCaller: false);
 
-                headers = await _webService.GetGroupHeadersAsync(groupNameFilter, cancellationToken);
+                headers = await _webService.GetGroupHeadersAsync(string.Empty, cancellationToken);
 
                 if (headers is null)
                 {
-                    throw new ArgumentException("Couldn't obtain timetable with given id from web service");
+                    throw new ArgumentException("Couldn't obtain groups from web service");
                 }
 
                 // No need to update AccessedAt and other properties for groups list since not using them

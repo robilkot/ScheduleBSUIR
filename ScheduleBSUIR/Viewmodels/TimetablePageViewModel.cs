@@ -181,8 +181,8 @@ namespace ScheduleBSUIR.Viewmodels
         {
             TypedId timetableId = dto switch
             {
-                StudentGroup group => new StudentGroupId(group.Name),
-                Employee employee => new EmployeeId(employee.Id.ToString()),
+                StudentGroup group => new StudentGroupId(group),
+                Employee employee => new EmployeeId(employee),
                 _ => throw new UnreachableException(),
             };
 

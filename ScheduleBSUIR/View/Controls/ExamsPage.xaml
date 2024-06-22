@@ -69,6 +69,7 @@
             </dx:DXCollectionView.Triggers>
         </dx:DXCollectionView>
 
+        <!--todo: move to timetable page-->
         <dx:BottomSheet 
              x:Name="examDetailSheet" 
              ShowGrabber="True" 
@@ -209,6 +210,7 @@
                 </Border>
 
                 <Label
+                     IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                      Text="Преподаватели"
                      Margin="15,0,0,-10"
                      Style="{StaticResource LabelBodySecondaryStyle}"/>

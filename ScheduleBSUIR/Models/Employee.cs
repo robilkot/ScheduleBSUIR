@@ -18,10 +18,12 @@ namespace ScheduleBSUIR.Models
         public string UrlId { get; set; } = string.Empty;
         public string? Email { get; set; }
         public List<string>? JobPositions { get; set; }
-
+        [JsonIgnore]
+        [BsonIgnore]
+        public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
         [BsonId]
         [JsonIgnore]
-        public string PrimaryKey => Id.ToString();
+        public string PrimaryKey => UrlId.ToString();
         [JsonIgnore]
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
