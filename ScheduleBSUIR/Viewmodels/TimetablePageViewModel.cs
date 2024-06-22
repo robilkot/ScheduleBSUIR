@@ -104,7 +104,7 @@ namespace ScheduleBSUIR.Viewmodels
                 // todo: error popup?
                 await Shell.Current.DisplayAlert("Error", "Couldn't get timetable", "OK");
 
-                _loggingService.LogError($"GetTimetable threw: {ex.Message}", displayCaller: false);
+                _loggingService.LogError($"GetTimetable threw: {ex.Message}\n{ex.StackTrace}", displayCaller: false);
             }
             finally
             {

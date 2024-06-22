@@ -20,9 +20,7 @@ namespace ScheduleBSUIR.Helpers.Converters
                 return null;
             }
 
-            string header = string.Empty;
-
-            header = values[1] switch
+            string? header = values[1] switch
             {
                 TimetableTabs.Exams
                     when timetable is { StartExamsDate: not null, EndExamsDate: not null }
@@ -32,7 +30,8 @@ namespace ScheduleBSUIR.Helpers.Converters
                     when timetable is { StartDate: not null, EndDate: not null }
                     => $"Занятия: {timetable.StartDate?.ToString("dd MMMM")} - {timetable.EndDate?.ToString("dd MMMM yyyy")}",
 
-                _ => throw new UnreachableException()
+                // Some employees may not have dates specified. No text to show then
+                _ => null,
             };
 
             return header;
