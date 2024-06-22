@@ -40,7 +40,6 @@ public partial class ExamsPage : ContentView
         sheetContent.BindingContext = (Schedule)examsCollectionView.SelectedItem;
 
         examDetailSheet.State = BottomSheetState.HalfExpanded;
-        examDetailSheet.UpdateSizeToContent = true;
 
         examsCollectionView.SelectedItem = null;
     }

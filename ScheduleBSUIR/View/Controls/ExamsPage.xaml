@@ -7,9 +7,10 @@
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui">
-    
+
     <Grid
         Margin="15,0">
         <dx:DXCollectionView
@@ -30,31 +31,12 @@
                     FieldName="DateLesson"
                     GroupInterval="Date"/>
             </dx:DXCollectionView.GroupDescription>
-           
+
             <dx:DXCollectionView.Header>
-                <Grid
+                <controls:TimetableHeader
                     Margin="0,100,0,20"
-                    RowDefinitions="auto,auto"
-                    RowSpacing="10">
-                    <controls:TimetableHeader
-                        Grid.Row="0"
-                        BindingContext="{Binding Timetable}"/>
-                    <Label
-                        Grid.Row="1"
-                        Style="{StaticResource LabelBodySecondaryStyle}">
-                        <Label.Text>
-                            <MultiBinding
-                                StringFormat="Сессия: {0} - {1}">
-                                <Binding
-                                    StringFormat="{}{0:dd MMMM}"
-                                    Path="Timetable.StartExamsDate"/>
-                                <Binding
-                                    StringFormat="{}{0:dd MMMM yyyy} г."
-                                    Path="Timetable.EndExamsDate"/>
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </Grid>
+                    Tab="{x:Static constants:TimetableTabs.Exams}"
+                    Timetable="{Binding Timetable}"/>
             </dx:DXCollectionView.Header>
 
             <dx:DXCollectionView.Triggers>

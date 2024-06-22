@@ -4,22 +4,50 @@
              x:Class="ScheduleBSUIR.View.Controls.TimetableHeader"
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
-             x:DataType="controls:TimetableHeader">
+             x:DataType="controls:TimetableHeader"
+             x:Name="rootview">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:TimetableToDaterangeTextConverter
+                x:Key="TimetableToDaterangeTextConverter"/>
+            <converters:TimetableToHeaderTextConverter
+                x:Key="TimetableToHeaderTextConverter"/>
+            <converters:TimetableToSubheaderTextConverter
+                x:Key="TimetableToSubheaderTextConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
 
     <Grid
-        ColumnSpacing="10"
-        ColumnDefinitions="auto,auto">
+        RowSpacing="10"
+        RowDefinitions="auto,auto">
+        <Grid
+            Grid.Row="0"
+            ColumnSpacing="10"
+            ColumnDefinitions="auto,auto">
+            <Label
+                Grid.Column="0"
+                VerticalOptions="Center"
+                Style="{StaticResource LabelHeaderStyle}"
+                Text="{Binding Source={x:Reference rootview}, Path=Timetable, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+            <Label
+                Grid.Column="1"
+                VerticalOptions="Center"
+                LineBreakMode="WordWrap"
+                WidthRequest="220"
+                Style="{StaticResource LabelBodySecondaryStyle}"
+                Text="{Binding Source={x:Reference rootview}, Path=Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
+        </Grid>
+
         <Label
-            Grid.Column="0"
-            VerticalOptions="Center"
-            Style="{StaticResource LabelHeaderStyle}"
-            Text="{Binding ., Converter={converters:TimetableToHeaderTextConverter}}"/>
-        <Label
-            Grid.Column="1"
-            VerticalOptions="Center"
-            LineBreakMode="WordWrap"
-            WidthRequest="220"
-            Style="{StaticResource LabelBodySecondaryStyle}"
-            Text="{Binding ., Converter={converters:TimetableToSubheaderTextConverter}}"/>
+            x:Name="datesLabel"
+            Grid.Row="1"
+            Style="{StaticResource LabelBodySecondaryStyle}">
+            <Label.Text>
+                <MultiBinding Converter="{StaticResource TimetableToDaterangeTextConverter}">
+                    <Binding Source="{x:Reference rootview}" Path="Timetable" />
+                    <Binding Source="{x:Reference rootview}" Path="Tab" />
+                </MultiBinding>
+            </Label.Text>
+        </Label>
     </Grid>
 </ContentView>

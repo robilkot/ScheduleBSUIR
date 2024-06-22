@@ -34,7 +34,7 @@
                     <Label
                         Grid.Row="0"
                         Style="{StaticResource LabelHeaderStyle}"
-                        Text="Все группы"/>
+                        Text="Все преподаватели"/>
                     <Border
                         Grid.Row="1"
                         Background="{StaticResource DarkControlBackground}"
