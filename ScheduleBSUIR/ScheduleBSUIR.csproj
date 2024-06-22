@@ -104,6 +104,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="View\Controls\CustomTabbar.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\Controls\TimetableHeader.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

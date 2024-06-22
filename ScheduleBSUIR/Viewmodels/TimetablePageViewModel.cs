@@ -87,6 +87,9 @@ namespace ScheduleBSUIR.Viewmodels
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
+
+                // todo: compare session dates instead of this?
+                SelectedTab = Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
             }
             catch (Exception ex)
             {

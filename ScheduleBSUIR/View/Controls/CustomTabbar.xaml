@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+             xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             x:Class="ScheduleBSUIR.View.Controls.CustomTabbar"
+             x:DataType="controls:CustomTabbar"
+             x:Name="rootView">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:TimetableTabsToStringConverter
+                x:Key="TimetableTabsToStringConverter"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Border
+        Background="{StaticResource DarkControlBackground}">
+        <Grid
+            x:Name="selectorGrid"
+            Padding="2"
+            ColumnSpacing="5"
+            ColumnDefinitions="auto,auto,auto">
+
+            <Border
+                Grid.ColumnSpan="2"
+                HorizontalOptions="Fill"
+                x:Name="selector"
+                VerticalOptions="Fill"
+                Background="{StaticResource DarkLightControlBackground}"
+                StrokeShape="RoundRectangle 8">
+            </Border>
+
+            <Grid
+                x:Name="firstOption"
+                Grid.Column="0"
+                WidthRequest="30"
+                HeightRequest="30"
+                Padding="5">
+                <Image
+                    Source="dark_schedule"/>
+            </Grid>
+
+            <Label
+                x:Name="optionLabel"
+                WidthRequest="100"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Grid.Column="1"
+                Style="{StaticResource LabelBodyPrimaryStyle}"
+                Text="{Binding Source={x:Reference rootView}, Path=Tab, Converter={StaticResource TimetableTabsToStringConverter}}"/>
+
+            <Grid
+                x:Name="secondOption"
+                Grid.Column="2"
+                WidthRequest="30"
+                HeightRequest="30"
+                Padding="5">
+                <Image
+                    Source="dark_exams"/>
+            </Grid>
+            
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer
+                    Command="{Binding Source={x:Reference rootView}, Path=ToggleTabCommand}"/>
+            </Grid.GestureRecognizers>
+        </Grid>
+    </Border>
+</ContentView>

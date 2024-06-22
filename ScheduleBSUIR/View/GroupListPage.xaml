@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScheduleBSUIR.View.GroupListPage"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
+             xmlns:view="clr-namespace:ScheduleBSUIR.View"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             x:DataType="viewmodel:GroupListPageViewModel"
+             xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+             x:Class="ScheduleBSUIR.View.GroupListPage"
+             x:DataType="viewmodel:GroupListPageViewModel"
              mtk:LeakMonitorBehavior.Cascade="True"
              mtk:TearDownBehavior.Cascade="False"
              Shell.NavBarIsVisible="False"
@@ -18,7 +21,6 @@
         Margin="15,0"
         IsRefreshing="{Binding IsRefreshing}">
         <dx:DXCollectionView
-            Grid.Row="1"
             AllowGroupCollapse="False"
             UseRippleEffect="True"
             ItemSeparatorColor="{StaticResource DarkLightControlBackground}"
@@ -59,9 +61,6 @@
                             </Entry>
                         </Grid>
                     </Border>
-                    <Button
-                        Grid.Row="2"
-                        Command="{Binding TestCommand}"/>
                 </Grid>
             </dx:DXCollectionView.Header>
 

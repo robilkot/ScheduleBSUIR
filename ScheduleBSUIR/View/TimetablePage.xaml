@@ -42,7 +42,7 @@
         <Grid
             x:Name="navBar"
             ZIndex="1"
-            Padding="15,0"
+            Padding="15"
             VerticalOptions="Start"
             ColumnSpacing="10"
             ColumnDefinitions="auto,*,auto,auto">
@@ -62,7 +62,7 @@
 
             <Grid
                 Grid.Column="0"
-                Padding="10"
+                Padding="0,10,20,10"
                 WidthRequest="40"
                 HeightRequest="40">
                 <Image
@@ -74,6 +74,7 @@
             </Grid>
 
             <Border
+                IsVisible="False"
                 Grid.Column="1"
                 Margin="0,20"
                 WidthRequest="200"
@@ -90,6 +91,13 @@
                     Text="{Binding SelectedTab}"/>
             </Border>
 
+            <controls:CustomTabbar
+                HorizontalOptions="Center"
+                Grid.Column="1"
+                Tab="{Binding SelectedTab, Mode=TwoWay}">
+            </controls:CustomTabbar>
+
+            <!--Timetable mode toggle-->
             <Grid
                 Grid.Column="2"
                 Padding="10"
@@ -134,6 +142,7 @@
                 </Grid.GestureRecognizers>
             </Grid>
 
+            <!--boormark toggle-->
             <Grid
                 IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="3"
@@ -148,6 +157,7 @@
                 </Grid.GestureRecognizers>
             </Grid>
             
+            <!--Timetable mode popup-->
             <dx:DXPopup
                 PlacementTarget="{x:Reference navBar}"
                 IsOpen="{Binding IsTimetableModePopupOpen}">
@@ -296,6 +306,7 @@
         </dx:DXCollectionView>
 
         <controls:ExamsPage
+            x:Name="examsPage"
             IsVisible="False"
             BindingContext="{Binding .}">
             <controls:ExamsPage.Triggers>
@@ -311,6 +322,7 @@
         </controls:ExamsPage>
 
         <controls:SchedulePage
+            x:Name="schedulePage"
             IsVisible="False"
             BindingContext="{Binding .}">
             <controls:SchedulePage.Triggers>
