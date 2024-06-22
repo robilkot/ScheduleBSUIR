@@ -95,6 +95,9 @@
                                  Property="ColumnSpacing"
                                  Value="10"/>
                         </Style>
+
+                        <converters:SubgroupTypeToStringConverter
+                            x:Key="SubgroupTypeToStringConverter"/>
                     </ResourceDictionary>
                 </VerticalStackLayout.Resources>
 
@@ -122,6 +125,19 @@
                                  HorizontalTextAlignment="End"
                                  Style="{StaticResource LabelBodySecondaryStyle}"
                                  Text="{Binding LessonTypeAbbrev}"/>
+                        </Grid>
+
+                        <!--subgroup-->
+                        <Grid>
+                            <Label
+                                 Grid.Column="0"
+                                 Style="{StaticResource LabelBodyPrimaryStyle}"
+                                 Text="Подгруппа"/>
+                            <Label
+                                 Grid.Column="1"
+                                 HorizontalTextAlignment="End"
+                                 Style="{StaticResource LabelBodySecondaryStyle}"
+                                 Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                         </Grid>
 
                         <!--date-->
@@ -252,13 +268,18 @@
                                         </Label.Text>
                                     </Label>
 
-                                    <!--todo: navigation-->
                                     <Image
                                          Grid.Column="2"
                                          HeightRequest="16"
                                          Opacity="0.5"
                                          Source="dark_arrow_right"/>
                                 </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="employee_tapped"
+                                        Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=OpenTimetableCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
                             </Border>
 
                         </DataTemplate>

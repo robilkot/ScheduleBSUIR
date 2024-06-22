@@ -52,4 +52,9 @@ public partial class ExamsPage : ContentView
             sheetContent.BindingContext = null;
         }
     }
+
+    private void employee_tapped(object sender, TappedEventArgs e)
+    {
+        examDetailSheet.State = BottomSheetState.Hidden;
+    }
 }

@@ -8,8 +8,10 @@ using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
+using ScheduleBSUIR.View;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using System.Xml;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -173,9 +175,39 @@ namespace ScheduleBSUIR.Viewmodels
             }
         }
 
+        // Accepts studentgroup dto or employeedto
+        [RelayCommand]
+        public async Task OpenTimetable(object dto)
+        {
+            TypedId timetableId = dto switch
+            {
+                StudentGroup group => new StudentGroupId(group.Name),
+                Employee employee => new EmployeeId(employee.Id.ToString()),
+                _ => throw new UnreachableException(),
+            };
+
+            string timetableHeader = dto switch
+            {
+                StudentGroup group => group.Name,
+                Employee employee => string.Format("{0} {1}. {2}.", employee.LastName, employee.FirstName[0], employee.MiddleName[0]),
+                _ => throw new UnreachableException(),
+            };
+
+            Dictionary<string, object> navigationParameters = new()
+            {
+                { NavigationKeys.TimetableId, timetableId },
+                { NavigationKeys.TimetableHeader, timetableHeader },
+            };
+
+            // Let bottomsheet close smoothly
+            await Task.Delay(150);
+
+            await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
+        }
+
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, 0);
+            SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
 
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
                 && query.TryGetValue(NavigationKeys.TimetableHeader, out var header))
