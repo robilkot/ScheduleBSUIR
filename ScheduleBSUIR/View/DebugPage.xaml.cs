@@ -2,10 +2,10 @@ using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;
 
-public partial class DebugLogPage : ContentPage
+public partial class DebugPage : ContentPage
 {
-    private readonly DebugLogPageViewModel _viewmodel;
-	public DebugLogPage(DebugLogPageViewModel viewmodel)
+    private readonly DebugPageViewModel _viewmodel;
+	public DebugPage(DebugPageViewModel viewmodel)
 	{
 		InitializeComponent();
 	
@@ -28,5 +28,10 @@ public partial class DebugLogPage : ContentPage
     private void ClearButton_Clicked(object sender, EventArgs e)
     {
         _viewmodel.ClearLogCommand.Execute(null);
+    }
+
+    private void ClearCacheButton_Clicked(object sender, EventArgs e)
+    {
+        _viewmodel.ClearCacheCommand.Execute(null);
     }
 }

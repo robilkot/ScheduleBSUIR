@@ -16,7 +16,21 @@ namespace ScheduleBSUIR.Helpers.Converters
 
             if (timetable.EmployeeDto is not null)
             {
-                header = $"{timetable.EmployeeDto.LastName} {timetable.EmployeeDto.FirstName[0]}. {timetable.EmployeeDto.MiddleName[0]}.";
+                string firstNameLetter = string.Empty;
+
+                if(!string.IsNullOrEmpty(timetable.EmployeeDto.FirstName))
+                {
+                    firstNameLetter = $"{timetable.EmployeeDto.FirstName[0]}.";
+                }
+
+                string middleNameLetter = string.Empty;
+
+                if (!string.IsNullOrEmpty(timetable.EmployeeDto.MiddleName))
+                {
+                    middleNameLetter = $"{timetable.EmployeeDto.MiddleName[0]}.";
+                }
+
+                header = $"{timetable.EmployeeDto.LastName} {firstNameLetter} {middleNameLetter}";
             }
             else if (timetable.StudentGroupDto is not null)
             {

@@ -25,7 +25,7 @@ namespace ScheduleBSUIR.Services
             _deserializeOptions.Converters.Add(new JsonDateTimeConverter());
         }
 
-        public async Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
         {
             var requestUrl = id switch
             {
@@ -34,10 +34,10 @@ namespace ScheduleBSUIR.Services
                 _ => throw new UnreachableException()
             };
 
-            return await GetDeserializedDataAsync<LastUpdateResponse>(requestUrl, cancellationToken);
+            return GetDeserializedDataAsync<LastUpdateResponse>(requestUrl, cancellationToken);
         }
 
-        public async Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
             var requestUrl = id switch
             {
@@ -46,21 +46,21 @@ namespace ScheduleBSUIR.Services
                 _ => throw new UnreachableException()
             };
 
-            return await GetDeserializedDataAsync<Timetable>(requestUrl, cancellationToken);
+            return GetDeserializedDataAsync<Timetable>(requestUrl, cancellationToken);
         }
 
-        public async Task<IEnumerable<StudentGroupHeader>?> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken)
+        public Task<IEnumerable<StudentGroupHeader>?> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken)
         {
             var requestUrl = UrlGenerator.GroupsHeaders(groupNameFilter);
 
-            return await GetDeserializedDataAsync<IEnumerable<StudentGroupHeader>>(requestUrl, cancellationToken);
+            return GetDeserializedDataAsync<IEnumerable<StudentGroupHeader>>(requestUrl, cancellationToken);
         }
 
-        public async Task<IEnumerable<Employee>?> GetEmployeesAsync(CancellationToken cancellationToken)
+        public Task<IEnumerable<Employee>?> GetEmployeesAsync(CancellationToken cancellationToken)
         {
             var requestUrl = UrlGenerator.Employees();
 
-            return await GetDeserializedDataAsync<IEnumerable<Employee>>(requestUrl, cancellationToken);
+            return GetDeserializedDataAsync<IEnumerable<Employee>>(requestUrl, cancellationToken);
         }
 
         private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)

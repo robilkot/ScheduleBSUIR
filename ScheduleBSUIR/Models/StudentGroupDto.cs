@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class StudentGroup : ICacheable
+    public class StudentGroupDto : ICacheable
     {
         public string Name { get; set; } = string.Empty;
         public int FacultyId { get; set; }

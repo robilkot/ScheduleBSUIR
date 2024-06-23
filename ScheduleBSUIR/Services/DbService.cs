@@ -25,6 +25,8 @@ namespace ScheduleBSUIR.Services
         {
             await RemoveAllAsync<Timetable>();
             await RemoveAllAsync<Employee>();
+            await RemoveAllAsync<EmployeeDto>();
+            await RemoveAllAsync<StudentGroupDto>();
             await RemoveAllAsync<StudentGroupHeader>();
         }
         public Task AddOrUpdateAsync<T>(T newObject) where T : ICacheable

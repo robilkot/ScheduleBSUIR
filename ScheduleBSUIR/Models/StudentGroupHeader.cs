@@ -10,11 +10,6 @@ namespace ScheduleBSUIR.Models
         public string? SpecialityAbbrev { get; set; }
         public int Id { get; set; }
 
-        // Property for grouping entries on DXCollectionView
-        [JsonIgnore]
-        [BsonIgnore]
-        public string DisplayGroup => Name.Substring(0, 3);
-
         [JsonIgnore]
         [BsonId]
         public string PrimaryKey => Name;

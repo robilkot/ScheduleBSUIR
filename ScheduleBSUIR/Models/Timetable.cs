@@ -6,8 +6,8 @@ namespace ScheduleBSUIR.Models
 {
     public class Timetable : ICacheable
     {
-        public Employee? EmployeeDto { get; set; }
-        public StudentGroup? StudentGroupDto { get; set; }
+        public EmployeeDto? EmployeeDto { get; set; }
+        public StudentGroupDto? StudentGroupDto { get; set; }
         public Dictionary<string, List<Schedule>>? Schedules { get; set; }
         public List<Schedule>? Exams { get; set; }
         public DateTime? StartDate { get; set; }

@@ -111,7 +111,7 @@
 
                     <BindableLayout.ItemTemplate>
                         <DataTemplate
-                            x:DataType="model:Employee">
+                            x:DataType="model:EmployeeDto">
                             <Image
                                 VerticalOptions="Center"
                                 HeightRequest="50"

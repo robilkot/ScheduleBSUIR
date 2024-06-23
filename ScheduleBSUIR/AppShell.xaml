@@ -21,7 +21,7 @@
             IsVisible="True"
             Title="Debug">
             <ShellContent
-                ContentTemplate="{DataTemplate view:DebugLogPage}"/>
+                ContentTemplate="{DataTemplate view:DebugPage}"/>
         </Tab>
     </TabBar>
 </Shell>

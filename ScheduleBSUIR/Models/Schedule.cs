@@ -5,7 +5,7 @@ namespace ScheduleBSUIR.Models
     public class Schedule
     {
         public required List<int> WeekNumber { get; set; }
-        public required List<StudentGroup> StudentGroups { get; set; }
+        public required List<StudentGroupDto> StudentGroups { get; set; }
         public SubgroupType NumSubgroup { get; set; }
         public List<string>? Auditories { get; set; }
         public required DateTime StartLessonTime { get; set; }
@@ -19,6 +19,6 @@ namespace ScheduleBSUIR.Models
         public required DateTime EndLessonDate { get; set; }
         public bool Announcement { get; set; }
         public bool Split { get; set; }
-        public List<Employee>? Employees { get; set; }
+        public List<EmployeeDto>? Employees { get; set; }
     }
 }

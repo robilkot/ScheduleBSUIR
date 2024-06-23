@@ -4,23 +4,20 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Employee : ICacheable
+    public class EmployeeDto : ICacheable
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string? MiddleName { get; set; }
-        // Actually a degree abbrev
         public string Degree { get; set; } = string.Empty;
+        public string DegreeAbbrev { get; set; } = string.Empty;
         public string? Rank { get; set; }
         public string? PhotoLink { get; set; }
         public string CalendarId { get; set; } = string.Empty;
         public int Id { get; set; }
         public string UrlId { get; set; } = string.Empty;
-        public List<string>? AcademicDepartment { get; set; }
-        public string Fio { get; set; } = string.Empty;
-        [BsonId]
-        [JsonIgnore]
-        public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
+        public string? Email { get; set; }
+        public List<string>? JobPositions { get; set; }
         [BsonId]
         [JsonIgnore]
         public string PrimaryKey => UrlId.ToString();

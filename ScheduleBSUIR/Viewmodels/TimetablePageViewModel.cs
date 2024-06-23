@@ -87,6 +87,8 @@ namespace ScheduleBSUIR.Viewmodels
 
             _loggingService.LogInfo($"Getting timetable with id {id}", displayCaller: false);
 
+            _loggingService.LogInfo($"GetTimetable is on main thread: {MainThread.IsMainThread}", displayCaller: false);
+
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
@@ -181,15 +183,16 @@ namespace ScheduleBSUIR.Viewmodels
         {
             TypedId timetableId = dto switch
             {
-                StudentGroup group => new StudentGroupId(group),
-                Employee employee => new EmployeeId(employee),
+                StudentGroupDto group => new StudentGroupId(group),
+                EmployeeDto employee => new EmployeeId(employee),
                 _ => throw new UnreachableException(),
             };
 
+            // todo: all this header thing is a hack honestly
             string timetableHeader = dto switch
             {
-                StudentGroup group => group.Name,
-                Employee employee => string.Format("{0} {1}. {2}.", employee.LastName, employee.FirstName[0], employee.MiddleName[0]),
+                StudentGroupDto group => group.Name,
+                EmployeeDto employee => employee.LastName,
                 _ => throw new UnreachableException(),
             };
 
@@ -207,6 +210,8 @@ namespace ScheduleBSUIR.Viewmodels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            _loggingService.LogInfo($"ApplyQueryAttributes is on main thread: {MainThread.IsMainThread}", displayCaller: false);
+
             SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
 
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
