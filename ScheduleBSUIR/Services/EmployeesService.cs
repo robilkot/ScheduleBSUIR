@@ -13,7 +13,7 @@ namespace ScheduleBSUIR.Services
         {
             IEnumerable<Employee>? employees;
 
-            var cachedEmployees = _dbService.GetAll<Employee>();
+            var cachedEmployees = await _dbService.GetAllAsync<Employee>();
 
             bool offline = Connectivity.NetworkAccess is NetworkAccess.None;
 
@@ -40,7 +40,7 @@ namespace ScheduleBSUIR.Services
 
                 // No need to update AccessedAt and other properties for groups list since not using them
 
-                _dbService.AddOrUpdate(employees);
+                await _dbService.AddOrUpdateAsync(employees);
             }
 
             return employees ?? [];

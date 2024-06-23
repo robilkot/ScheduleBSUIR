@@ -13,7 +13,7 @@ namespace ScheduleBSUIR.Services
         {
             IEnumerable<StudentGroupHeader>? headers;
 
-            var cachedHeaders = _dbService.GetAll<StudentGroupHeader>();
+            var cachedHeaders = await _dbService.GetAllAsync<StudentGroupHeader>();
 
             bool offline = Connectivity.NetworkAccess is NetworkAccess.None;
 
@@ -40,7 +40,7 @@ namespace ScheduleBSUIR.Services
 
                 // No need to update AccessedAt and other properties for groups list since not using them
 
-                _dbService.AddOrUpdate(headers);
+                await _dbService.AddOrUpdateAsync(headers);
             }
 
             return headers ?? [];

@@ -88,10 +88,6 @@
                         StrokeThickness="0"
                         Padding="15,10">
 
-                        <Border.StrokeShape>
-                            <Rectangle/>
-                        </Border.StrokeShape>
-
                         <Grid
                             ColumnSpacing="10"
                             ColumnDefinitions="*,auto">

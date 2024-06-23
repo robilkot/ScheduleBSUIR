@@ -41,6 +41,18 @@ public partial class CustomTabbar : ContentView
     {
         InitializeComponent();
 
+        ForceUpdateTab();
+    }
+
+    protected override void OnBindingContextChanged()
+    {
+        base.OnBindingContextChanged();
+
+        ForceUpdateTab();
+    }
+
+    private void ForceUpdateTab()
+    {
         Dispatcher.Dispatch(async () =>
         {
             // Hack to slide to initial tab
@@ -48,18 +60,6 @@ public partial class CustomTabbar : ContentView
             Tab = Tab;
         });
     }
-
-    //protected override void OnBindingContextChanged()
-    //{
-    //    base.OnBindingContextChanged();
-
-    //    Dispatcher.Dispatch(async () =>
-    //    {
-    //        // Hack to slide to initial tab
-    //        await Task.Delay(100);
-    //        Tab = Tab;
-    //    });
-    //}
 
     private void MoveSlider(TimetableTabs activeTab)
     {

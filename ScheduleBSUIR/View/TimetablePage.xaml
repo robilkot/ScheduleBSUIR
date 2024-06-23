@@ -75,24 +75,6 @@
                 </Grid.GestureRecognizers>
             </Grid>
 
-            <Border
-                IsVisible="False"
-                Grid.Column="1"
-                Margin="0,20"
-                WidthRequest="200"
-                HeightRequest="40"
-                Background="{StaticResource DarkControlBackground}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Tapped="TapGestureRecognizer_Tapped"/>
-                </Border.GestureRecognizers>
-                <Label
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Style="{StaticResource LabelBodyPrimaryStyle}"
-                    Text="{Binding SelectedTab}"/>
-            </Border>
-
             <controls:CustomTabbar
                 HorizontalOptions="Center"
                 Grid.Column="1"
@@ -172,7 +154,7 @@
                         </Style>
                     </ResourceDictionary>
                 </dx:DXPopup.Resources>
-            
+
                 <Border
                     Padding="20,10"
                     BackgroundColor="{StaticResource DarkControlBackground}">

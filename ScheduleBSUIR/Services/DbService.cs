@@ -6,7 +6,6 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
-    // todo async await
     public class DbService
     {
         private const string DatabaseFilename = "ScheduleBSUIR.db";
@@ -22,91 +21,167 @@ namespace ScheduleBSUIR.Services
             _database = new LiteDatabase(databasePath);
         }
 
-        public void ClearDatabase()
+        public async Task ClearDatabase()
         {
-            RemoveAll<Timetable>();
-            RemoveAll<Employee>();
-            RemoveAll<StudentGroupHeader>();
+            await RemoveAllAsync<Timetable>();
+            await RemoveAllAsync<Employee>();
+            await RemoveAllAsync<StudentGroupHeader>();
         }
-        public void AddOrUpdate<T>(T newObject) where T : ICacheable
+        public Task AddOrUpdateAsync<T>(T newObject) where T : ICacheable
         {
-            var collection = _database.GetCollection<T>();
+            TaskCompletionSource tcs = new();
 
-            if (collection.Exists(Query.EQ("_id", newObject.PrimaryKey)))
+            Task.Run(() =>
             {
-                collection.Update(newObject);
-            }
-            else
+                var collection = _database.GetCollection<T>();
+
+                if (collection.Exists(Query.EQ("_id", newObject.PrimaryKey)))
+                {
+                    collection.Update(newObject);
+                }
+                else
+                {
+                    collection.Insert(newObject.PrimaryKey, newObject);
+                }
+
+                _database.Commit();
+
+                //_loggingService.LogInfo($"DbService updated obj with key {newObject.PrimaryKey}", displayCaller: false);
+
+                tcs.SetResult();
+            });
+
+            return tcs.Task;
+        }
+
+        public Task AddOrUpdateAsync<T>(IEnumerable<T> newObjects) where T : ICacheable
+        {
+            TaskCompletionSource tcs = new();
+
+            Task.Run(() =>
             {
-                collection.Insert(newObject.PrimaryKey, newObject);
-            }
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
-            _database.Commit();
+                var collection = _database.GetCollection<T>();
+
+                foreach (var newObject in newObjects)
+                {
+                    if (collection.Exists(Query.EQ("_id", newObject.PrimaryKey)))
+                    {
+                        collection.Update(newObject);
+                    }
+                    else
+                    {
+                        collection.Insert(newObject.PrimaryKey, newObject);
+                    }
+                }
+
+                _database.Commit();
+
+                _loggingService.LogInfo($"AddOrUpdate<T> updated {newObjects.Count()} objects in {stopwatch.Elapsed}");
+
+                tcs.SetResult();
+            });
+
+            return tcs.Task;
         }
 
-        public void AddOrUpdate<T>(IEnumerable<T> newObjects) where T : ICacheable
+        public Task<T?> GetAsync<T>(string primaryKey) where T : ICacheable
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            TaskCompletionSource<T?> tcs = new();
 
-            foreach (var newObject in newObjects)
+            _ = Task.Run(() =>
             {
-                AddOrUpdate(newObject);
-            }
+                var collection = _database.GetCollection<T>();
 
-            _loggingService.LogInfo($"AddOrUpdate<T> updated {newObjects.Count()} objects in {stopwatch.Elapsed}");
+                var result = collection.FindById(primaryKey);
+
+                tcs.SetResult(result);
+            });
+
+            return tcs.Task;
         }
 
-        public T? Get<T>(string primaryKey) where T : ICacheable
+        public Task<List<T>> GetAllAsync<T>() where T : ICacheable
         {
-            var collection = _database.GetCollection<T>();
+            TaskCompletionSource<List<T>> tcs = new();
 
-            return collection.FindById(primaryKey);
-        }
-
-        public List<T> GetAll<T>() where T : ICacheable
-        {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            var collection = _database.GetCollection<T>();
-
-            var result = collection.FindAll().ToList();
-
-            _loggingService.LogInfo($"GetAll<T> got {collection.Count()} objects in {stopwatch.Elapsed}");
-
-            return result;
-        }
-
-        public void Remove<T>(T obj) where T : ICacheable
-        {
-            Remove<T>(obj.PrimaryKey);
-        }
-
-        public void Remove<T>(string primaryKey) where T : ICacheable
-        {
-            var collection = _database.GetCollection<T>();
-
-            collection.Delete(primaryKey);
-
-            _database.Commit();
-        }
-
-        public void Remove<T>(IEnumerable<T> objects) where T : ICacheable
-        {
-            var collection = _database.GetCollection<T>();
-
-            foreach (var obj in objects)
+            _ = Task.Run(() =>
             {
-                collection.Delete(obj.PrimaryKey);
-            }
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
+                var collection = _database.GetCollection<T>();
+
+                var result = collection.FindAll().ToList();
+
+                _loggingService.LogInfo($"GetAll<T> got {collection.Count()} objects in {stopwatch.Elapsed}");
+
+                tcs.SetResult(result);
+            });
+
+            return tcs.Task;
         }
 
-        public void RemoveAll<T>() where T : ICacheable
+        public Task RemoveAsync<T>(T obj) where T : ICacheable
         {
-            var collection = _database.GetCollection<T>();
+            return RemoveAsync<T>(obj.PrimaryKey);
+        }
 
-            collection.DeleteAll();
+        public Task RemoveAsync<T>(string primaryKey) where T : ICacheable
+        {
+            TaskCompletionSource tcs = new();
 
-            _database.Commit();
+            _ = Task.Run(() =>
+            {
+                var collection = _database.GetCollection<T>();
+
+                collection.Delete(primaryKey);
+
+                _database.Commit();
+
+                tcs.SetResult();
+            });
+
+            return tcs.Task;
+        }
+
+        public Task RemoveAsync<T>(IEnumerable<T> objects) where T : ICacheable
+        {
+            TaskCompletionSource tcs = new();
+
+            _ = Task.Run(() =>
+            {
+                var collection = _database.GetCollection<T>();
+
+                foreach (var obj in objects)
+                {
+                    collection.Delete(obj.PrimaryKey);
+                }
+
+                _database.Commit();
+
+                tcs.SetResult();
+            });
+
+            return tcs.Task;
+        }
+
+        public Task RemoveAllAsync<T>() where T : ICacheable
+        {
+            TaskCompletionSource tcs = new();
+
+            _ = Task.Run(() =>
+            {
+                var collection = _database.GetCollection<T>();
+
+                collection.DeleteAll();
+
+                _database.Commit();
+
+                tcs.SetResult();
+            });
+
+            return tcs.Task;
         }
     }
 }

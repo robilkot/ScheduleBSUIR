@@ -82,9 +82,9 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         // todo: make better + optimise?
-        private Func<Employee, bool> SearchPredicate(string filter) => new((employee) =>
+        private static Func<Employee, bool> SearchPredicate(string filter) => new((employee) =>
         {
-            return employee.FullName.Contains(filter);
+            return employee.FullName.Contains(filter, StringComparison.InvariantCultureIgnoreCase);
         });
 
         [RelayCommand]

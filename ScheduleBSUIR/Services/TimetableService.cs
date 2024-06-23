@@ -14,7 +14,7 @@ namespace ScheduleBSUIR.Services
         {
             Timetable? timetable;
 
-            var cachedTimetable = _dbService.Get<Timetable>(id.ToString());
+            var cachedTimetable = await _dbService.GetAsync<Timetable>(id.ToString());
             
             bool offline = Connectivity.NetworkAccess is NetworkAccess.None;
 
@@ -67,28 +67,24 @@ namespace ScheduleBSUIR.Services
                 // If we obtained timetable from web api, make sure favorited flag remains from locally stored timetable
                 timetable.Favorited = cachedTimetableIsFavorite;
 
-                _dbService.AddOrUpdate(timetable);
+                await _dbService.AddOrUpdateAsync(timetable);
             }
 
             return timetable;
         }
 
-        public Task AddToFavorites(Timetable timetable)
+        public async Task AddToFavorites(Timetable timetable)
         {
             timetable.Favorited = true;
 
-            _dbService.AddOrUpdate(timetable);
-
-            return Task.FromResult(true);
+            await _dbService.AddOrUpdateAsync(timetable);
         }
 
-        public Task RemoveFromFavorites(Timetable timetable)
+        public async Task RemoveFromFavorites(Timetable timetable)
         {
             timetable.Favorited = false;
 
-            _dbService.AddOrUpdate(timetable);
-            
-            return Task.FromResult(true);
+            await _dbService.AddOrUpdateAsync(timetable);
         }
     }
 }
