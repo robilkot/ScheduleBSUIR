@@ -95,9 +95,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="View\Controls\SchedulePage.xaml.cs">
-	    <DependentUpon>SchedulePage.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="View\DebugPage.xaml.cs">
 	    <DependentUpon>DebugPage.xaml</DependentUpon>
 	  </Compile>
@@ -116,12 +113,6 @@
 	  <MauiXaml Update="View\Controls\TimetableHeader.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Controls\SchedulePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Controls\ExamsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="View\DebugPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -129,9 +120,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\GroupListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Templates\HeaderTemplates.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Templates\LessonTemplates.xaml">

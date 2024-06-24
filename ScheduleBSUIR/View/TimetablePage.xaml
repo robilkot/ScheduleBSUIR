@@ -30,6 +30,8 @@
                 x:Key="BookmarkSelected"
                 TrueValue="dark_bookmark_active"
                 FalseValue="dark_bookmark_inactive"/>
+            <converters:DateToHeaderTextConverter
+                x:Key="DateToHeaderTextConverter"/>
             <converters:TimetableToHeaderTextConverter
                 x:Key="TimetableToHeaderTextConverter"/>
             <converters:SubgroupTypeToStringConverter
@@ -198,7 +200,7 @@
                                 Source="dark_user"/>
                             <Label
                                 Grid.Column="1"
-                                Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                                Text="{Binding Source={x:Static constants:SubgroupType.SecondSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
@@ -289,36 +291,327 @@
             </dx:DXCollectionView.ItemTemplate>
         </dx:DXCollectionView>
 
-        <controls:ExamsPage
-            x:Name="examsPage"
-            IsVisible="False"
-            BindingContext="{Binding .}">
-            <controls:ExamsPage.Triggers>
-                <DataTrigger
-                    TargetType="controls:ExamsPage"
-                    Binding="{Binding SelectedTab, Converter={StaticResource ExamsTabSelected}}"
-                    Value="True">
-                    <Setter
-                        Property="IsVisible"
-                        Value="True"/>
-                </DataTrigger>
-            </controls:ExamsPage.Triggers>
-        </controls:ExamsPage>
+         <!-- Timetable collectionview -->
+        <dx:DXCollectionView
+            x:Name="dayScheduleCollectionView"
+            AllowCascadeUpdate="False"
+            ReduceSizeToContent="True"
+            Grid.Row="1"
+            Margin="15,0"
+            ItemsSource="{Binding Schedule}"
+            ItemSpacing="5"
+            IsLoadMoreEnabled="True"
+            IsRefreshing="{Binding IsLoadingMoreSchedule}"
+            LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
 
-        <controls:SchedulePage
-            x:Name="schedulePage"
-            IsVisible="False"
-            BindingContext="{Binding .}">
-            <controls:SchedulePage.Triggers>
+            <!--todo bind tab-->
+            <dx:DXCollectionView.Header>
+                <controls:TimetableHeader
+                    Margin="0,100,0,20"
+                    Tab="{x:Static constants:TimetableTabs.Exams}"
+                    Timetable="{Binding Timetable}"/>
+            </dx:DXCollectionView.Header>
+
+            <dx:DXCollectionView.ItemTemplate>
+                <DataTemplate
+                    x:DataType="model:DaySchedule">
+                    <Border>
+                        <Grid
+                            RowDefinitions="auto,auto">
+                            <!--active-->
+                            <Label
+                                Grid.Row="0"
+                                Margin="0,20,0,10"
+                                Style="{StaticResource LabelBodyHeaderStyle}"
+                                Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
+                            <!--inactive-->
+                            <!--<Label
+                                Margin="0,10,0,5"
+                                Opacity="0.35"
+                                Style="{StaticResource LabelHeaderStyle}"
+                                FontSize="15"
+                                Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
+                            <dx:DXCollectionView
+                                Grid.Row="1"
+                                AllowCascadeUpdate="True"
+                                IsScrollBarVisible="False"
+                                ReduceSizeToContent="True"
+                                ItemsSource="{Binding .}"
+                                ItemTemplate="{StaticResource LessonTemplateSelector}"
+                                SelectionMode="Single"
+                                SelectionChanged="scheduleCollectionView_SelectionChanged"
+                                ItemSpacing="5"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </dx:DXCollectionView.ItemTemplate>
+
+            <dx:DXCollectionView.Triggers>
                 <DataTrigger
-                    TargetType="controls:SchedulePage"
-                    Binding="{Binding SelectedTab, Converter={StaticResource ScheduleTabSelected}}"
+                    TargetType="dx:DXCollectionView"
+                    Binding="{Binding IsBusy}"
                     Value="True">
                     <Setter
                         Property="IsVisible"
-                        Value="True"/>
+                        Value="False"/>
                 </DataTrigger>
-            </controls:SchedulePage.Triggers>
-        </controls:SchedulePage>
+            </dx:DXCollectionView.Triggers>
+        </dx:DXCollectionView>
+
+        <!--todo: No empty view on dxcv?-->
+        <AbsoluteLayout
+            IsVisible="False">
+            <!--IsVisible="{Binding Schedule, Converter={StaticResource IsEmptyConverter}}">-->
+            <Grid
+                VerticalOptions="Center"
+                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Opacity="0.5"
+                RowSpacing="20"
+                RowDefinitions="auto,auto">
+                <Image
+                    WidthRequest="100"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Grid.Row="0"
+                    Source="party"/>
+                <Label
+                    Grid.Row="1"
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource LabelBodyHeaderStyle}"
+                    Text="Занятий больше нет"/>
+            </Grid>
+
+            <AbsoluteLayout.Triggers>
+                <DataTrigger
+                    TargetType="AbsoluteLayout"
+                    Binding="{Binding IsBusy}"
+                    Value="True">
+                    <Setter
+                        Property="IsVisible"
+                        Value="False"/>
+                </DataTrigger>
+            </AbsoluteLayout.Triggers>
+        </AbsoluteLayout>
+
+        <!-- Bottom sheet with schedule details -->
+        <dx:BottomSheet 
+            x:Name="examDetailSheet" 
+            ShowGrabber="True" 
+            AllowDismiss="True" 
+            StateChanged="examDetailSheet_StateChanged"
+            CornerRadius="12"
+            Padding="15,30"
+            HalfExpandedRatio="0.5"
+            BackgroundColor="{StaticResource DarkControlBackground}"
+            IsModal="true"
+            x:DataType="model:Schedule">
+
+            <VerticalStackLayout
+                x:Name="sheetContent"
+                Spacing="20">
+                <VerticalStackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style
+                            TargetType="Grid">
+                            <Setter
+                                Property="ColumnDefinitions"
+                                Value="auto, *"/>
+                            <Setter
+                                Property="ColumnSpacing"
+                                Value="10"/>
+                        </Style>
+
+                        <converters:SubgroupTypeToStringConverter
+                        x:Key="SubgroupTypeToStringConverter"/>
+                    </ResourceDictionary>
+                </VerticalStackLayout.Resources>
+
+                <Label
+                    Margin="0,0,0,-5"
+                    LineBreakMode="WordWrap"
+                    Style="{StaticResource LabelBodyHeaderStyle}"
+                    Text="{Binding SubjectFullName}"/>
+
+                <!--Schedule details-->
+                <Border
+                    Padding="15"
+                    BackgroundColor="{StaticResource DarkLightControlBackground}">
+
+                    <VerticalStackLayout
+                        Spacing="20">
+                        <!--type-->
+                        <Grid>
+                            <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Тип"/>
+                            <Label
+                                Grid.Column="1"
+                                HorizontalTextAlignment="End"
+                                Style="{StaticResource LabelBodySecondaryStyle}"
+                                Text="{Binding LessonTypeAbbrev}"/>
+                        </Grid>
+
+                        <!--subgroup-->
+                        <Grid>
+                            <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Подгруппа"/>
+                            <Label
+                                Grid.Column="1"
+                                HorizontalTextAlignment="End"
+                                Style="{StaticResource LabelBodySecondaryStyle}"
+                                Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                        </Grid>
+
+                        <!--date-->
+                        <Grid>
+                            <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Дата"/>
+                            <Label
+                                Grid.Column="1"
+                                HorizontalTextAlignment="End"
+                                Style="{StaticResource LabelBodySecondaryStyle}"
+                                Text="{Binding DateLesson, StringFormat='{}{0:dd MMMM yyyy г.}'}"/>
+                        </Grid>
+
+                        <!--time-->
+                        <Grid>
+                            <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Время"/>
+                            <Label
+                                Grid.Column="1"
+                                HorizontalTextAlignment="End"
+                                Style="{StaticResource LabelBodySecondaryStyle}">
+                                <Label.Text>
+                                    <MultiBinding
+                                        StringFormat="{}{0} - {1}">
+                                        <Binding
+                                            Path="StartLessonTime"
+                                            StringFormat="{}{0:HH:mm}"/>
+                                        <Binding
+                                            Path="EndLessonTime"
+                                            StringFormat="{}{0:HH:mm}"/>
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </Grid>
+
+                        <!--auditories-->
+                        <Grid>
+                            <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Аудитория"/>
+                            <Label
+                                Grid.Column="1"
+                                HorizontalTextAlignment="End"
+                                Style="{StaticResource LabelBodySecondaryStyle}"
+                                Text="{Binding Auditories, Converter={converters:StringListToStringConverter}}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label
+                    IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                    Text="Примечания"
+                    Margin="15,0,0,-10"
+                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                <!--Remarks (if present)-->
+                <Border
+                    IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                    Padding="15"
+                    BackgroundColor="{StaticResource DarkLightControlBackground}">
+                    <Label
+                        Text="{Binding Note}"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"/>
+                </Border>
+
+                <Label
+                    IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                    Text="Преподаватели"
+                    Margin="15,0,0,-10"
+                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                <!--Schedule lecturers-->
+                <VerticalStackLayout
+                    Spacing="10"
+                    BindableLayout.ItemsSource="{Binding Employees}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="model:EmployeeDto">
+                            <Border
+                                HeightRequest="70"
+                                BackgroundColor="{StaticResource DarkLightControlBackground}">
+                                <Grid
+                                    ColumnSpacing="15"
+                                    Padding="15,10"
+                                    ColumnDefinitions="auto,*,auto">
+
+                                    <Image
+                                        VerticalOptions="Center"
+                                        Grid.Column="0"
+                                        HeightRequest="50"
+                                        Aspect="AspectFill">
+                                        <Image.Source>
+                                            <UriImageSource
+                                                Uri="{Binding PhotoLink}"
+                                                CachingEnabled="True"
+                                                CacheValidity="10:00:00:00"/>
+                                        </Image.Source>
+
+                                        <Image.Clip>
+                                            <EllipseGeometry
+                                                Center="25,25"
+                                                RadiusX="25"
+                                                RadiusY="25"/>
+                                        </Image.Clip>
+                                    </Image>
+
+                                    <!--todo: converter?-->
+                                    <Label
+                                        Grid.Column="1"
+                                        VerticalOptions="Center"
+                                        MaxLines="2"
+                                        LineHeight="1.1"
+                                        LineBreakMode="WordWrap"
+                                        Style="{StaticResource LabelBodyPrimaryStyle}">
+                                        <Label.Text>
+                                            <MultiBinding
+                                                StringFormat="{}{2} {0} {1}">
+                                                <Binding Path="FirstName"/>
+                                                <Binding Path="MiddleName"/>
+                                                <Binding Path="LastName"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+
+                                    <Image
+                                        Grid.Column="2"
+                                        HeightRequest="16"
+                                        Opacity="0.5"
+                                        Source="dark_arrow_right"/>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="employee_tapped"
+                                        Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </dx:BottomSheet>
     </Grid>
 </ContentPage>

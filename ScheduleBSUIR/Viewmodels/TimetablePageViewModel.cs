@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DevExpress.Maui.Core.Internal;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -46,6 +47,8 @@ namespace ScheduleBSUIR.Viewmodels
             ClearLoadedSchedule();
 
             LoadMoreScheduleCommand.Execute(null);
+
+            ScrollToActiveSchedule();
         }
 
         [ObservableProperty]
@@ -55,6 +58,8 @@ namespace ScheduleBSUIR.Viewmodels
             ClearLoadedSchedule();
 
             LoadMoreScheduleCommand.Execute(null);
+
+            ScrollToActiveSchedule();
         }
 
         [ObservableProperty]
@@ -69,13 +74,15 @@ namespace ScheduleBSUIR.Viewmodels
             SelectedTab = Timetable?.Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
 
             LoadMoreScheduleCommand.Execute(null);
+
+            ScrollToActiveSchedule();
         }
 
         public bool Favorited => Timetable?.Favorited ?? false;
         public bool IsSkeletonVisible => Timetable is null || IsBusy;
 
         [ObservableProperty]
-        private ObservableCollection<DaySchedule> _schedule = [];
+        private DXObservableCollection<DaySchedule> _schedule = [];
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -86,7 +93,7 @@ namespace ScheduleBSUIR.Viewmodels
 
 
         [RelayCommand]
-        public void LoadMoreSchedule()
+        public async Task LoadMoreSchedule()
         {
             // Guard case for overflow if already loaded all possible schedules
             if (SelectedTab is TimetableTabs.Schedule && _loadedToDate >= Timetable?.EndDate
@@ -111,12 +118,9 @@ namespace ScheduleBSUIR.Viewmodels
 
             _loadedToDate += _loadingStep;
 
-            var newSchedules = _timetableService.GetDaySchedules(Timetable, _loadedFromDate, _loadedToDate, SelectedTab, SelectedMode);
+            var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedFromDate, _loadedToDate, SelectedTab, SelectedMode);
 
-            foreach (var schedule in newSchedules ?? [])
-            {
-                Schedule.Add(schedule);
-            }
+            Schedule.AddRange(newSchedules ?? []);
 
             IsLoadingMoreSchedule = false;
         }
@@ -208,7 +212,10 @@ namespace ScheduleBSUIR.Viewmodels
             await GetTimetable(TimetableId);
 
             IsRefreshing = false;
+        }
 
+        private void ScrollToActiveSchedule()
+        {
             int? nearestScheduleIndex = GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)

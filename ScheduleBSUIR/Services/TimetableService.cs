@@ -89,15 +89,16 @@ namespace ScheduleBSUIR.Services
             await _dbService.AddOrUpdateAsync(timetable);
         }
 
+        // todo: maybe pagination without binding dates is better?
         // Dates are nullable because we may want to get exams schedules for which dates are ignored
-        public IEnumerable<DaySchedule>? GetDaySchedules(Timetable? timetable,
+        public Task<List<DaySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
             DateTime? startDate,
             DateTime? endDate,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
             if (timetable is null)
-                return null;
+                return Task.FromResult<List<DaySchedule>?>(null);
 
             IEnumerable<DaySchedule>? result = null;
 
@@ -126,9 +127,19 @@ namespace ScheduleBSUIR.Services
                         .Select(grouping => new DaySchedule(grouping));
             }
 
-            _loggingService.LogInfo($"GetDaySchedules returned {result?.Count()} objects (startDate: {startDate?.Date}, endDate: {endDate?.Date})", displayCaller: false);
+            TaskCompletionSource<List<DaySchedule>?> tcs = new();
 
-            return result;
+            _ = Task.Run(() =>
+            {
+                // Deferred LINQ
+                var resultList = result?.ToList();
+
+                _loggingService.LogInfo($"GetDaySchedules got {resultList?.Count} objects (startDate: {startDate?.ToString("dd.MM")}, endDate: {endDate?.ToString("dd.MM")}", displayCaller: false);
+
+                tcs.SetResult(resultList);
+            });
+
+            return tcs.Task;
         }
     }
 }
