@@ -37,6 +37,7 @@ public partial class ExamsPage : ContentView
             return;
         }
 
+        // todooo replace
         sheetContent.BindingContext = (Schedule)examsCollectionView.SelectedItem;
 
         examDetailSheet.State = BottomSheetState.HalfExpanded;

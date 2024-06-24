@@ -1,5 +1,7 @@
-﻿using ScheduleBSUIR.Interfaces;
+﻿using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
@@ -15,7 +17,7 @@ namespace ScheduleBSUIR.Services
             Timetable? timetable;
 
             var cachedTimetable = await _dbService.GetAsync<Timetable>(id.ToString());
-            
+
             bool offline = Connectivity.NetworkAccess is NetworkAccess.None;
 
             if (offline)
@@ -28,11 +30,11 @@ namespace ScheduleBSUIR.Services
                 timetable = cachedTimetable;
                 _loggingService.LogInfo($"Cached timetable found for {id}", displayCaller: false);
             }
-            else 
+            else
             {
                 bool cachedTimetableIsFavorite = false;
 
-                if(cachedTimetable is not null)
+                if (cachedTimetable is not null)
                 {
                     cachedTimetableIsFavorite = cachedTimetable.Favorited;
                 }
@@ -85,6 +87,48 @@ namespace ScheduleBSUIR.Services
             timetable.Favorited = false;
 
             await _dbService.AddOrUpdateAsync(timetable);
+        }
+
+        // Dates are nullable because we may want to get exams schedules for which dates are ignored
+        public IEnumerable<DaySchedule>? GetDaySchedules(Timetable? timetable,
+            DateTime? startDate,
+            DateTime? endDate,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All)
+        {
+            if (timetable is null)
+                return null;
+
+            IEnumerable<DaySchedule>? result = null;
+
+            // Completely ignore dates for exams because they are not consistent with actual schedules in backend
+            // Probably being set manually there
+            if (timetableTabs is TimetableTabs.Exams)
+            {
+                var schedules = subgroupType switch
+                {
+                    SubgroupType.All => timetable.Exams,
+                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate),
+
+                    SubgroupType.FirstSubgroup => timetable.Exams?
+                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
+                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
+
+                    SubgroupType.SecondSubgroup => timetable.Exams?
+                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
+                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
+
+                    _ => throw new UnreachableException(),
+                };
+
+                result = schedules?
+                        .GroupBy(schedule => schedule.DateLesson)
+                        .Select(grouping => new DaySchedule(grouping));
+            }
+
+            _loggingService.LogInfo($"GetDaySchedules returned {result?.Count()} objects (startDate: {startDate?.Date}, endDate: {endDate?.Date})", displayCaller: false);
+
+            return result;
         }
     }
 }

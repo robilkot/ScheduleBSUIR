@@ -1,17 +1,14 @@
-﻿using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DevExpress.XtraEditors.Filtering;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.Versioning;
-using System.Xml;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -24,8 +21,15 @@ namespace ScheduleBSUIR.Viewmodels
         private readonly TimetableService _timetableService = timetableService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
+        private readonly TimeSpan _loadingStep = TimeSpan.FromDays(6);
+        private DateTime? _loadedFromDate = null;
+        private DateTime? _loadedToDate = null;
+
         [ObservableProperty]
         private bool _isRefreshing = false;
+
+        [ObservableProperty]
+        private bool _isLoadingMoreSchedule = false;
 
         [ObservableProperty]
         private bool _isTimetableModePopupOpen = false;
@@ -37,34 +41,41 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
+        partial void OnSelectedTabChanged(TimetableTabs value)
+        {
+            ClearLoadedSchedule();
+
+            LoadMoreScheduleCommand.Execute(null);
+        }
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Exams))]
         private SubgroupType _selectedMode = SubgroupType.All;
+        partial void OnSelectedModeChanged(SubgroupType value)
+        {
+            ClearLoadedSchedule();
+
+            LoadMoreScheduleCommand.Execute(null);
+        }
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Exams))]
         [NotifyPropertyChangedFor(nameof(Favorited))]
         [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
         private Timetable? _timetable;
+        partial void OnTimetableChanged(Timetable? value)
+        {
+            ClearLoadedSchedule();
+
+            // todo: compare session dates instead of this?
+            SelectedTab = Timetable?.Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
+
+            LoadMoreScheduleCommand.Execute(null);
+        }
 
         public bool Favorited => Timetable?.Favorited ?? false;
         public bool IsSkeletonVisible => Timetable is null || IsBusy;
-        public List<Schedule>? Exams => SelectedMode switch 
-        { 
-            SubgroupType.All => Timetable?.Exams,
 
-            SubgroupType.FirstSubgroup => Timetable?.Exams?
-                .Where(schedule => schedule is { NumSubgroup: SubgroupType.All or SubgroupType.FirstSubgroup } )
-                .ToList(),
-
-            SubgroupType.SecondSubgroup => Timetable?.Exams?
-                .Where(schedule => schedule is { NumSubgroup: SubgroupType.All or SubgroupType.SecondSubgroup })
-                .ToList(),
-
-            _ => throw new UnreachableException(),
-        };
-
+        [ObservableProperty]
+        private ObservableCollection<DaySchedule> _schedule = [];
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -73,6 +84,42 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private string _timetableHeader = string.Empty;
 
+
+        [RelayCommand]
+        public void LoadMoreSchedule()
+        {
+            // Guard case for overflow if already loaded all possible schedules
+            if (SelectedTab is TimetableTabs.Schedule && _loadedToDate >= Timetable?.EndDate
+                ||
+                SelectedTab is TimetableTabs.Exams && Schedule.Count > 0)
+            {
+                IsLoadingMoreSchedule = false;
+                return;
+            }
+
+            // Initial case
+            var yesterday = _dateTimeProvider.Now - TimeSpan.FromDays(1);
+
+            _loadedFromDate ??= SelectedTab switch
+            {
+                TimetableTabs.Schedule => Timetable?.StartDate,
+                TimetableTabs.Exams => Timetable?.StartExamsDate, // Ignored in timetable service, actually
+                _ => throw new UnreachableException(),
+            } ?? yesterday;
+
+            _loadedToDate ??= _loadedFromDate;
+
+            _loadedToDate += _loadingStep;
+
+            var newSchedules = _timetableService.GetDaySchedules(Timetable, _loadedFromDate, _loadedToDate, SelectedTab, SelectedMode);
+
+            foreach (var schedule in newSchedules ?? [])
+            {
+                Schedule.Add(schedule);
+            }
+
+            IsLoadingMoreSchedule = false;
+        }
 
         [RelayCommand]
         public async Task GetTimetable(TypedId? id)
@@ -87,14 +134,9 @@ namespace ScheduleBSUIR.Viewmodels
 
             _loggingService.LogInfo($"Getting timetable with id {id}", displayCaller: false);
 
-            _loggingService.LogInfo($"GetTimetable is on main thread: {MainThread.IsMainThread}", displayCaller: false);
-
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
-
-                // todo: compare session dates instead of this?
-                SelectedTab = Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
             }
             catch (Exception ex)
             {
@@ -179,7 +221,7 @@ namespace ScheduleBSUIR.Viewmodels
 
         // Accepts studentgroup dto or employeedto
         [RelayCommand]
-        public async Task OpenTimetable(object dto)
+        public async Task NavigateToTimetable(object dto)
         {
             TypedId timetableId = dto switch
             {
@@ -210,8 +252,6 @@ namespace ScheduleBSUIR.Viewmodels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            _loggingService.LogInfo($"ApplyQueryAttributes is on main thread: {MainThread.IsMainThread}", displayCaller: false);
-
             SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
 
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
@@ -228,26 +268,16 @@ namespace ScheduleBSUIR.Viewmodels
             if (Timetable is null)
                 return null;
 
-            if (SelectedTab == TimetableTabs.Exams)
-            {
-                if (Exams is null)
-                    return null;
+            var foundSchedule = Schedule.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.Now.Date);
 
-                var foundSchedule = Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
+            return foundSchedule is null ? null : Schedule.IndexOf(foundSchedule);
+        }
+        private void ClearLoadedSchedule()
+        {
+            Schedule.Clear();
 
-                return foundSchedule is null ? null : Exams.IndexOf(foundSchedule);
-            }
-
-            // todo
-            if (SelectedTab == TimetableTabs.Schedule)
-            {
-                //if (Exams is null)
-                //    return null;
-
-                //return Exams.FirstOrDefault(e => e.DateLesson >= _dateTimeProvider.Now.Date);
-            }
-
-            return null;
+            _loadedFromDate = null;
+            _loadedToDate = null;
         }
     }
 }

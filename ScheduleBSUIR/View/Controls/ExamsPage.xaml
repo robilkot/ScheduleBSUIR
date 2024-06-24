@@ -16,21 +16,25 @@
         <dx:DXCollectionView
             x:Name="examsCollectionView"
             Grid.Row="1"
-            IsVisible="{Binding Exams, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-            ItemsSource="{Binding Exams}"
+            ItemsSource="{Binding Schedule}"
             ItemSpacing="5"
-            ItemTemplate="{StaticResource LessonTemplateSelector}"
             AllowGroupCollapse="False"
             UseRippleEffect="True"
+            IsLoadMoreEnabled="True"
+            IsRefreshing="{Binding IsLoadingMoreSchedule}"
+            LoadMoreCommand="{Binding LoadMoreScheduleCommand}"
             SelectionMode="Single"
-            SelectionChanged="examsCollectionView_SelectionChanged"
-            GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">
+            SelectionChanged="examsCollectionView_SelectionChanged">
+            <!--IndicatorColor="Transparent"-->
+            <!--IsVisible="{Binding Schedule, Converter={StaticResource IsNotNullOrEmptyConverter}}"-->
+            <!--ItemTemplate="{StaticResource LessonTemplateSelector}"-->
+            <!--GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}">-->
 
-            <dx:DXCollectionView.GroupDescription>
+            <!--<dx:DXCollectionView.GroupDescription>
                 <dx:GroupDescription 
                     FieldName="DateLesson"
                     GroupInterval="Date"/>
-            </dx:DXCollectionView.GroupDescription>
+            </dx:DXCollectionView.GroupDescription>-->
 
             <dx:DXCollectionView.Header>
                 <controls:TimetableHeader
@@ -38,6 +42,19 @@
                     Tab="{x:Static constants:TimetableTabs.Exams}"
                     Timetable="{Binding Timetable}"/>
             </dx:DXCollectionView.Header>
+
+            <dx:DXCollectionView.ItemTemplate>
+                <DataTemplate
+                    x:DataType="model:DaySchedule">
+                    <Border>
+                        <VerticalStackLayout
+                            BindableLayout.ItemsSource="{Binding .}"
+                            BindableLayout.ItemTemplateSelector="{StaticResource LessonTemplateSelector}"
+                            Spacing="5">
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </dx:DXCollectionView.ItemTemplate>
 
             <dx:DXCollectionView.Triggers>
                 <DataTrigger
@@ -203,7 +220,7 @@
                      BindableLayout.ItemsSource="{Binding Employees}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate
-                             x:DataType="model:Employee">
+                             x:DataType="model:EmployeeDto">
                             <Border
                                  HeightRequest="70"
                                  BackgroundColor="{StaticResource DarkLightControlBackground}">
@@ -232,6 +249,7 @@
                                         </Image.Clip>
                                     </Image>
 
+                                    <!--todo: converter?-->
                                     <Label
                                          Grid.Column="1"
                                          VerticalOptions="Center"
@@ -275,7 +293,8 @@
 
         <!--todo: No empty view on dxcv?-->
         <AbsoluteLayout
-            IsVisible="{Binding Exams, Converter={StaticResource IsEmptyConverter}}">
+            IsVisible="False">
+            <!--IsVisible="{Binding Schedule, Converter={StaticResource IsEmptyConverter}}">-->
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
