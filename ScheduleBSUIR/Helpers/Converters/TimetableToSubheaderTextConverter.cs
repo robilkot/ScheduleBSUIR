@@ -14,11 +14,7 @@ namespace ScheduleBSUIR.Helpers.Converters
 
             string header = string.Empty;
 
-            if (timetable.EmployeeDto is not null)
-            {
-                header = $"{timetable.EmployeeDto.DegreeAbbrev}";
-            }
-            else if (timetable.StudentGroupDto is not null)
+            if (timetable.StudentGroupDto is not null)
             {
                 header = $"{timetable.StudentGroupDto.Course} курс {timetable.StudentGroupDto.SpecialityAbbrev}";
             }

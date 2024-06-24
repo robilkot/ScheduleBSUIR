@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 
 namespace ScheduleBSUIR.Helpers.Converters.Common
 {
@@ -6,8 +7,8 @@ namespace ScheduleBSUIR.Helpers.Converters.Common
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is IEnumerable<object> enumerableValue)
-                return enumerableValue.Count() == 0;
+            if (value is IEnumerable enumerableValue)
+                return !enumerableValue.GetEnumerator().MoveNext();
 
             return false;
         }

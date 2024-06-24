@@ -49,7 +49,7 @@ namespace ScheduleBSUIR.Viewmodels
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, emplyeeId },
-                { NavigationKeys.TimetableHeader, selectedEmployee.Fio },
+                { NavigationKeys.TimetableHeader, selectedEmployee.LastName },
             };
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);

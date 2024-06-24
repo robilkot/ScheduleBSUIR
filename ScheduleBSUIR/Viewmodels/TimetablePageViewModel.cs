@@ -22,22 +22,18 @@ namespace ScheduleBSUIR.Viewmodels
         private readonly TimetableService _timetableService = timetableService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-        private readonly TimeSpan _loadingStep = TimeSpan.FromDays(6);
-        private DateTime? _loadedFromDate = null;
+        private readonly TimeSpan _loadingStep = TimeSpan.FromDays(10);
         private DateTime? _loadedToDate = null;
+        private DateTime? _lastScheduleDate = null;
 
         [ObservableProperty]
-        private bool _isRefreshing = false;
-
-        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Schedule))]
         private bool _isLoadingMoreSchedule = false;
 
         [ObservableProperty]
         private bool _isTimetableModePopupOpen = false;
 
-        // Actually declared in BaseViewModel but we need NotifyPropertyChangedFor here
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
         private bool _isBusy;
 
         [ObservableProperty]
@@ -64,14 +60,13 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Favorited))]
-        [NotifyPropertyChangedFor(nameof(IsSkeletonVisible))]
         private Timetable? _timetable;
         partial void OnTimetableChanged(Timetable? value)
         {
             ClearLoadedSchedule();
 
             // todo: compare session dates instead of this?
-            SelectedTab = Timetable?.Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
+            //SelectedTab = Timetable?.Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
 
             LoadMoreScheduleCommand.Execute(null);
 
@@ -79,10 +74,9 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         public bool Favorited => Timetable?.Favorited ?? false;
-        public bool IsSkeletonVisible => Timetable is null || IsBusy;
 
         [ObservableProperty]
-        private DXObservableCollection<DaySchedule> _schedule = [];
+        private ObservableCollection<DaySchedule>? _schedule = null;
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -91,44 +85,42 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private string _timetableHeader = string.Empty;
 
-
         [RelayCommand]
         public async Task LoadMoreSchedule()
         {
-            // Guard case for overflow if already loaded all possible schedules
-            if (SelectedTab is TimetableTabs.Schedule && _loadedToDate >= Timetable?.EndDate
-                ||
-                SelectedTab is TimetableTabs.Exams && Schedule.Count > 0)
+            // Initial case
+            _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
+
+            _loadedToDate ??= _timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode)
+                ?? _dateTimeProvider.Now - TimeSpan.FromDays(1);
+
+            // Guard case for overflow if no schedules found or already loaded all possible schedules
+            if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
             {
                 IsLoadingMoreSchedule = false;
                 return;
             }
 
-            // Initial case
-            var yesterday = _dateTimeProvider.Now - TimeSpan.FromDays(1);
+            // Common case
+            var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
 
-            _loadedFromDate ??= SelectedTab switch
+            // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
+            _loadedToDate += _loadingStep + TimeSpan.FromDays(1);
+
+            Schedule ??= [];
+
+            foreach (var schedule in newSchedules ?? [])
             {
-                TimetableTabs.Schedule => Timetable?.StartDate,
-                TimetableTabs.Exams => Timetable?.StartExamsDate, // Ignored in timetable service, actually
-                _ => throw new UnreachableException(),
-            } ?? yesterday;
-
-            _loadedToDate ??= _loadedFromDate;
-
-            _loadedToDate += _loadingStep;
-
-            var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedFromDate, _loadedToDate, SelectedTab, SelectedMode);
-
-            Schedule.AddRange(newSchedules ?? []);
+                Schedule.Add(schedule);
+            }
 
             IsLoadingMoreSchedule = false;
         }
 
         [RelayCommand]
-        public async Task GetTimetable(TypedId? id)
+        public async Task GetTimetable()
         {
-            if (id is null)
+            if (TimetableId is null)
                 return;
 
             if (IsBusy)
@@ -136,18 +128,15 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsBusy = true;
 
-            _loggingService.LogInfo($"Getting timetable with id {id}", displayCaller: false);
+            _loggingService.LogInfo($"Getting timetable with id {TimetableId}", displayCaller: false);
 
             try
             {
-                Timetable = await _timetableService.GetTimetableAsync(id, CancellationToken.None);
+                Timetable = await _timetableService.GetTimetableAsync(TimetableId, CancellationToken.None);
             }
             catch (Exception ex)
             {
                 Timetable = null;
-
-                // let skeleton appear before popup. maybe will become obosolete
-                await Task.Delay(100);
 
                 // todo: error popup?
                 await Shell.Current.DisplayAlert("Error", "Couldn't get timetable", "OK");
@@ -206,14 +195,6 @@ namespace ScheduleBSUIR.Viewmodels
             IsTimetableModePopupOpen = !IsTimetableModePopupOpen;
         }
 
-        [RelayCommand]
-        public async Task Refresh()
-        {
-            await GetTimetable(TimetableId);
-
-            IsRefreshing = false;
-        }
-
         private void ScrollToActiveSchedule()
         {
             int? nearestScheduleIndex = GetNearestScheduleIndex();
@@ -267,7 +248,7 @@ namespace ScheduleBSUIR.Viewmodels
                 TimetableId = (TypedId)id;
                 TimetableHeader = (string)header;
 
-                RefreshCommand.Execute(null);
+                GetTimetableCommand.Execute(null);
             }
         }
         private int? GetNearestScheduleIndex()
@@ -275,16 +256,16 @@ namespace ScheduleBSUIR.Viewmodels
             if (Timetable is null)
                 return null;
 
-            var foundSchedule = Schedule.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.Now.Date);
+            var foundSchedule = Schedule?.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.Now.Date);
 
-            return foundSchedule is null ? null : Schedule.IndexOf(foundSchedule);
+            return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
         }
         private void ClearLoadedSchedule()
         {
-            Schedule.Clear();
-
-            _loadedFromDate = null;
             _loadedToDate = null;
+            _lastScheduleDate = null;
+
+            Schedule = null;
         }
     }
 }

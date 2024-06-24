@@ -30,6 +30,10 @@
                 x:Key="BookmarkSelected"
                 TrueValue="dark_bookmark_active"
                 FalseValue="dark_bookmark_inactive"/>
+            <convertersCommon:BoolToValueConverter
+                x:Key="EnabledOpacityConverter"
+                TrueValue="1"
+                FalseValue="0.5"/>
             <converters:DateToHeaderTextConverter
                 x:Key="DateToHeaderTextConverter"/>
             <converters:TimetableToHeaderTextConverter
@@ -38,6 +42,9 @@
                 x:Key="SubgroupTypeToStringConverter"/>
             <toolkit:EnumToIntConverter 
                 x:Key="EnumToIntConverter" />
+            <toolkit:VariableMultiValueConverter 
+                ConditionType="All"
+                x:Key="VariableMultiValueConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -64,18 +71,14 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <Grid
+            <ImageButton
                 Grid.Column="0"
                 Padding="0,10,20,10"
                 WidthRequest="40"
-                HeightRequest="40">
-                <Image
-                    Source="dark_arrow_left"/>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Command="{Binding NavigateBackCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
+                HeightRequest="40"
+                Command="{Binding NavigateBackCommand}"
+                Source="dark_arrow_left">
+            </ImageButton>
 
             <controls:CustomTabbar
                 HorizontalOptions="Center"
@@ -83,10 +86,12 @@
                 Tab="{Binding SelectedTab, Mode=TwoWay}">
             </controls:CustomTabbar>
 
-            <!--Timetable mode toggle-->
+            <!-- Timetable mode toggle -->
             <Grid
+                IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="2"
                 Padding="10"
+                Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
                 WidthRequest="40"
                 HeightRequest="40">
                 <Grid
@@ -128,21 +133,31 @@
                 </Grid.GestureRecognizers>
             </Grid>
 
-            <!--boormark toggle-->
-            <Grid
+            <!-- Boormark toggle -->
+            <ImageButton
                 IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="3"
+                Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
                 Padding="10"
                 WidthRequest="40"
-                HeightRequest="40">
-                <Image
-                    Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"/>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Command="{Binding ToogleBookmarkCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
-            
+                HeightRequest="40"
+                Command="{Binding ToogleBookmarkCommand}"
+                Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}">
+                <ImageButton.Triggers>
+                    <DataTrigger
+                        TargetType="ImageButton"
+                        Binding="{Binding Timetable}"
+                        Value="{x:Null}">
+                        <Setter
+                            Property="IsEnabled"
+                            Value="False"/>
+                        <Setter
+                            Property="Opacity"
+                            Value="0.5"/>
+                    </DataTrigger>
+                </ImageButton.Triggers>
+            </ImageButton>
+
             <!--Timetable mode popup-->
             <dx:DXPopup
                 PlacementTarget="{x:Reference navBar}"
@@ -238,11 +253,17 @@
         <!-- Skeleton of timetable -->
         <dx:DXCollectionView
             ItemSpacing="5"
-            IsVisible="{Binding IsSkeletonVisible}"
             IsPullToRefreshEnabled="True"
-            IsRefreshing="{Binding IsRefreshing}"
-            PullToRefreshCommand="{Binding RefreshCommand}"
+            IsRefreshing="{Binding IsBusy}"
+            PullToRefreshCommand="{Binding GetTimetableCommand}"
             Margin="15,0">
+            <dx:DXCollectionView.IsVisible>
+                <MultiBinding
+                    Converter="{StaticResource VariableMultiValueConverter}">
+                    <Binding Path="IsBusy"/>
+                    <Binding Path="Timetable" Converter="{StaticResource IsNullOrEmptyConverter}"/>
+                </MultiBinding>
+            </dx:DXCollectionView.IsVisible>
             <dx:DXCollectionView.ItemsSource>
                 <x:Array Type="{x:Type x:Int16}">
                     <x:Int16>0</x:Int16>
@@ -304,11 +325,10 @@
             IsRefreshing="{Binding IsLoadingMoreSchedule}"
             LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
 
-            <!--todo bind tab-->
             <dx:DXCollectionView.Header>
                 <controls:TimetableHeader
                     Margin="0,100,0,20"
-                    Tab="{x:Static constants:TimetableTabs.Exams}"
+                    Tab="{Binding SelectedTab}"
                     Timetable="{Binding Timetable}"/>
             </dx:DXCollectionView.Header>
 
@@ -360,8 +380,7 @@
 
         <!--todo: No empty view on dxcv?-->
         <AbsoluteLayout
-            IsVisible="False">
-            <!--IsVisible="{Binding Schedule, Converter={StaticResource IsEmptyConverter}}">-->
+            IsVisible="{Binding Schedule, Converter={StaticResource IsEmptyConverter}}">
             <Grid
                 VerticalOptions="Center"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"

@@ -16,7 +16,12 @@ public partial class TimetableHeader : ContentView
     public TimetableTabs Tab
     {
         get => (TimetableTabs)GetValue(TabProperty);
-        set => SetValue(TabProperty, value);
+        set
+        {
+            SetValue(TabProperty, value);
+            // Timetable needs to be converted to labels' texts
+            OnPropertyChanged(nameof(Timetable));
+        }
     }
 
     public TimetableHeader()

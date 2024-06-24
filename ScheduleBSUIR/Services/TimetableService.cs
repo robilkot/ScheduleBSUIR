@@ -89,8 +89,72 @@ namespace ScheduleBSUIR.Services
             await _dbService.AddOrUpdateAsync(timetable);
         }
 
-        // todo: maybe pagination without binding dates is better?
-        // Dates are nullable because we may want to get exams schedules for which dates are ignored
+        public DateTime? GetLastScheduleDate(Timetable? timetable,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All)
+        {
+            if (timetable is null)
+                return null;
+
+            DateTime? result = null;
+
+            if (timetableTabs is TimetableTabs.Exams)
+            {
+                var lastSchedule = subgroupType switch
+                {
+                    SubgroupType.All => timetable.Exams?
+                        .LastOrDefault(),
+
+                    SubgroupType.FirstSubgroup => timetable.Exams?
+                        .LastOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
+
+                    SubgroupType.SecondSubgroup => timetable.Exams?
+                        .LastOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
+
+                    _ => throw new UnreachableException(),
+                };
+
+                result = lastSchedule?.DateLesson;
+            }
+
+            // todo for schedule tab
+
+            return result;
+        }
+
+        public DateTime? GetFirstScheduleDate(Timetable? timetable,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All)
+        {
+            if (timetable is null)
+                return null;
+
+            DateTime? result = null;
+
+            if (timetableTabs is TimetableTabs.Exams)
+            {
+                var firstSchedule = subgroupType switch
+                {
+                    SubgroupType.All => timetable.Exams?
+                        .FirstOrDefault(),
+
+                    SubgroupType.FirstSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
+
+                    SubgroupType.SecondSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
+
+                    _ => throw new UnreachableException(),
+                };
+
+                result = firstSchedule?.DateLesson;
+            }
+
+            // todo for schedule tab
+
+            return result;
+        }
+
         public Task<List<DaySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
             DateTime? startDate,
             DateTime? endDate,
@@ -102,21 +166,19 @@ namespace ScheduleBSUIR.Services
 
             IEnumerable<DaySchedule>? result = null;
 
-            // Completely ignore dates for exams because they are not consistent with actual schedules in backend
-            // Probably being set manually there
             if (timetableTabs is TimetableTabs.Exams)
             {
                 var schedules = subgroupType switch
                 {
-                    SubgroupType.All => timetable.Exams,
-                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate),
+                    SubgroupType.All => timetable.Exams?
+                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate),
 
                     SubgroupType.FirstSubgroup => timetable.Exams?
-                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
+                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
                         .Where(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
 
                     SubgroupType.SecondSubgroup => timetable.Exams?
-                        //.Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
+                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
                         .Where(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
 
                     _ => throw new UnreachableException(),
@@ -134,7 +196,7 @@ namespace ScheduleBSUIR.Services
                 // Deferred LINQ
                 var resultList = result?.ToList();
 
-                _loggingService.LogInfo($"GetDaySchedules got {resultList?.Count} objects (startDate: {startDate?.ToString("dd.MM")}, endDate: {endDate?.ToString("dd.MM")}", displayCaller: false);
+                _loggingService.LogInfo($"GetDaySchedules got {resultList?.Count} objects ({startDate?.ToString("dd.MM")} - {endDate?.ToString("dd.MM")})", displayCaller: false);
 
                 tcs.SetResult(resultList);
             });

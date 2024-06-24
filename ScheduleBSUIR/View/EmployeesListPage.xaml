@@ -86,7 +86,8 @@
                     <Border
                         Background="{StaticResource DarkControlBackground}"
                         StrokeThickness="0"
-                        Padding="15,10">
+                        Padding="15,10"
+                        StrokeShape="Rectangle">
 
                         <Grid
                             ColumnSpacing="10"
