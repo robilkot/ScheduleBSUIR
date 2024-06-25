@@ -2,7 +2,7 @@
 {
     public static class NavigationKeys
     {
-        public const string TimetableId = "TimetableId";
-        public const string TimetableHeader = "TimetableHeader";
+        public const string TimetableId = nameof(TimetableId);
+        public const string TimetableHeader = nameof(TimetableHeader);
     }
 }

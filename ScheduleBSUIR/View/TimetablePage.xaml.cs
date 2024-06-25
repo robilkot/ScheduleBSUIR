@@ -46,12 +46,12 @@ public partial class TimetablePage : ContentPage
 
         sheetContent.BindingContext = (Schedule)collectionView.SelectedItem;
 
-        examDetailSheet.State = BottomSheetState.HalfExpanded;
+        scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
 
         collectionView.SelectedItem = null;
     }
 
-    private void examDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
+    private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
     {
         if (e.NewValue == BottomSheetState.Hidden)
         {
@@ -61,6 +61,6 @@ public partial class TimetablePage : ContentPage
 
     private void employee_tapped(object sender, TappedEventArgs e)
     {
-        examDetailSheet.State = BottomSheetState.Hidden;
+        scheduleDetailSheet.State = BottomSheetState.Hidden;
     }
 }

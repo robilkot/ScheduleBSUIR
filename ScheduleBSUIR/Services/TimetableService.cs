@@ -196,8 +196,6 @@ namespace ScheduleBSUIR.Services
                 // Deferred LINQ
                 var resultList = result?.ToList();
 
-                _loggingService.LogInfo($"GetDaySchedules got {resultList?.Count} objects ({startDate?.ToString("dd.MM")} - {endDate?.ToString("dd.MM")})", displayCaller: false);
-
                 tcs.SetResult(resultList);
             });
 

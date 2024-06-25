@@ -20,35 +20,189 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <convertersCommon:ValueToBoolConverter
-                x:Key="ScheduleTabSelected"
-                TrueValue="{x:Static constants:TimetableTabs.Schedule}"/>
-            <convertersCommon:ValueToBoolConverter
-                x:Key="ExamsTabSelected"
-                TrueValue="{x:Static constants:TimetableTabs.Exams}"/>
-            <convertersCommon:BoolToValueConverter
-                x:Key="BookmarkSelected"
-                TrueValue="dark_bookmark_active"
-                FalseValue="dark_bookmark_inactive"/>
-            <convertersCommon:BoolToValueConverter
-                x:Key="EnabledOpacityConverter"
-                TrueValue="1"
-                FalseValue="0.5"/>
             <converters:DateToHeaderTextConverter
                 x:Key="DateToHeaderTextConverter"/>
-            <converters:TimetableToHeaderTextConverter
-                x:Key="TimetableToHeaderTextConverter"/>
             <converters:SubgroupTypeToStringConverter
                 x:Key="SubgroupTypeToStringConverter"/>
+            <toolkit:BoolToObjectConverter
+                x:Key="BookmarkSelected"
+                TrueObject="dark_bookmark_active"
+                FalseObject="dark_bookmark_inactive"/>
+            <toolkit:BoolToObjectConverter
+                x:Key="EnabledOpacityConverter"
+                TrueObject="1"
+                FalseObject="0.5"/>
             <toolkit:EnumToIntConverter 
                 x:Key="EnumToIntConverter" />
-            <toolkit:VariableMultiValueConverter 
-                ConditionType="All"
-                x:Key="VariableMultiValueConverter" />
+            <toolkit:ListToStringConverter
+                Separator=", "
+                x:Key="ListToStringConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid>
+        <Grid
+            toolkit:StateContainer.CurrentState="{Binding CurrentState}"
+            toolkit:StateContainer.CanStateChange="True">
+
+            <toolkit:StateContainer.StateViews>
+                <!-- Skeleton of timetable -->
+                <dx:DXCollectionView
+                    toolkit:StateView.StateKey="Loading"
+                    ItemSpacing="5"
+                    IsPullToRefreshEnabled="True"
+                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
+                    PullToRefreshCommand="{Binding GetTimetableCommand}"
+                    Margin="15,0">
+                    <dx:DXCollectionView.ItemsSource>
+                        <x:Array Type="{x:Type x:Int16}">
+                            <x:Int16>0</x:Int16>
+                            <x:Int16>0</x:Int16>
+                            <x:Int16>1</x:Int16>
+                            <x:Int16>1</x:Int16>
+                            <x:Int16>1</x:Int16>
+                            <x:Int16>2</x:Int16>
+                            <x:Int16>2</x:Int16>
+                        </x:Array>
+                    </dx:DXCollectionView.ItemsSource>
+
+                    <dx:DXCollectionView.Header>
+                        <Grid
+                            Margin="0,100,0,20"
+                            RowDefinitions="auto,auto"
+                            RowSpacing="10">
+                            <Label
+                                Grid.Column="0"
+                                VerticalOptions="Center"
+                                Style="{StaticResource LabelHeaderStyle}"
+                                Text="{Binding TimetableHeader}"/>
+                            <Border
+                                Grid.Row="1"
+                                WidthRequest="240"
+                                HorizontalOptions="Start"
+                                HeightRequest="18"
+                                BackgroundColor="{StaticResource DarkLightControlBackground}"/>
+                        </Grid>
+                    </dx:DXCollectionView.Header>
+
+                    <!--<dx:DXCollectionView.GroupHeaderTemplate>
+                        <DataTemplate>
+                            <Border
+                                Grid.Row="0"
+                                Margin="0,20,0,0"
+                                WidthRequest="240"
+                                HorizontalOptions="Start"
+                                BackgroundColor="{StaticResource DarkControlBackground}"
+                                HeightRequest="20"/>
+                        </DataTemplate>
+                    </dx:DXCollectionView.GroupHeaderTemplate>-->
+
+                    <dx:DXCollectionView.ItemTemplate>
+                        <StaticResource Key="SkeletonLessonTemplate"/>
+                    </dx:DXCollectionView.ItemTemplate>
+                </dx:DXCollectionView>
+
+                <!-- Timetable collectionview -->
+                <dx:DXCollectionView
+                    x:Name="dayScheduleCollectionView"
+                    toolkit:StateView.StateKey="Loaded"
+                    AllowCascadeUpdate="False"
+                    Grid.Row="1"
+                    Margin="15,0"
+                    ItemsSource="{Binding Schedule}"
+                    ItemSpacing="5"
+                    IsLoadMoreEnabled="True"
+                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
+                    LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
+
+                    <dx:DXCollectionView.Header>
+                        <controls:TimetableHeader
+                            Margin="0,100,0,20"
+                            Tab="{Binding SelectedTab}"
+                            Timetable="{Binding Timetable}"/>
+                    </dx:DXCollectionView.Header>
+
+                    <dx:DXCollectionView.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="model:DaySchedule">
+                            <Border>
+                                <Grid
+                                    RowDefinitions="auto,auto">
+                                    <!--active-->
+                                    <Label
+                                        Grid.Row="0"
+                                        Margin="0,20,0,10"
+                                        Style="{StaticResource LabelBodyHeaderStyle}"
+                                        Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
+                                    <!--inactive-->
+                                    <!--<Label
+                                        Margin="0,10,0,5"
+                                        Opacity="0.35"
+                                        Style="{StaticResource LabelHeaderStyle}"
+                                        FontSize="15"
+                                        Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
+                                    <VerticalStackLayout
+                                        Grid.Row="1"
+                                        BindableLayout.ItemsSource="{Binding .}"
+                                        BindableLayout.ItemTemplateSelector="{StaticResource LessonTemplateSelector}"
+                                        Spacing="5"/>
+                                        <!--SelectionMode="Single"
+                                        SelectionChanged="scheduleCollectionView_SelectionChanged"-->
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </dx:DXCollectionView.ItemTemplate>
+
+                    <dx:DXCollectionView.Triggers>
+                        <DataTrigger
+                            TargetType="dx:DXCollectionView"
+                            Binding="{Binding IsBusy}"
+                            Value="True">
+                            <Setter
+                                Property="IsVisible"
+                                Value="False"/>
+                        </DataTrigger>
+                    </dx:DXCollectionView.Triggers>
+                </dx:DXCollectionView>
+
+                <!--todo: No empty view on dxcv?-->
+                <AbsoluteLayout
+                    toolkit:StateView.StateKey="LoadedEmpty">
+                    <Grid
+                        VerticalOptions="Center"
+                        AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                        AbsoluteLayout.LayoutFlags="PositionProportional"
+                        Opacity="0.5"
+                        RowSpacing="20"
+                        RowDefinitions="auto,auto">
+                        <Image
+                            WidthRequest="100"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Grid.Row="0"
+                            Source="party"/>
+                        <Label
+                            Grid.Row="1"
+                            HorizontalTextAlignment="Center"
+                            Style="{StaticResource LabelBodyHeaderStyle}"
+                            Text="Занятий больше нет"/>
+                    </Grid>
+
+                    <AbsoluteLayout.Triggers>
+                        <DataTrigger
+                            TargetType="AbsoluteLayout"
+                            Binding="{Binding IsBusy}"
+                            Value="True">
+                            <Setter
+                                Property="IsVisible"
+                                Value="False"/>
+                        </DataTrigger>
+                    </AbsoluteLayout.Triggers>
+                </AbsoluteLayout>
+
+            </toolkit:StateContainer.StateViews>
+        </Grid>
+
         <!-- Navbar -->
         <Grid
             x:Name="navBar"
@@ -104,7 +258,7 @@
                         <Label.Triggers>
                             <DataTrigger
                                 TargetType="Label"
-                                Binding="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"
+                                Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
                                 Value="True">
                                 <Setter
                                     Property="IsVisible"
@@ -118,7 +272,7 @@
                         <Image.Triggers>
                             <DataTrigger
                                 TargetType="Image"
-                                Binding="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"
+                                Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
                                 Value="True">
                                 <Setter
                                     Property="Source"
@@ -201,7 +355,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
-                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.FirstSubgroup}}}"/>
+                                IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding ToggleModeCommand}"
@@ -219,7 +373,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
-                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.SecondSubgroup}}}"/>
+                                IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding ToggleModeCommand}"
@@ -237,7 +391,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="dark_check"
-                                IsVisible="{Binding SelectedMode, Converter={convertersCommon:ValueToBoolConverter TrueValue={x:Static constants:SubgroupType.All}}}"/>
+                                IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding ToggleModeCommand}"
@@ -250,175 +404,13 @@
             </dx:DXPopup>
         </Grid>
 
-        <!-- Skeleton of timetable -->
-        <dx:DXCollectionView
-            ItemSpacing="5"
-            IsPullToRefreshEnabled="True"
-            IsRefreshing="{Binding IsBusy}"
-            PullToRefreshCommand="{Binding GetTimetableCommand}"
-            Margin="15,0">
-            <dx:DXCollectionView.IsVisible>
-                <MultiBinding
-                    Converter="{StaticResource VariableMultiValueConverter}">
-                    <Binding Path="IsBusy"/>
-                    <Binding Path="Timetable" Converter="{StaticResource IsNullOrEmptyConverter}"/>
-                </MultiBinding>
-            </dx:DXCollectionView.IsVisible>
-            <dx:DXCollectionView.ItemsSource>
-                <x:Array Type="{x:Type x:Int16}">
-                    <x:Int16>0</x:Int16>
-                    <x:Int16>0</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>2</x:Int16>
-                    <x:Int16>2</x:Int16>
-                </x:Array>
-            </dx:DXCollectionView.ItemsSource>
-
-            <dx:DXCollectionView.Header>
-                <Grid
-                    Margin="0,100,0,20"
-                    RowDefinitions="auto,auto"
-                    RowSpacing="10">
-                    <Label
-                        Grid.Column="0"
-                        VerticalOptions="Center"
-                        Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding TimetableHeader}"/>
-                    <Border
-                        Grid.Row="1"
-                        WidthRequest="240"
-                        HorizontalOptions="Start"
-                        HeightRequest="18"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}"/>
-                </Grid>
-            </dx:DXCollectionView.Header>
-
-            <!--<dx:DXCollectionView.GroupHeaderTemplate>
-                <DataTemplate>
-                    <Border
-                        Grid.Row="0"
-                        Margin="0,20,0,0"
-                        WidthRequest="240"
-                        HorizontalOptions="Start"
-                        BackgroundColor="{StaticResource DarkControlBackground}"
-                        HeightRequest="20"/>
-                </DataTemplate>
-            </dx:DXCollectionView.GroupHeaderTemplate>-->
-
-            <dx:DXCollectionView.ItemTemplate>
-                <StaticResource Key="SkeletonLessonTemplate"/>
-            </dx:DXCollectionView.ItemTemplate>
-        </dx:DXCollectionView>
-
-         <!-- Timetable collectionview -->
-        <dx:DXCollectionView
-            x:Name="dayScheduleCollectionView"
-            AllowCascadeUpdate="False"
-            ReduceSizeToContent="True"
-            Grid.Row="1"
-            Margin="15,0"
-            ItemsSource="{Binding Schedule}"
-            ItemSpacing="5"
-            IsLoadMoreEnabled="True"
-            IsRefreshing="{Binding IsLoadingMoreSchedule}"
-            LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
-
-            <dx:DXCollectionView.Header>
-                <controls:TimetableHeader
-                    Margin="0,100,0,20"
-                    Tab="{Binding SelectedTab}"
-                    Timetable="{Binding Timetable}"/>
-            </dx:DXCollectionView.Header>
-
-            <dx:DXCollectionView.ItemTemplate>
-                <DataTemplate
-                    x:DataType="model:DaySchedule">
-                    <Border>
-                        <Grid
-                            RowDefinitions="auto,auto">
-                            <!--active-->
-                            <Label
-                                Grid.Row="0"
-                                Margin="0,20,0,10"
-                                Style="{StaticResource LabelBodyHeaderStyle}"
-                                Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
-                            <!--inactive-->
-                            <!--<Label
-                                Margin="0,10,0,5"
-                                Opacity="0.35"
-                                Style="{StaticResource LabelHeaderStyle}"
-                                FontSize="15"
-                                Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
-                            <dx:DXCollectionView
-                                Grid.Row="1"
-                                AllowCascadeUpdate="True"
-                                IsScrollBarVisible="False"
-                                ReduceSizeToContent="True"
-                                ItemsSource="{Binding .}"
-                                ItemTemplate="{StaticResource LessonTemplateSelector}"
-                                SelectionMode="Single"
-                                SelectionChanged="scheduleCollectionView_SelectionChanged"
-                                ItemSpacing="5"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </dx:DXCollectionView.ItemTemplate>
-
-            <dx:DXCollectionView.Triggers>
-                <DataTrigger
-                    TargetType="dx:DXCollectionView"
-                    Binding="{Binding IsBusy}"
-                    Value="True">
-                    <Setter
-                        Property="IsVisible"
-                        Value="False"/>
-                </DataTrigger>
-            </dx:DXCollectionView.Triggers>
-        </dx:DXCollectionView>
-
-        <!--todo: No empty view on dxcv?-->
-        <AbsoluteLayout
-            IsVisible="{Binding Schedule, Converter={StaticResource IsEmptyConverter}}">
-            <Grid
-                VerticalOptions="Center"
-                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                Opacity="0.5"
-                RowSpacing="20"
-                RowDefinitions="auto,auto">
-                <Image
-                    WidthRequest="100"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Grid.Row="0"
-                    Source="party"/>
-                <Label
-                    Grid.Row="1"
-                    HorizontalTextAlignment="Center"
-                    Style="{StaticResource LabelBodyHeaderStyle}"
-                    Text="Занятий больше нет"/>
-            </Grid>
-
-            <AbsoluteLayout.Triggers>
-                <DataTrigger
-                    TargetType="AbsoluteLayout"
-                    Binding="{Binding IsBusy}"
-                    Value="True">
-                    <Setter
-                        Property="IsVisible"
-                        Value="False"/>
-                </DataTrigger>
-            </AbsoluteLayout.Triggers>
-        </AbsoluteLayout>
-
         <!-- Bottom sheet with schedule details -->
         <dx:BottomSheet 
-            x:Name="examDetailSheet" 
+            x:Name="scheduleDetailSheet" 
+            ZIndex="2"
             ShowGrabber="True" 
             AllowDismiss="True" 
-            StateChanged="examDetailSheet_StateChanged"
+            StateChanged="scheduleDetailSheet_StateChanged"
             CornerRadius="12"
             Padding="15,30"
             HalfExpandedRatio="0.5"
@@ -532,7 +524,7 @@
                                 Grid.Column="1"
                                 HorizontalTextAlignment="End"
                                 Style="{StaticResource LabelBodySecondaryStyle}"
-                                Text="{Binding Auditories, Converter={converters:StringListToStringConverter}}"/>
+                                Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}"/>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>

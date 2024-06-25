@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DevExpress.Maui.Core.Internal;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -34,28 +33,23 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _isTimetableModePopupOpen = false;
 
         [ObservableProperty]
+        string currentState = ViewStates.Loading;
+
+        [ObservableProperty]
         private bool _isBusy;
 
         [ObservableProperty]
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
         partial void OnSelectedTabChanged(TimetableTabs value)
         {
-            ClearLoadedSchedule();
-
-            LoadMoreScheduleCommand.Execute(null);
-
-            ScrollToActiveSchedule();
+            LoadMoreScheduleCommand.Execute(true);
         }
 
         [ObservableProperty]
         private SubgroupType _selectedMode = SubgroupType.All;
         partial void OnSelectedModeChanged(SubgroupType value)
         {
-            ClearLoadedSchedule();
-
-            LoadMoreScheduleCommand.Execute(null);
-
-            ScrollToActiveSchedule();
+            LoadMoreScheduleCommand.Execute(true);
         }
 
         [ObservableProperty]
@@ -63,14 +57,7 @@ namespace ScheduleBSUIR.Viewmodels
         private Timetable? _timetable;
         partial void OnTimetableChanged(Timetable? value)
         {
-            ClearLoadedSchedule();
-
-            // todo: compare session dates instead of this?
-            //SelectedTab = Timetable?.Exams?.Count > 0 ? TimetableTabs.Exams : TimetableTabs.Schedule;
-
-            LoadMoreScheduleCommand.Execute(null);
-
-            ScrollToActiveSchedule();
+            LoadMoreScheduleCommand.Execute(true);
         }
 
         public bool Favorited => Timetable?.Favorited ?? false;
@@ -86,15 +73,32 @@ namespace ScheduleBSUIR.Viewmodels
         private string _timetableHeader = string.Empty;
 
         [RelayCommand]
-        public async Task LoadMoreSchedule()
+        public async Task LoadMoreSchedule(bool? reloadAll = false)
         {
+            if (reloadAll ?? false)
+            {
+                CurrentState = ViewStates.Loading;
+
+                _loadedToDate = null;
+                _lastScheduleDate = null;
+
+                Schedule = null;
+            }
+
             // Initial case
             _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
+            
+            _loggingService.LogInfo($"LoadMoreSchedule: _lastScheduleDate set to {_lastScheduleDate?.ToString("dd.MM")}.", displayCaller: false);
 
             _loadedToDate ??= _timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode)
                 ?? _dateTimeProvider.Now - TimeSpan.FromDays(1);
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
+            if (_lastScheduleDate is null)
+            {
+                CurrentState = ViewStates.LoadedEmpty;
+            }
+
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
             {
                 IsLoadingMoreSchedule = false;
@@ -103,6 +107,8 @@ namespace ScheduleBSUIR.Viewmodels
 
             // Common case
             var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
+
+            _loggingService.LogInfo($"GetDaySchedules got {newSchedules?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
 
             // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
             _loadedToDate += _loadingStep + TimeSpan.FromDays(1);
@@ -113,6 +119,12 @@ namespace ScheduleBSUIR.Viewmodels
             {
                 Schedule.Add(schedule);
             }
+
+            CurrentState = Schedule.Count switch
+            {
+                0 => ViewStates.LoadedEmpty,
+                _ => ViewStates.Loaded,
+            };
 
             IsLoadingMoreSchedule = false;
         }
@@ -237,7 +249,6 @@ namespace ScheduleBSUIR.Viewmodels
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
         }
-
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
@@ -259,13 +270,6 @@ namespace ScheduleBSUIR.Viewmodels
             var foundSchedule = Schedule?.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.Now.Date);
 
             return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
-        }
-        private void ClearLoadedSchedule()
-        {
-            _loadedToDate = null;
-            _lastScheduleDate = null;
-
-            Schedule = null;
         }
     }
 }
