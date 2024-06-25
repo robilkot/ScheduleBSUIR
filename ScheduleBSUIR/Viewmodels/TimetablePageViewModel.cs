@@ -84,6 +84,11 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? reloadAll = false)
         {
+            if(IsLoadingMoreSchedule)
+                return;
+
+            IsLoadingMoreSchedule = true;
+
             if (reloadAll ?? false)
             {
                 CurrentState = ViewStates.Loading;
@@ -96,17 +101,11 @@ namespace ScheduleBSUIR.Viewmodels
 
             // Initial case
             _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
-            
-            _loggingService.LogInfo($"LoadMoreSchedule: _lastScheduleDate set to {_lastScheduleDate?.ToString("dd.MM")}.", displayCaller: false);
 
             _loadedToDate ??= _timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode)
                 ?? _dateTimeProvider.Now - TimeSpan.FromDays(1);
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
-            if (_lastScheduleDate is null)
-            {
-                CurrentState = ViewStates.LoadedEmpty;
-            }
 
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
             {
@@ -129,11 +128,7 @@ namespace ScheduleBSUIR.Viewmodels
                 Schedule.Add(schedule);
             }
 
-            CurrentState = Schedule.Count switch
-            {
-                0 => ViewStates.LoadedEmpty,
-                _ => ViewStates.Loaded,
-            };
+            CurrentState = ViewStates.Loaded;
 
             IsLoadingMoreSchedule = false;
         }

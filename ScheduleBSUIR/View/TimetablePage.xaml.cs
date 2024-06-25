@@ -18,21 +18,21 @@ public partial class TimetablePage : ContentPage
         BindingContext = vm;
         _viewModel = vm;
 
-        WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
-        {
-            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
-            {
-                if (dayScheduleCollectionView is null)
-                    return;
+        //WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
+        //{
+        //    Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
+        //    {
+        //        if (dayScheduleCollectionView is null)
+        //            return;
 
-                // Decrement by two to make schedule visible
-                //var indexToScrollTo = Math.Clamp(message.Value - 2, 0, int.MaxValue);
+        //        // Decrement by two to make schedule visible
+        //        //var indexToScrollTo = Math.Clamp(message.Value - 2, 0, int.MaxValue);
 
-                var handle = dayScheduleCollectionView.GetItemHandle(message.Value);
+        //        var handle = dayScheduleCollectionView.GetItemHandle(message.Value);
 
-                dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
-            });
-        });
+        //        dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
+        //    });
+        //});
 
         WeakReferenceMessenger.Default.Register<SetStateMessage>(this, (sender, message) =>
         {

@@ -104,26 +104,29 @@
                 </dx:DXCollectionView>
 
                 <!-- Timetable collectionview -->
-                <dx:DXCollectionView
+                <CollectionView
                     x:Name="dayScheduleCollectionView"
                     toolkit:StateView.StateKey="Loaded"
-                    AllowCascadeUpdate="False"
                     Grid.Row="1"
                     Margin="15,0"
                     ItemsSource="{Binding Schedule}"
-                    ItemSpacing="5"
-                    IsLoadMoreEnabled="True"
-                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
-                    LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
+                    RemainingItemsThreshold="5"
+                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreScheduleCommand}">
 
-                    <dx:DXCollectionView.Header>
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout
+                            Orientation="Vertical"
+                            ItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.Header>
                         <controls:TimetableHeader
                             Margin="0,100,0,20"
                             Tab="{Binding SelectedTab}"
                             Timetable="{Binding Timetable}"/>
-                    </dx:DXCollectionView.Header>
+                    </CollectionView.Header>
 
-                    <dx:DXCollectionView.ItemTemplate>
+                    <CollectionView.ItemTemplate>
                         <DataTemplate
                             x:DataType="model:DaySchedule">
                             <Grid
@@ -152,33 +155,32 @@
                                     ItemSpacing="5"/>
                             </Grid>
                         </DataTemplate>
-                    </dx:DXCollectionView.ItemTemplate>
-                </dx:DXCollectionView>
+                    </CollectionView.ItemTemplate>
 
-                <!--todo: No empty view on dxcv?-->
-                <AbsoluteLayout
-                    toolkit:StateView.StateKey="LoadedEmpty">
-                    <Grid
-                        VerticalOptions="Center"
-                        AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                        AbsoluteLayout.LayoutFlags="PositionProportional"
-                        Opacity="0.5"
-                        RowSpacing="20"
-                        RowDefinitions="auto,auto">
-                        <Image
-                            WidthRequest="100"
-                            VerticalOptions="Center"
-                            HorizontalOptions="Center"
-                            Grid.Row="0"
-                            Source="party"/>
-                        <Label
-                            Grid.Row="1"
-                            HorizontalTextAlignment="Center"
-                            Style="{StaticResource LabelBodyHeaderStyle}"
-                            Text="Занятий больше нет"/>
-                    </Grid>
-                </AbsoluteLayout>
-
+                    <CollectionView.EmptyView>
+                        <AbsoluteLayout>
+                            <Grid
+                                VerticalOptions="Center"
+                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                                AbsoluteLayout.LayoutFlags="PositionProportional"
+                                Opacity="0.5"
+                                RowSpacing="20"
+                                RowDefinitions="auto,auto">
+                                <Image
+                                    WidthRequest="100"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Grid.Row="0"
+                                    Source="party"/>
+                                <Label
+                                    Grid.Row="1"
+                                    HorizontalTextAlignment="Center"
+                                    Style="{StaticResource LabelBodyHeaderStyle}"
+                                    Text="Занятий больше нет"/>
+                            </Grid>
+                        </AbsoluteLayout>
+                    </CollectionView.EmptyView>
+                </CollectionView>
             </toolkit:StateContainer.StateViews>
         </Grid>
 
