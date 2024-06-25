@@ -117,7 +117,8 @@ namespace ScheduleBSUIR.Services
                 result = lastSchedule?.DateLesson;
             }
 
-            // todo for schedule tab
+            // todo for schedule tab           
+            _loggingService.LogInfo($"GetLastScheduleDate returned {result?.ToString("dd.MM")}.", displayCaller: false);
 
             return result;
         }
