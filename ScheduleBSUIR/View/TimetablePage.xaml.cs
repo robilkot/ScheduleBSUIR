@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Layouts;
 using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Maui.CollectionView;
 using DevExpress.Maui.Controls;
@@ -17,7 +18,7 @@ public partial class TimetablePage : ContentPage
         BindingContext = vm;
         _viewModel = vm;
 
-        // Does not work with pagination
+        //Does not work with pagination
         //WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
         //{
         //    Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
@@ -33,7 +34,51 @@ public partial class TimetablePage : ContentPage
         //        dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
         //    });
         //});
+
+        WeakReferenceMessenger.Default.Register<SetStateMessage>(this, (sender, message) =>
+        {
+            Dispatcher.Dispatch(async () =>
+            {
+                if (StateContainer.GetCanStateChange(stateAwareGrid) == false)
+                {
+                    if (animationCtsRef?.IsAlive ?? false)
+                    {
+                        if (animationCtsRef.Target is CancellationTokenSource cts)
+                        {
+                            cts.Cancel();
+                        } 
+                    }
+                };
+
+                using(CancellationTokenSource cts = new())
+                {
+                    animationCtsRef = new(cts);
+
+                    var currentState = StateContainer.GetCurrentState(stateAwareGrid);
+
+                    if (currentState != message.Value)
+                    {
+                        try
+                        {
+                            await StateContainer.ChangeStateWithAnimation(
+                                stateAwareGrid,
+                                message.Value,
+                                (element, token) => element.FadeTo(0, 250, Easing.SpringIn).WaitAsync(token),
+                                (element, token) => element.FadeTo(1, 250, Easing.SpringOut).WaitAsync(token),
+                                cts.Token);
+                        }
+                        catch(TaskCanceledException)
+                        {
+                            // animation was cancelled due to new state change or something
+                        }
+                    }
+                }
+            });
+        });
     }
+
+    private WeakReference? animationCtsRef = null;
+
     private void scheduleCollectionView_SelectionChanged(object sender, DevExpress.Maui.CollectionView.CollectionViewSelectionChangedEventArgs e)
     {
         if (sender is not DXCollectionView collectionView)

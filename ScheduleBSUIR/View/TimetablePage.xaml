@@ -42,7 +42,8 @@
 
     <Grid>
         <Grid
-            toolkit:StateContainer.CurrentState="{Binding CurrentState}"
+            x:Name="stateAwareGrid"
+            toolkit:StateContainer.CurrentState="{Binding CurrentState, Mode=OneTime}"
             toolkit:StateContainer.CanStateChange="True">
 
             <toolkit:StateContainer.StateViews>

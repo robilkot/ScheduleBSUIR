@@ -34,6 +34,15 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         string currentState = ViewStates.Loading;
+        partial void OnCurrentStateChanged(string? oldValue, string newValue)
+        {
+            if(oldValue != newValue)
+            {
+                SetStateMessage setStateMessage = new(newValue);
+
+                WeakReferenceMessenger.Default.Send(setStateMessage);
+            }
+        }
 
         [ObservableProperty]
         private bool _isBusy;
