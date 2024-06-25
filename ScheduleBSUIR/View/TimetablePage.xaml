@@ -126,31 +126,31 @@
                     <dx:DXCollectionView.ItemTemplate>
                         <DataTemplate
                             x:DataType="model:DaySchedule">
-                            <Border>
-                                <Grid
-                                    RowDefinitions="auto,auto">
-                                    <!--active-->
-                                    <Label
-                                        Grid.Row="0"
-                                        Margin="0,20,0,10"
-                                        Style="{StaticResource LabelBodyHeaderStyle}"
-                                        Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
-                                    <!--inactive-->
-                                    <!--<Label
-                                        Margin="0,10,0,5"
-                                        Opacity="0.35"
-                                        Style="{StaticResource LabelHeaderStyle}"
-                                        FontSize="15"
-                                        Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
-                                    <VerticalStackLayout
-                                        Grid.Row="1"
-                                        BindableLayout.ItemsSource="{Binding .}"
-                                        BindableLayout.ItemTemplateSelector="{StaticResource LessonTemplateSelector}"
-                                        Spacing="5"/>
-                                    <!--SelectionMode="Single"
-                                        SelectionChanged="scheduleCollectionView_SelectionChanged"-->
-                                </Grid>
-                            </Border>
+                            <Grid
+                                RowDefinitions="auto,auto">
+                                <!--active-->
+                                <Label
+                                    Grid.Row="0"
+                                    Margin="0,20,0,10"
+                                    Style="{StaticResource LabelBodyHeaderStyle}"
+                                    Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
+                                <!--inactive-->
+                                <!--<Label
+                                    Margin="0,10,0,5"
+                                    Opacity="0.35"
+                                    Style="{StaticResource LabelHeaderStyle}"
+                                    FontSize="15"
+                                    Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
+                                <dx:DXCollectionView
+                                    Grid.Row="1"
+                                    ReduceSizeToContent="True"
+                                    IsScrollBarVisible="False"
+                                    ItemsSource="{Binding .}"
+                                    ItemTemplate="{StaticResource LessonTemplateSelector}"
+                                    SelectionMode="Single"
+                                    SelectionChanged="scheduleCollectionView_SelectionChanged"
+                                    ItemSpacing="5"/>
+                            </Grid>
                         </DataTemplate>
                     </dx:DXCollectionView.ItemTemplate>
                 </dx:DXCollectionView>
@@ -204,14 +204,18 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <ImageButton
+            <!-- Navigation button -->
+            <Grid
                 Grid.Column="0"
                 Padding="0,10,20,10"
                 WidthRequest="40"
-                HeightRequest="40"
-                Command="{Binding NavigateBackCommand}"
-                Source="dark_arrow_left">
-            </ImageButton>
+                HeightRequest="40">
+                <Image
+                    Source="dark_arrow_left"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateBackCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <controls:CustomTabbar
                 HorizontalOptions="Center"
@@ -267,18 +271,18 @@
             </Grid>
 
             <!-- Boormark toggle -->
-            <ImageButton
+            <Grid
                 IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="3"
                 Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
                 Padding="10"
                 WidthRequest="40"
-                HeightRequest="40"
-                Command="{Binding ToogleBookmarkCommand}"
-                Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}">
-                <ImageButton.Triggers>
+                HeightRequest="40">
+                <Image
+                    Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"/>
+                <Grid.Triggers>
                     <DataTrigger
-                        TargetType="ImageButton"
+                        TargetType="Grid"
                         Binding="{Binding Timetable}"
                         Value="{x:Null}">
                         <Setter
@@ -288,8 +292,11 @@
                             Property="Opacity"
                             Value="0.5"/>
                     </DataTrigger>
-                </ImageButton.Triggers>
-            </ImageButton>
+                </Grid.Triggers>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToogleBookmarkCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <!--Timetable mode popup-->
             <dx:DXPopup
