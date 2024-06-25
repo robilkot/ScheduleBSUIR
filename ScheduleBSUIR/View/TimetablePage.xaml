@@ -147,23 +147,12 @@
                                         BindableLayout.ItemsSource="{Binding .}"
                                         BindableLayout.ItemTemplateSelector="{StaticResource LessonTemplateSelector}"
                                         Spacing="5"/>
-                                        <!--SelectionMode="Single"
+                                    <!--SelectionMode="Single"
                                         SelectionChanged="scheduleCollectionView_SelectionChanged"-->
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </dx:DXCollectionView.ItemTemplate>
-
-                    <dx:DXCollectionView.Triggers>
-                        <DataTrigger
-                            TargetType="dx:DXCollectionView"
-                            Binding="{Binding IsBusy}"
-                            Value="True">
-                            <Setter
-                                Property="IsVisible"
-                                Value="False"/>
-                        </DataTrigger>
-                    </dx:DXCollectionView.Triggers>
                 </dx:DXCollectionView>
 
                 <!--todo: No empty view on dxcv?-->
@@ -188,17 +177,6 @@
                             Style="{StaticResource LabelBodyHeaderStyle}"
                             Text="Занятий больше нет"/>
                     </Grid>
-
-                    <AbsoluteLayout.Triggers>
-                        <DataTrigger
-                            TargetType="AbsoluteLayout"
-                            Binding="{Binding IsBusy}"
-                            Value="True">
-                            <Setter
-                                Property="IsVisible"
-                                Value="False"/>
-                        </DataTrigger>
-                    </AbsoluteLayout.Triggers>
                 </AbsoluteLayout>
 
             </toolkit:StateContainer.StateViews>
