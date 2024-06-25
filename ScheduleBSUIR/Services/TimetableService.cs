@@ -60,11 +60,11 @@ namespace ScheduleBSUIR.Services
                     }
 
                     // Update property for ICacheable interface
-                    timetable.UpdatedAt = _dateTimeProvider.Now;
+                    timetable.UpdatedAt = _dateTimeProvider.UtcNow;
                 }
 
                 // Update property for ICacheable interface
-                timetable.AccessedAt = _dateTimeProvider.Now;
+                timetable.AccessedAt = _dateTimeProvider.UtcNow;
 
                 // If we obtained timetable from web api, make sure favorited flag remains from locally stored timetable
                 timetable.Favorited = cachedTimetableIsFavorite;

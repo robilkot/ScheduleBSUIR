@@ -41,7 +41,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
                         _ => throw new NotImplementedException(),
                     } ?? DateTime.MinValue;
 
-                    isActive = dateTime >= _dateTimeProvider.Now.Date;
+                    isActive = dateTime >= _dateTimeProvider.UtcNow.Date;
 
                     _cachedResults.Add(item, isActive);
                 }

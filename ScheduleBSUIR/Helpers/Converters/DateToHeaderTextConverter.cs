@@ -22,15 +22,15 @@ namespace ScheduleBSUIR.Helpers.Converters
             string resultString = string.Empty;
 
             // todo: translate extension
-            if (_dateTimeProvider.Now.Date == dateTime.Date)
+            if (_dateTimeProvider.UtcNow.Date == dateTime.Date)
             {
                 resultString += "Сегодня, ";
             }
-            else if (DateTime.Now.AddDays(1).Date == dateTime.Date)
+            else if (_dateTimeProvider.UtcNow.AddDays(1).Date == dateTime.Date)
             {
                 resultString += "Завтра, ";
             }
-            else if (DateTime.Now.AddDays(2).Date == dateTime.Date)
+            else if (_dateTimeProvider.UtcNow.AddDays(2).Date == dateTime.Date)
             {
                 resultString += "Послезавтра, ";
             }

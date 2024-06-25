@@ -100,7 +100,7 @@ namespace ScheduleBSUIR.Viewmodels
             _loggingService.LogInfo($"LoadMoreSchedule: _lastScheduleDate set to {_lastScheduleDate?.ToString("dd.MM")}.", displayCaller: false);
 
             _loadedToDate ??= _timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode)
-                ?? _dateTimeProvider.Now - TimeSpan.FromDays(1);
+                ?? _dateTimeProvider.UtcNow - TimeSpan.FromDays(1);
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
             if (_lastScheduleDate is null)
@@ -276,7 +276,7 @@ namespace ScheduleBSUIR.Viewmodels
             if (Timetable is null)
                 return null;
 
-            var foundSchedule = Schedule?.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.Now.Date);
+            var foundSchedule = Schedule?.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.UtcNow.Date);
 
             return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
         }
