@@ -10,8 +10,6 @@
         <ResourceDictionary>
             <converters:TimetableToDaterangeTextConverter
                 x:Key="TimetableToDaterangeTextConverter"/>
-            <converters:TimetableToHeaderTextConverter
-                x:Key="TimetableToHeaderTextConverter"/>
             <converters:TimetableToSubheaderTextConverter
                 x:Key="TimetableToSubheaderTextConverter"/>
         </ResourceDictionary>
@@ -28,7 +26,7 @@
                 Grid.Column="0"
                 VerticalOptions="Center"
                 Style="{StaticResource LabelHeaderStyle}"
-                Text="{Binding Source={x:Reference rootview}, Path=Timetable, Converter={StaticResource TimetableToHeaderTextConverter}}"/>
+                Text="{Binding Source={x:Reference rootview}, Path=TimetableId.DisplayName}"/>
             <Label
                 Grid.Column="1"
                 VerticalOptions="Center"

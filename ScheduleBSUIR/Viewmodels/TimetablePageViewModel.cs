@@ -69,17 +69,20 @@ namespace ScheduleBSUIR.Viewmodels
             LoadMoreScheduleCommand.Execute(true);
         }
 
-        public bool Favorited => Timetable?.Favorited ?? false;
+        [ObservableProperty]
+        private bool _favorited = false;
 
         [ObservableProperty]
         private ObservableCollection<DaySchedule>? _schedule = null;
 
         [ObservableProperty]
         private TypedId? _timetableId;
+        async partial void OnTimetableIdChanged(TypedId? value)
+        {
+            Favorited = await _timetableService.IsFavoritedAsync(value);
 
-        // This property exists to display group number/employee name before timetable is loaded
-        [ObservableProperty]
-        private string _timetableHeader = string.Empty;
+            _loggingService.LogInfo($"Timetable {value} is favorited: {Favorited}", displayCaller: false);
+        }
 
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? reloadAll = false)
@@ -175,25 +178,27 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task ToogleBookmark()
         {
-            if (Timetable is null)
+            if (TimetableId is null)
                 return;
 
             if (Favorited)
             {
-                await _timetableService.RemoveFromFavorites(Timetable);
+                await _timetableService.RemoveFromFavoritesAsync(TimetableId);
+
+                Favorited = false;
 
                 Vibration.Default.Vibrate(80f);
             }
             else
             {
-                await _timetableService.AddToFavorites(Timetable);
+                await _timetableService.AddToFavoritesAsync(TimetableId);
+
+                Favorited = true;
 
                 Vibration.Default.Vibrate(80f);
                 await Task.Delay(150);
                 Vibration.Default.Vibrate(50f);
             }
-
-            OnPropertyChanged(nameof(Favorited));
         }
 
         [RelayCommand]
@@ -230,18 +235,9 @@ namespace ScheduleBSUIR.Viewmodels
         {
             var timetableId = TypedId.Create(dto);
 
-            // todo: all this header thing is a hack honestly
-            string timetableHeader = dto switch
-            {
-                StudentGroupDto group => group.Name,
-                EmployeeDto employee => employee.LastName,
-                _ => throw new UnreachableException(),
-            };
-
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, timetableId },
-                { NavigationKeys.TimetableHeader, timetableHeader },
             };
 
             // Let bottomsheet close smoothly
@@ -253,11 +249,9 @@ namespace ScheduleBSUIR.Viewmodels
         {
             SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
 
-            if (query.TryGetValue(NavigationKeys.TimetableId, out var id)
-                && query.TryGetValue(NavigationKeys.TimetableHeader, out var header))
+            if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
             {
                 TimetableId = (TypedId)id;
-                TimetableHeader = (string)header;
 
                 GetTimetableCommand.Execute(null);
             }

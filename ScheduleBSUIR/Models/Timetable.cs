@@ -23,8 +23,6 @@ namespace ScheduleBSUIR.Models
             ? StudentGroupDto.Name
             : String.Empty;
         [JsonIgnore]
-        public bool Favorited { get; set; }
-        [JsonIgnore]
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public DateTime AccessedAt { get; set; }

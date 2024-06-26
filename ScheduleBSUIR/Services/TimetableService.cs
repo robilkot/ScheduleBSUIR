@@ -1,6 +1,7 @@
 ﻿using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
@@ -16,7 +17,7 @@ namespace ScheduleBSUIR.Services
         {
             Timetable? timetable;
 
-            var cachedTimetable = await _dbService.GetAsync<Timetable>(id.ToString());
+            var cachedTimetable = await _dbService.GetAsync<Timetable>(id.PrimaryKey);
 
             bool offline = Connectivity.NetworkAccess is NetworkAccess.None;
 
@@ -32,13 +33,6 @@ namespace ScheduleBSUIR.Services
             }
             else
             {
-                bool cachedTimetableIsFavorite = false;
-
-                if (cachedTimetable is not null)
-                {
-                    cachedTimetableIsFavorite = cachedTimetable.Favorited;
-                }
-
                 var lastUpdateResponse = await _webService.GetTimetableLastUpdateAsync(id, cancellationToken);
 
                 // If timetable is not yet cached and NOT expired
@@ -66,27 +60,73 @@ namespace ScheduleBSUIR.Services
                 // Update property for IUpdateAware interface
                 timetable.AccessedAt = _dateTimeProvider.UtcNow;
 
-                // If we obtained timetable from web api, make sure favorited flag remains from locally stored timetable
-                timetable.Favorited = cachedTimetableIsFavorite;
-
                 await _dbService.AddOrUpdateAsync(timetable);
             }
 
             return timetable;
         }
 
-        public async Task AddToFavorites(Timetable timetable)
+        public async Task AddToFavoritesAsync(TypedId timetableId)
         {
-            timetable.Favorited = true;
+            switch (timetableId) {
+                case StudentGroupId studentGroupId:
+                    {
+                        await _dbService.AddOrUpdateAsync(studentGroupId);
+                        break;
+                    }
+                case EmployeeId employeeId:
+                    {
+                        await _dbService.AddOrUpdateAsync(employeeId);
+                        break;
+                    }
+                default: throw new UnreachableException();
+            }
 
-            await _dbService.AddOrUpdateAsync(timetable);
+            _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
         }
 
-        public async Task RemoveFromFavorites(Timetable timetable)
+        public async Task RemoveFromFavoritesAsync(TypedId timetableId)
         {
-            timetable.Favorited = false;
+            switch (timetableId)
+            {
+                case StudentGroupId studentGroupId:
+                    {
+                        await _dbService.RemoveAsync(studentGroupId);
+                        break;
+                    }
+                case EmployeeId employeeId:
+                    {
+                        await _dbService.RemoveAsync(employeeId);
+                        break;
+                    }
+                default: throw new UnreachableException();
+            }
 
-            await _dbService.AddOrUpdateAsync(timetable);
+            _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
+        }
+
+        public async Task<bool> IsFavoritedAsync(TypedId? timetableId)
+        {
+            if (timetableId is null)
+                return false;
+
+            TypedId? timetableIdInDb = timetableId switch
+            {
+                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey),
+                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey),
+                _ => throw new UnreachableException(),
+            };
+
+            return timetableIdInDb is not null;
+        }
+
+        public async Task<List<T>> GetFavoriteTimetablesIdsAsync<T>() where T : TypedId
+        {
+            // Calling GetAllAsync<TypedId> will not return both StudentGroupIds and EmployeeIds because of how LiteDb works 
+            // => using generic method
+            List<T> ids = await _dbService.GetAllAsync<T>();
+
+            return ids;
         }
 
         public DateTime? GetLastScheduleDate(Timetable? timetable,

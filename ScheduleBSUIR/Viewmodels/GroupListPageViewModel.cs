@@ -43,12 +43,11 @@ namespace ScheduleBSUIR.Viewmodels
 
             Preferences.Set(PreferencesKeys.SelectedGroupName, selectedGroup.Name);
 
-            var groupId = TypedId.Create(selectedGroup);
+            TypedId groupId = TypedId.Create(selectedGroup);
 
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, groupId },
-                { NavigationKeys.TimetableHeader, selectedGroup.Name },
             };
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);

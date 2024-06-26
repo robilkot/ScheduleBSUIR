@@ -44,12 +44,11 @@ namespace ScheduleBSUIR.Viewmodels
             // todo check comment in prefs
             //Preferences.Set(PreferencesKeys.SelectedGroupName, selectedEmployee.Name);
 
-            EmployeeId emplyeeId = new(selectedEmployee);
+            TypedId emplyeeId = TypedId.Create(selectedEmployee);
 
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, emplyeeId },
-                { NavigationKeys.TimetableHeader, selectedEmployee.LastName },
             };
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);

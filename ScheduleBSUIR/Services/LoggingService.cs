@@ -80,6 +80,10 @@ namespace ScheduleBSUIR.Services
                     _localLog += line + '\n';
                 }
             }
+            catch(FileNotFoundException)
+            {
+                // idc
+            }
             catch (Exception ex)
             {
                 LogError($"Error opening log: {ex.Message}", displayCaller: false);

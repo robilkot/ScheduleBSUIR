@@ -14,5 +14,13 @@
         public string UrlId { get; set; } = string.Empty;
         public string? Email { get; set; }
         public List<string>? JobPositions { get; set; }
+
+        public override string ToString()
+        {
+            string? firstNameSymbol = FirstName is not null ? FirstName[0] + "." : null;
+            string? middleNameSymbol = MiddleName is not null ? MiddleName[0] + "." : null;
+
+            return string.Join(' ', LastName, firstNameSymbol, middleNameSymbol);
+        }
     }
 }

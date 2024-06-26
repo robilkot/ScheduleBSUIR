@@ -28,5 +28,13 @@ namespace ScheduleBSUIR.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public DateTime AccessedAt { get; set; }
+
+        public override string ToString()
+        {
+            string? firstNameSymbol = FirstName is not null ? FirstName[0] + "." : null;
+            string? middleNameSymbol = MiddleName is not null ? MiddleName[0] + "." : null;
+
+            return string.Join(' ', LastName, firstNameSymbol, middleNameSymbol);
+        }
     }
 }

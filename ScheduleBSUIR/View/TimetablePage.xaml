@@ -76,7 +76,7 @@
                                 Grid.Column="0"
                                 VerticalOptions="Center"
                                 Style="{StaticResource LabelHeaderStyle}"
-                                Text="{Binding TimetableHeader}"/>
+                                Text="{Binding TimetableId.DisplayName}"/>
                             <Border
                                 Grid.Row="1"
                                 WidthRequest="240"
@@ -142,7 +142,8 @@
                         <controls:TimetableHeader
                              Margin="0,100,0,20"
                              Tab="{Binding SelectedTab}"
-                             Timetable="{Binding Timetable}"/>
+                             Timetable="{Binding Timetable, Mode=OneTime}"
+                             TimetableId="{Binding TimetableId, Mode=OneTime}"/>
                     </CollectionView.Header>
 
                     <CollectionView.EmptyView>
