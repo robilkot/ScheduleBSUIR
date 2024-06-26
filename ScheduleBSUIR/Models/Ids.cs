@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Models
 {
-    public abstract class TypedId : ICacheable
+    public abstract class TypedId
     {
         public TypedId(string id, string? displayName = null)
         {
@@ -25,13 +25,13 @@ namespace ScheduleBSUIR.Models
         };
         public override string ToString() => PrimaryKey;
     }
-    public sealed class StudentGroupId : TypedId
+    public sealed class StudentGroupId : TypedId, ICacheable
     {
         public StudentGroupId() : base(string.Empty) { }
         public StudentGroupId(StudentGroupDto group) : base(group.Name) { }
         public StudentGroupId(StudentGroupHeader group) : base(group.Name) { }
     }
-    public sealed class EmployeeId : TypedId
+    public sealed class EmployeeId : TypedId, ICacheable
     {
         public EmployeeId() : base(string.Empty) { }
         public EmployeeId(EmployeeDto employeeDto) : base(employeeDto.UrlId, employeeDto.ToString()) { }

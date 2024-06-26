@@ -8,7 +8,6 @@ using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -36,7 +35,7 @@ namespace ScheduleBSUIR.Viewmodels
         string currentState = ViewStates.Loading;
         partial void OnCurrentStateChanged(string? oldValue, string newValue)
         {
-            if(oldValue != newValue)
+            if (oldValue != newValue)
             {
                 SetStateMessage setStateMessage = new(newValue);
 
@@ -55,9 +54,11 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [ObservableProperty]
-        private SubgroupType _selectedMode = SubgroupType.All;
+        private SubgroupType _selectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
         partial void OnSelectedModeChanged(SubgroupType value)
         {
+            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)value);
+
             LoadMoreScheduleCommand.Execute(true);
         }
 
@@ -87,7 +88,7 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? reloadAll = false)
         {
-            if(IsLoadingMoreSchedule)
+            if (IsLoadingMoreSchedule)
                 return;
 
             IsLoadingMoreSchedule = true;
@@ -105,7 +106,7 @@ namespace ScheduleBSUIR.Viewmodels
             // Initial case
             _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
 
-            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow) 
+            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow)
                 - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
@@ -119,7 +120,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
             _loadedToDate += TimeSpan.FromDays(1);
-            
+
             // Common case
             var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
 
@@ -206,8 +207,6 @@ namespace ScheduleBSUIR.Viewmodels
         {
             SelectedMode = mode;
 
-            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)mode);
-
             IsTimetableModePopupOpen = false;
         }
 
@@ -247,8 +246,6 @@ namespace ScheduleBSUIR.Viewmodels
         }
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            SelectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
-
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
             {
                 TimetableId = (TypedId)id;

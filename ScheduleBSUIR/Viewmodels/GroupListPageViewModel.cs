@@ -14,8 +14,8 @@ namespace ScheduleBSUIR.Viewmodels
 {
     public partial class GroupListPageViewModel : BaseViewModel
     {
-        private GroupsService _groupsService;
-        private TimetableService _timetableService;
+        private readonly GroupsService _groupsService;
+        private readonly TimetableService _timetableService;
 
         private List<StudentGroupHeader> _allGroupsHeaders = [];
 
@@ -83,7 +83,7 @@ namespace ScheduleBSUIR.Viewmodels
                 _allGroupsHeaders = groupHeaders.ToList();
                 FilteredGroups = _allGroupsHeaders;
 
-                _favoriteGroupsIds = await _timetableService.GetFavoriteTimetablesIdsAsync<StudentGroupId>();
+                _favoriteGroupsIds = await _timetableService.GetFavoriteGroupsTimetablesIdsAsync();
                 FilteredFavoriteGroupsIds = _favoriteGroupsIds.ToObservableCollection();
 
                 GroupName = string.Empty;

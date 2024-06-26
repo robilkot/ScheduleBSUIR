@@ -19,7 +19,7 @@ namespace ScheduleBSUIR.Models
                 new LessonType("ЛР", "LabColor"),
                 new LessonType("УЛР", "LabColor"),
                 new LessonType("Зачет", "CreditColor"),
-                new LessonType(UnknownTypeAbbreviation, "UnknownColor"), // todo check if valid
+                new LessonType(UnknownTypeAbbreviation, "UnknownColor"),
             ];
 
         public static LessonType GetByAbbreviation(string abbreviation)

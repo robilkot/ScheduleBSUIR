@@ -12,8 +12,8 @@ namespace ScheduleBSUIR.Viewmodels
 {
     public partial class EmployeesListPageViewModel : BaseViewModel
     {
-        private EmployeesService _employeesService;
-        private TimetableService _timetableService;
+        private readonly EmployeesService _employeesService;
+        private readonly TimetableService _timetableService;
 
         private List<Employee> _allEmployees = [];
 
@@ -81,7 +81,7 @@ namespace ScheduleBSUIR.Viewmodels
                 _allEmployees = employees.ToList();
                 FilteredEmployees = _allEmployees;
 
-                _favoriteEmployeesIds = await _timetableService.GetFavoriteTimetablesIdsAsync<EmployeeId>();
+                _favoriteEmployeesIds = await _timetableService.GetFavoriteEmployeesTimetablesIdsAsync();
                 FilteredFavoriteEmployeesIds = _favoriteEmployeesIds.ToObservableCollection();
 
                 EmployeeFilter = string.Empty;

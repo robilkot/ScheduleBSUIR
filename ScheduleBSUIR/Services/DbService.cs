@@ -1,4 +1,5 @@
-﻿using LiteDB;
+﻿using DevExpress.Xpo.DB;
+using LiteDB;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -76,6 +77,8 @@ namespace ScheduleBSUIR.Services
 
         public async Task ClearDatabase()
         {
+            await RemoveAllAsync<StudentGroupId>();
+            await RemoveAllAsync<EmployeeId>();
             await RemoveAllAsync<Timetable>();
             await RemoveAllAsync<Employee>();
             await RemoveAllAsync<StudentGroupHeader>();
@@ -96,10 +99,9 @@ namespace ScheduleBSUIR.Services
                 {
                     collection.Insert(newObject.PrimaryKey, newObject);
                 }
-
                 _database.Commit();
 
-                //_loggingService.LogInfo($"DbService updated obj with key {newObject.PrimaryKey}", displayCaller: false);
+                _loggingService.LogInfo($"AddOrUpdateAsync<{typeof(T).Name}> {newObject.PrimaryKey}");
 
                 tcs.SetResult();
             });
@@ -131,7 +133,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"AddOrUpdate<T> {newObjects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"AddOrUpdate<{typeof(T).Name}> {newObjects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult();
             });
@@ -148,6 +150,8 @@ namespace ScheduleBSUIR.Services
                 var collection = _database.GetCollection<T>();
 
                 var result = collection.FindById(primaryKey);
+
+                _loggingService.LogInfo($"GetAsync<{typeof(T).Name}> {primaryKey}");
 
                 tcs.SetResult(result);
             });
@@ -167,7 +171,7 @@ namespace ScheduleBSUIR.Services
 
                 var result = collection.FindAll().ToList();
 
-                _loggingService.LogInfo($"GetAll<T> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"GetAll<{typeof(T).Name}> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult(result);
             });
@@ -192,6 +196,8 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
+                _loggingService.LogInfo($"RemoveAsync<{typeof(T).Name}> {primaryKey}");
+
                 tcs.SetResult();
             });
 
@@ -204,6 +210,8 @@ namespace ScheduleBSUIR.Services
 
             _ = Task.Run(() =>
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 var collection = _database.GetCollection<T>();
 
                 foreach (var obj in objects)
@@ -212,6 +220,8 @@ namespace ScheduleBSUIR.Services
                 }
 
                 _database.Commit();
+
+                _loggingService.LogInfo($"RemoveAsync<IEnumerable<{typeof(T).Name}>> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult();
             });
@@ -225,11 +235,15 @@ namespace ScheduleBSUIR.Services
 
             _ = Task.Run(() =>
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 var collection = _database.GetCollection<T>();
 
                 collection.DeleteAll();
 
                 _database.Commit();
+
+                _loggingService.LogInfo($"RemoveAllAsync<{typeof(T).Name}> in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult();
             });

@@ -67,14 +67,36 @@ namespace ScheduleBSUIR.Services
 
         public async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            await _dbService.AddOrUpdateAsync(timetableId);
+            switch (timetableId)
+            {
+                case StudentGroupId studentGroupId: {
+                        await _dbService.AddOrUpdateAsync(studentGroupId);
+                        break;
+                    }
+                case EmployeeId employeeId: {
+                        await _dbService.AddOrUpdateAsync(employeeId);
+                        break;
+                    }
+                default: throw new UnreachableException();
+            }
 
             _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
         }
 
         public async Task RemoveFromFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            await _dbService.RemoveAsync(timetableId);
+            switch(timetableId)
+            {
+                case StudentGroupId studentGroupId: {
+                        await _dbService.RemoveAsync(studentGroupId);
+                        break;
+                    }
+                case EmployeeId employeeId: {
+                        await _dbService.RemoveAsync(employeeId);
+                        break;
+                    }
+                default: throw new UnreachableException();
+            }
 
             _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
         }
@@ -84,16 +106,27 @@ namespace ScheduleBSUIR.Services
             if (timetableId is null)
                 return false;
 
-            var timetableIdInDb = await _dbService.GetAsync<T>(timetableId.PrimaryKey);
+            TypedId? timetableIdInDb = timetableId switch
+            {
+                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey),
+                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey),
+                _ => throw new UnreachableException(),
+            };
 
             return timetableIdInDb is not null;
         }
 
-        public async Task<List<T>> GetFavoriteTimetablesIdsAsync<T>() where T : TypedId
+        public async Task<List<StudentGroupId>> GetFavoriteGroupsTimetablesIdsAsync()
         {
             // Calling GetAllAsync<TypedId> will not return both StudentGroupIds and EmployeeIds because of how LiteDb works 
             // => using generic method
-            List<T> ids = await _dbService.GetAllAsync<T>();
+            List<StudentGroupId> ids = await _dbService.GetAllAsync<StudentGroupId>();
+
+            return ids;
+        }
+        public async Task<List<EmployeeId>> GetFavoriteEmployeesTimetablesIdsAsync()
+        {
+            List<EmployeeId> ids = await _dbService.GetAllAsync<EmployeeId>();
 
             return ids;
         }
