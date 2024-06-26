@@ -427,7 +427,7 @@
                         Spacing="20">
                         <!--type-->
                         <Grid>
-                            <Label
+                        <Label
                                 Grid.Column="0"
                                 Style="{StaticResource LabelBodyPrimaryStyle}"
                                 Text="Тип"/>
@@ -438,12 +438,13 @@
                                 Text="{Binding LessonTypeAbbrev}"/>
                         </Grid>
 
-                        <!--subgroup-->
-                        <Grid>
-                            <Label
-                                Grid.Column="0"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="Подгруппа"/>
+                        <!-- Subgroup (if not whole group) -->
+                        <Grid
+                            IsVisible="{Binding NumSubgroup, Converter={toolkit:IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}">
+                        <Label
+                            Grid.Column="0"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Text="Подгруппа"/>
                             <Label
                                 Grid.Column="1"
                                 HorizontalTextAlignment="End"
@@ -474,8 +475,8 @@
                                 Grid.Column="1"
                                 HorizontalTextAlignment="End"
                                 Style="{StaticResource LabelBodySecondaryStyle}">
-                                <Label.Text>
-                                    <MultiBinding
+                            <Label.Text>
+                                <MultiBinding
                                         StringFormat="{}{0} - {1}">
                                         <Binding
                                             Path="StartLessonTime"
@@ -484,15 +485,15 @@
                                             Path="EndLessonTime"
                                             StringFormat="{}{0:HH:mm}"/>
                                     </MultiBinding>
-                                </Label.Text>
-                            </Label>
+                            </Label.Text>
+                        </Label>
                         </Grid>
 
                         <!--auditories-->
                         <Grid>
-                            <Label
+                        <Label
                                 Grid.Column="0"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
                                 Text="Аудитория"/>
                             <Label
                                 Grid.Column="1"

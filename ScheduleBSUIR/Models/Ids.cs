@@ -13,6 +13,7 @@ namespace ScheduleBSUIR.Models
             StudentGroupDto studentGroupDto => new StudentGroupId(studentGroupDto),
             StudentGroupHeader studentGroupHeader => new StudentGroupId(studentGroupHeader),
             EmployeeDto employeeDto => new EmployeeId(employeeDto),
+            Employee employee => new EmployeeId(employee),
             Timetable timetable when timetable.EmployeeDto is not null => new EmployeeId(timetable.EmployeeDto),
             Timetable timetable when timetable.StudentGroupDto is not null => new StudentGroupId(timetable.StudentGroupDto),
             _ => throw new UnreachableException()

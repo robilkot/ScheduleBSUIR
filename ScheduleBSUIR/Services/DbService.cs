@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 
 namespace ScheduleBSUIR.Services
 {
+    // todo: exception handling in methods with tcs
     public class DbService
     {
         private const string DatabaseFilename = "ScheduleBSUIR.db";
@@ -71,11 +72,6 @@ namespace ScheduleBSUIR.Services
             Preferences.Set(PreferencesKeys.CacheClearLastDate, _dateTimeProvider.UtcNow.ToString());
 
             _loggingService.LogInfo($"ClearCacheIfNeeded worked in {stopwatch.Elapsed:ss\\.FFFFF}");
-        }
-
-        public void SetClearCacheInterval(double? days)
-        {
-            Preferences.Set(PreferencesKeys.CacheClearInterval, days ?? 7d);
         }
 
         public async Task ClearDatabase()
