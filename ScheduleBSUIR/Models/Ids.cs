@@ -3,10 +3,15 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Models
 {
-    public abstract class TypedId(string Id, string? displayName = null) : ICacheable
+    public abstract class TypedId : ICacheable
     {
-        public string PrimaryKey => Id;
-        public string DisplayName => displayName ?? Id;
+        public TypedId(string id, string? displayName = null)
+        {
+            PrimaryKey = id;
+            DisplayName = displayName ?? id;
+        }
+        public string PrimaryKey { get; init; }
+        public string DisplayName { get; init; }
 
         public static TypedId Create(object dto) => dto switch
         {
