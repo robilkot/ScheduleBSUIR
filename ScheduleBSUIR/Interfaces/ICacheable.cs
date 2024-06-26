@@ -1,9 +1,7 @@
-﻿namespace ScheduleBSUIR.Models.DB
+﻿namespace ScheduleBSUIR.Interfaces
 {
     public interface ICacheable
     {
         public string PrimaryKey { get; }
-        public DateTime UpdatedAt { get; set; }
-        public DateTime AccessedAt { get; set; }
     }
 }

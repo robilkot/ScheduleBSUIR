@@ -1,10 +1,10 @@
 ﻿using LiteDB;
-using ScheduleBSUIR.Models.DB;
+using ScheduleBSUIR.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class StudentGroupHeader : ICacheable
+    public class StudentGroupHeader : ICacheable, IUpdateDateAware
     {
         public string Name { get; set; } = string.Empty;
         public string? SpecialityAbbrev { get; set; }

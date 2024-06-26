@@ -3,11 +3,12 @@ using ScheduleBSUIR.Models;
 
 namespace ScheduleBSUIR.Services
 {
-    public class EmployeesService(WebService webService, DbService dbService, ILoggingService loggingService)
+    public class EmployeesService(WebService webService, DbService dbService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
     {
         private readonly WebService _webService = webService;
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<IEnumerable<Employee>> GetEmployeesAsync(CancellationToken cancellationToken)
         {
@@ -38,9 +39,24 @@ namespace ScheduleBSUIR.Services
                     throw new ArgumentException("Couldn't obtain employees from web service");
                 }
 
-                // No need to update AccessedAt and other properties for groups list since not using them
+                // Use first employee in list to check if employees were updated in this day. If so, skip updating in db.
+                var firstEmployee = employees.FirstOrDefault();
 
-                await _dbService.AddOrUpdateAsync(employees);
+                if (firstEmployee is null)
+                {
+                    await _dbService.RemoveAllAsync<Employee>();
+                }
+                else
+                {
+                    var localFirstGroupHeader = await _dbService.GetAsync<Employee>(firstEmployee.PrimaryKey);
+
+                    if (localFirstGroupHeader is null || localFirstGroupHeader.UpdatedAt <= _dateTimeProvider.UtcNow - TimeSpan.FromDays(1))
+                    {
+                        firstEmployee.UpdatedAt = _dateTimeProvider.UtcNow;
+
+                        await _dbService.AddOrUpdateAsync(employees);
+                    }
+                }
             }
 
             return employees ?? [];

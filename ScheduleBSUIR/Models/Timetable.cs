@@ -1,10 +1,10 @@
 ﻿using LiteDB;
-using ScheduleBSUIR.Models.DB;
+using ScheduleBSUIR.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Timetable : ICacheable
+    public class Timetable : ICacheable, IUpdateDateAware
     {
         public EmployeeDto? EmployeeDto { get; set; }
         public StudentGroupDto? StudentGroupDto { get; set; }
@@ -17,10 +17,10 @@ namespace ScheduleBSUIR.Models
 
         [BsonId]
         [JsonIgnore]
-        public string PrimaryKey => EmployeeDto is not null 
+        public string PrimaryKey => EmployeeDto is not null
             ? EmployeeDto.UrlId
-            : StudentGroupDto is not null 
-            ? StudentGroupDto.Name 
+            : StudentGroupDto is not null
+            ? StudentGroupDto.Name
             : String.Empty;
         [JsonIgnore]
         public bool Favorited { get; set; }

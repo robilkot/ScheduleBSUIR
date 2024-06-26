@@ -63,7 +63,7 @@ namespace ScheduleBSUIR.Services
                     timetable.UpdatedAt = _dateTimeProvider.UtcNow;
                 }
 
-                // Update property for ICacheable interface
+                // Update property for IUpdateAware interface
                 timetable.AccessedAt = _dateTimeProvider.UtcNow;
 
                 // If we obtained timetable from web api, make sure favorited flag remains from locally stored timetable

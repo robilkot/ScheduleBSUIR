@@ -1,8 +1,9 @@
 ﻿using LiteDB;
+using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Models.DB;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace ScheduleBSUIR.Services
 {
@@ -11,22 +12,76 @@ namespace ScheduleBSUIR.Services
         private const string DatabaseFilename = "ScheduleBSUIR.db";
         private readonly LiteDatabase _database;
         private readonly ILoggingService _loggingService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public DbService(ILoggingService loggingService)
+        public DbService(ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
         {
             _loggingService = loggingService;
+            _dateTimeProvider = dateTimeProvider;
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
             _database = new LiteDatabase(databasePath);
+
+            _ = ClearCacheIfNeeded();
+        }
+
+        private async Task ClearCacheIfNeeded()
+        {
+            double clearInterval = Preferences.Get(PreferencesKeys.CacheClearInterval, 7d);
+            
+            // Clearing is disabled
+            if (clearInterval == 0)
+            {
+                return;
+            }
+
+            DateTime dateToClear = _dateTimeProvider.UtcNow - TimeSpan.FromDays(clearInterval);
+
+            // Last clear was too recently
+            if (DateTime.TryParse(Preferences.Get(PreferencesKeys.CacheClearLastDate, string.Empty), out DateTime lastClearDate))
+            {
+                if(lastClearDate > dateToClear)
+                {
+                    _loggingService.LogInfo($"ClearCacheIfNeeded no clearing needed");
+                    return;
+                }
+            }
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            DeleteStaleObjects<Timetable>();
+
+            await RemoveAllAsync<Employee>();
+            await RemoveAllAsync<StudentGroupHeader>();
+
+            _database.Rebuild();
+
+            _database.Commit();
+
+            void DeleteStaleObjects<T>() where T : IUpdateDateAware
+            {
+                var collection = _database.GetCollection<T>();
+
+                Expression<Func<T, bool>> deletePredicate = (obj) => obj.AccessedAt < dateToClear;
+
+                collection.DeleteMany(deletePredicate);
+            }
+
+            Preferences.Set(PreferencesKeys.CacheClearLastDate, _dateTimeProvider.UtcNow.ToString());
+
+            _loggingService.LogInfo($"ClearCacheIfNeeded worked in {stopwatch.Elapsed:ss\\.FFFFF}");
+        }
+
+        public void SetClearCacheInterval(double? days)
+        {
+            Preferences.Set(PreferencesKeys.CacheClearInterval, days ?? 7d);
         }
 
         public async Task ClearDatabase()
         {
             await RemoveAllAsync<Timetable>();
             await RemoveAllAsync<Employee>();
-            await RemoveAllAsync<EmployeeDto>();
-            await RemoveAllAsync<StudentGroupDto>();
             await RemoveAllAsync<StudentGroupHeader>();
         }
         public Task AddOrUpdateAsync<T>(T newObject) where T : ICacheable

@@ -1,10 +1,10 @@
 ﻿using LiteDB;
-using ScheduleBSUIR.Models.DB;
+using ScheduleBSUIR.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Employee : ICacheable
+    public class Employee : ICacheable, IUpdateDateAware
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
