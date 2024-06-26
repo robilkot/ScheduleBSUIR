@@ -3,6 +3,7 @@
     // Used to group schedules by day
     public class DaySchedule(IEnumerable<Schedule> schedules) : List<Schedule>(schedules)
     {
-        public DateTime Day => this.FirstOrDefault()?.DateLesson ?? DateTime.MinValue;
+        private DateTime _day = schedules.FirstOrDefault()?.DateLesson ?? DateTime.MinValue;
+        public DateTime Day => _day;
     }
 }

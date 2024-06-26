@@ -70,14 +70,14 @@
                         HorizontalOptions="End"
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
-                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}'}">
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
                     </Label>
                     <Label
                         HorizontalOptions="End"
                         Grid.Row="1"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="13"
-                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}'}">
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
                     </Label>
                 </Grid>
 
@@ -96,12 +96,12 @@
                     <Label
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyHeaderStyle}"
-                        Text="{Binding Subject}">
+                        Text="{Binding Subject, Mode=OneTime}">
                     </Label>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}"
-                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}}">
+                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
                     </Label>
                 </Grid>
 
@@ -109,7 +109,7 @@
                     Grid.Column="3"
                     Spacing="-25"
                     HorizontalOptions="End"
-                    BindableLayout.ItemsSource="{Binding Employees}">
+                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime}">
 
                     <BindableLayout.ItemTemplate>
                         <DataTemplate
@@ -121,7 +121,7 @@
 
                                 <Image.Source>
                                     <UriImageSource
-                                        Uri="{Binding PhotoLink}"
+                                        Uri="{Binding PhotoLink, Mode=OneTime}"
                                         CachingEnabled="True"
                                         CacheValidity="10:00:00:00"/>
                                 </Image.Source>
@@ -172,14 +172,14 @@
                         Grid.Row="0"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="13"
-                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}'}">
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
                     </Label>
                     <Label
                         HorizontalOptions="End"
                         Grid.Row="1"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         FontSize="11"
-                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}'}">
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
                     </Label>
                 </Grid>
 
@@ -196,15 +196,9 @@
                     VerticalOptions="Center"
                     Style="{StaticResource LabelBodyHeaderStyle}"
                     FontSize="18"
-                    Text="{Binding Subject}">
+                    Text="{Binding Subject, Mode=OneTime}">
                 </Label>
             </Grid>
         </Border>
     </DataTemplate>
-
-
-    <templateSelectors:ActiveTemplateSelector
-        ActiveTemplate="{StaticResource ActiveLessonTemplate}"
-        InactiveTemplate="{StaticResource InactiveLessonTemplate}"
-        x:Key="LessonTemplateSelector"/>
 </ResourceDictionary>

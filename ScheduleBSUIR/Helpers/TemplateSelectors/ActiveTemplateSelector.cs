@@ -9,6 +9,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
     class ActiveTemplateSelector : DataTemplateSelector
     {
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly ILoggingService _loggingService;
 
         // todo: check this on DXCollectionView
         // OnSelectTemplate gets called on each collectionview actually (even scrolling).
@@ -24,6 +25,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         {
             // todo: DI
             _dateTimeProvider = new DateTimeProviderService();
+            _loggingService = new LoggingService();
         }
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
@@ -36,8 +38,9 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
                 {
                     var dateTime = item switch
                     {
-                        Schedule schedule => schedule.DateLesson,
-                        GroupInfo scheduleGroup => (DateTime)scheduleGroup.GroupValue,
+                        DaySchedule daySchedule => daySchedule.Day, // For grouping with default collectionview
+                        Schedule schedule => schedule.DateLesson, // For no grouping
+                        GroupInfo scheduleGroup => (DateTime)scheduleGroup.GroupValue, // For grouping with DXCollectionview
                         _ => throw new NotImplementedException(),
                     } ?? DateTime.MinValue;
 
@@ -47,8 +50,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
-                    // todo: log
+                    _loggingService.LogError(ex.Message);
                 }
             }
 
