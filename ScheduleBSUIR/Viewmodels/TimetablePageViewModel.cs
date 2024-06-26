@@ -102,8 +102,8 @@ namespace ScheduleBSUIR.Viewmodels
             // Initial case
             _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
 
-            _loadedToDate ??= _timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode)
-                ?? _dateTimeProvider.UtcNow - TimeSpan.FromDays(1);
+            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow) 
+                - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
@@ -114,13 +114,15 @@ namespace ScheduleBSUIR.Viewmodels
                 return;
             }
 
+            // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
+            _loadedToDate += TimeSpan.FromDays(1);
+            
             // Common case
             var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
 
-            _loggingService.LogInfo($"GetDaySchedules got {newSchedules?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
+            _loadedToDate += _loadingStep;
 
-            // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
-            _loadedToDate += _loadingStep + TimeSpan.FromDays(1);
+            _loggingService.LogInfo($"GetDaySchedules got {newSchedules?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
 
             Schedule ??= [];
 

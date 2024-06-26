@@ -21,6 +21,7 @@
         Margin="15,0"
         IsRefreshing="{Binding IsRefreshing}">
         <dx:DXCollectionView
+            AllowCascadeUpdate="False"
             AllowGroupCollapse="False"
             UseRippleEffect="True"
             ItemSeparatorColor="{StaticResource DarkLightControlBackground}"

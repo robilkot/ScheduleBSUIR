@@ -118,7 +118,7 @@ namespace ScheduleBSUIR.Services
             }
 
             // todo for schedule tab           
-            _loggingService.LogInfo($"GetLastScheduleDate returned {result?.ToString("dd.MM")}.", displayCaller: false);
+            _loggingService.LogInfo($"GetLastScheduleDate returned {result?.ToString("dd.MM")} (for {timetableTabs}, {subgroupType}).", displayCaller: false);
 
             return result;
         }
@@ -152,6 +152,7 @@ namespace ScheduleBSUIR.Services
             }
 
             // todo for schedule tab
+            _loggingService.LogInfo($"GetFirstScheduleDate returned {result?.ToString("dd.MM")} (for {timetableTabs}, {subgroupType}).", displayCaller: false);
 
             return result;
         }
