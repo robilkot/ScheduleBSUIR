@@ -32,12 +32,12 @@ namespace ScheduleBSUIR
             builder.UseLeakDetection(collectionTarget =>
             {
                 // This callback will run any time a leak is detected.
-                var logger = App.Current.MainPage.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
+                var logger = App.Current?.MainPage?.Handler?.MauiContext?.Services.GetRequiredService<ILoggingService>();
 
-                logger?.LogInfo($"Leaked {collectionTarget.Name}", displayCaller: false);
+                logger?.LogInfo($"Leak {collectionTarget.Name}", displayCaller: false);
             });
 
-            //builder.UseLeakDetection();
+            builder.UseGlobalExceptionHandler(MauiExceptions_UnhandledException);
 
             builder.Services.AddTransient<EmployeesListPage>();
             builder.Services.AddTransient<GroupListPage>();
@@ -58,6 +58,19 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProviderService>();
 
             return builder.Build();
+        }
+
+        private static void MauiExceptions_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var logger = App.Current?.MainPage?.Handler?.MauiContext?.Services.GetRequiredService<ILoggingService>();
+
+            var exception = e.ExceptionObject as Exception;
+
+            string info = $"Unhandled exception: {exception?.Message}\n{exception?.StackTrace}";
+
+            logger?.LogError(info, displayCaller: false);
+
+            Shell.Current.DisplayAlert("Exception", info, "OK");
         }
     }
 }
