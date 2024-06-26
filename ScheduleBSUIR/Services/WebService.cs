@@ -27,24 +27,14 @@ namespace ScheduleBSUIR.Services
 
         public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
         {
-            var requestUrl = id switch
-            {
-                StudentGroupId studentGroupId => UrlGenerator.StudentGroupTimetableLastUpdate(studentGroupId),
-                EmployeeId employeeId => UrlGenerator.EmployeeTimetableLastUpdate(employeeId),
-                _ => throw new UnreachableException()
-            };
+            string requestUrl = UrlGenerator.TimetableLastUpdate(id);
 
             return GetDeserializedDataAsync<LastUpdateResponse>(requestUrl, cancellationToken);
         }
 
         public Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
-            var requestUrl = id switch
-            {
-                StudentGroupId studentGroupId => UrlGenerator.StudentGroupTimetable(studentGroupId),
-                EmployeeId employeeId => UrlGenerator.EmployeeTimetable(employeeId),
-                _ => throw new UnreachableException()
-            };
+            string requestUrl = UrlGenerator.Timetable(id);
 
             return GetDeserializedDataAsync<Timetable>(requestUrl, cancellationToken);
         }

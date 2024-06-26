@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Layouts;
 using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Maui.CollectionView;
 using DevExpress.Maui.Controls;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Viewmodels;
@@ -78,9 +79,22 @@ public partial class TimetablePage : ContentPage
 
     private WeakReference? animationCtsRef = null;
 
-    private void scheduleCollectionView_SelectionChanged(object sender, DevExpress.Maui.CollectionView.CollectionViewSelectionChangedEventArgs e)
+    private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
     {
-        if (sender is not DXCollectionView collectionView)
+        if (e.NewValue == BottomSheetState.Hidden)
+        {
+            sheetContent.BindingContext = null;
+        }
+    }
+
+    private void employee_tapped(object sender, TappedEventArgs e)
+    {
+        scheduleDetailSheet.State = BottomSheetState.Hidden;
+    }
+
+    private void dayScheduleCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is not CollectionView collectionView)
             return;
 
         if (collectionView.SelectedItem is null)
@@ -93,18 +107,5 @@ public partial class TimetablePage : ContentPage
         scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
 
         collectionView.SelectedItem = null;
-    }
-
-    private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
-    {
-        if (e.NewValue == BottomSheetState.Hidden)
-        {
-            sheetContent.BindingContext = null;
-        }
-    }
-
-    private void employee_tapped(object sender, TappedEventArgs e)
-    {
-        scheduleDetailSheet.State = BottomSheetState.Hidden;
     }
 }

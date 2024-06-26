@@ -106,9 +106,10 @@ namespace ScheduleBSUIR.Viewmodels
                 ?? _dateTimeProvider.UtcNow - TimeSpan.FromDays(1);
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
-
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
             {
+                CurrentState = ViewStates.Loaded;
+
                 IsLoadingMoreSchedule = false;
                 return;
             }
@@ -227,12 +228,7 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task NavigateToTimetable(object dto)
         {
-            TypedId timetableId = dto switch
-            {
-                StudentGroupDto group => new StudentGroupId(group),
-                EmployeeDto employee => new EmployeeId(employee),
-                _ => throw new UnreachableException(),
-            };
+            var timetableId = TypedId.Create(dto);
 
             // todo: all this header thing is a hack honestly
             string timetableHeader = dto switch

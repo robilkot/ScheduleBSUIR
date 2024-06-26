@@ -13,6 +13,7 @@
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              mtk:LeakMonitorBehavior.Cascade="True"
              mtk:TearDownBehavior.Cascade="True"
              Shell.NavBarIsVisible="False"
@@ -111,72 +112,60 @@
                     Margin="15,0"
                     ItemsSource="{Binding Schedule}"
                     RemainingItemsThreshold="5"
+                    ItemTemplate="{StaticResource LessonTemplateSelector}"
+                    IsGrouped="True"
+                    SelectionMode="Single"
+                    SelectionChanged="dayScheduleCollectionView_SelectionChanged"
+                    GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}"
                     RemainingItemsThresholdReachedCommand="{Binding LoadMoreScheduleCommand}">
+
+                    <CollectionView.Resources>
+                        <ResourceDictionary>
+                            <templateSelectors:ActiveTemplateSelector
+                                 ActiveTemplate="{StaticResource ActiveHeaderTemplate}"
+                                 InactiveTemplate="{StaticResource InactiveHeaderTemplate}"
+                                 x:Key="HeaderTemplateSelector"/>
+
+                            <templateSelectors:ActiveTemplateSelector
+                                ActiveTemplate="{StaticResource ActiveLessonTemplate}"
+                                InactiveTemplate="{StaticResource InactiveLessonTemplate}"
+                                x:Key="LessonTemplateSelector"/>
+                        </ResourceDictionary>
+                    </CollectionView.Resources>
 
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout
-                            Orientation="Vertical"
-                            ItemSpacing="5"/>
+                             Orientation="Vertical"
+                             ItemSpacing="5"/>
                     </CollectionView.ItemsLayout>
 
                     <CollectionView.Header>
                         <controls:TimetableHeader
-                            Margin="0,100,0,20"
-                            Tab="{Binding SelectedTab}"
-                            Timetable="{Binding Timetable}"/>
+                             Margin="0,100,0,20"
+                             Tab="{Binding SelectedTab}"
+                             Timetable="{Binding Timetable}"/>
                     </CollectionView.Header>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate
-                            x:DataType="model:DaySchedule">
-                            <Grid
-                                RowDefinitions="auto,auto">
-                                <!--active-->
-                                <Label
-                                    Grid.Row="0"
-                                    Margin="0,20,0,10"
-                                    Style="{StaticResource LabelBodyHeaderStyle}"
-                                    Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>
-                                <!--inactive-->
-                                <!--<Label
-                                    Margin="0,10,0,5"
-                                    Opacity="0.35"
-                                    Style="{StaticResource LabelHeaderStyle}"
-                                    FontSize="15"
-                                    Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}}"/>-->
-                                <dx:DXCollectionView
-                                    Grid.Row="1"
-                                    ReduceSizeToContent="True"
-                                    IsScrollBarVisible="False"
-                                    ItemsSource="{Binding .}"
-                                    ItemTemplate="{StaticResource LessonTemplateSelector}"
-                                    SelectionMode="Single"
-                                    SelectionChanged="scheduleCollectionView_SelectionChanged"
-                                    ItemSpacing="5"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
 
                     <CollectionView.EmptyView>
                         <AbsoluteLayout>
                             <Grid
-                                VerticalOptions="Center"
-                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                                AbsoluteLayout.LayoutFlags="PositionProportional"
-                                Opacity="0.5"
-                                RowSpacing="20"
-                                RowDefinitions="auto,auto">
+                                 VerticalOptions="Center"
+                                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                                 Opacity="0.5"
+                                 RowSpacing="20"
+                                 RowDefinitions="auto,auto">
                                 <Image
-                                    WidthRequest="100"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    Grid.Row="0"
-                                    Source="party"/>
+                                     WidthRequest="100"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Grid.Row="0"
+                                     Source="party"/>
                                 <Label
-                                    Grid.Row="1"
-                                    HorizontalTextAlignment="Center"
-                                    Style="{StaticResource LabelBodyHeaderStyle}"
-                                    Text="Занятий больше нет"/>
+                                     Grid.Row="1"
+                                     HorizontalTextAlignment="Center"
+                                     Style="{StaticResource LabelBodyHeaderStyle}"
+                                     Text="Занятий больше нет"/>
                             </Grid>
                         </AbsoluteLayout>
                     </CollectionView.EmptyView>

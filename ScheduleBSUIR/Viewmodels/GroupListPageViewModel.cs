@@ -43,7 +43,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             Preferences.Set(PreferencesKeys.SelectedGroupName, selectedGroup.Name);
 
-            StudentGroupId groupId = new(selectedGroup.Name);
+            var groupId = TypedId.Create(selectedGroup);
 
             Dictionary<string, object> navigationParameters = new()
             {

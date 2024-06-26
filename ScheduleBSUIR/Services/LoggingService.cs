@@ -73,7 +73,7 @@ namespace ScheduleBSUIR.Services
             {
                 using var stream = File.OpenText(LogFilePath);
 
-                string line;
+                string? line;
 
                 while ((line = stream.ReadLine()) != null)
                 {
