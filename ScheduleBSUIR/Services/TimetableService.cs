@@ -1,7 +1,6 @@
 ﻿using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
@@ -66,56 +65,26 @@ namespace ScheduleBSUIR.Services
             return timetable;
         }
 
-        public async Task AddToFavoritesAsync(TypedId timetableId)
+        public async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            switch (timetableId) {
-                case StudentGroupId studentGroupId:
-                    {
-                        await _dbService.AddOrUpdateAsync(studentGroupId);
-                        break;
-                    }
-                case EmployeeId employeeId:
-                    {
-                        await _dbService.AddOrUpdateAsync(employeeId);
-                        break;
-                    }
-                default: throw new UnreachableException();
-            }
+            await _dbService.AddOrUpdateAsync(timetableId);
 
             _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
         }
 
-        public async Task RemoveFromFavoritesAsync(TypedId timetableId)
+        public async Task RemoveFromFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            switch (timetableId)
-            {
-                case StudentGroupId studentGroupId:
-                    {
-                        await _dbService.RemoveAsync(studentGroupId);
-                        break;
-                    }
-                case EmployeeId employeeId:
-                    {
-                        await _dbService.RemoveAsync(employeeId);
-                        break;
-                    }
-                default: throw new UnreachableException();
-            }
+            await _dbService.RemoveAsync(timetableId);
 
             _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
         }
 
-        public async Task<bool> IsFavoritedAsync(TypedId? timetableId)
+        public async Task<bool> IsFavoritedAsync<T>(T? timetableId) where T : TypedId
         {
             if (timetableId is null)
                 return false;
 
-            TypedId? timetableIdInDb = timetableId switch
-            {
-                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey),
-                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey),
-                _ => throw new UnreachableException(),
-            };
+            var timetableIdInDb = await _dbService.GetAsync<T>(timetableId.PrimaryKey);
 
             return timetableIdInDb is not null;
         }

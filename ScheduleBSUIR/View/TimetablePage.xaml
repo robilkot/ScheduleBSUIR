@@ -381,6 +381,7 @@
             </dx:DXPopup>
         </Grid>
 
+        <!--todo: dont show groups list when viewing group timetable-->
         <!-- Bottom sheet with schedule details -->
         <dx:BottomSheet 
             x:Name="scheduleDetailSheet" 
