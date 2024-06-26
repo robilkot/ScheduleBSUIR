@@ -24,11 +24,11 @@ namespace ScheduleBSUIR.Services
             {
                 if (cachedTimetable is null)
                 {
-                    throw new FileNotFoundException($"No cached timetable found for {id}");
+                    throw new FileNotFoundException($"Timetable NOT cached yet for {id}");
                 }
 
                 timetable = cachedTimetable;
-                _loggingService.LogInfo($"Cached timetable found for {id}", displayCaller: false);
+                _loggingService.LogInfo($"Timetable cached for {id}", displayCaller: false);
             }
             else
             {
@@ -45,18 +45,18 @@ namespace ScheduleBSUIR.Services
                 if (cachedTimetable is not null
                     && lastUpdateResponse?.LastUpdateDate <= cachedTimetable.UpdatedAt)
                 {
-                    _loggingService.LogInfo($"Cached timetable found for {id}", displayCaller: false);
+                    _loggingService.LogInfo($"Timetable cached for {id}", displayCaller: false);
                     timetable = cachedTimetable;
                 }
                 // Else obtain from api
                 else
                 {
-                    _loggingService.LogInfo($"Cached timetable NOT found for {id}", displayCaller: false);
+                    _loggingService.LogInfo($"Timetable NOT cached yet for {id}", displayCaller: false);
                     timetable = await _webService.GetTimetableAsync(id, cancellationToken);
 
                     if (timetable is null)
                     {
-                        throw new ArgumentException($"Couldn't obtain timetable for {id} from web service");
+                        throw new ArgumentException($"Error obtaining timetable for {id}");
                     }
 
                     // Update property for ICacheable interface
@@ -118,7 +118,7 @@ namespace ScheduleBSUIR.Services
             }
 
             // todo for schedule tab           
-            _loggingService.LogInfo($"GetLastScheduleDate returned {result?.ToString("dd.MM")} (for {timetableTabs}, {subgroupType}).", displayCaller: false);
+            _loggingService.LogInfo($"GetLastScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
 
             return result;
         }
@@ -152,7 +152,7 @@ namespace ScheduleBSUIR.Services
             }
 
             // todo for schedule tab
-            _loggingService.LogInfo($"GetFirstScheduleDate returned {result?.ToString("dd.MM")} (for {timetableTabs}, {subgroupType}).", displayCaller: false);
+            _loggingService.LogInfo($"GetFirstScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
 
             return result;
         }

@@ -80,7 +80,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"AddOrUpdate<T> updated {newObjects.Count()} objects in {stopwatch.Elapsed}");
+                _loggingService.LogInfo($"AddOrUpdate<T> {newObjects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult();
             });
@@ -116,7 +116,7 @@ namespace ScheduleBSUIR.Services
 
                 var result = collection.FindAll().ToList();
 
-                _loggingService.LogInfo($"GetAll<T> got {collection.Count()} objects in {stopwatch.Elapsed}");
+                _loggingService.LogInfo($"GetAll<T> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult(result);
             });

@@ -83,7 +83,7 @@ public partial class TimetablePage : ContentPage
     {
         if (e.NewValue == BottomSheetState.Hidden)
         {
-            sheetContent.BindingContext = null;
+            scheduleDetailSheet.BindingContext = null;
         }
     }
 
@@ -102,7 +102,7 @@ public partial class TimetablePage : ContentPage
             return;
         }
 
-        sheetContent.BindingContext = (Schedule)collectionView.SelectedItem;
+        scheduleDetailSheet.BindingContext = (Schedule)collectionView.SelectedItem;
 
         scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
 

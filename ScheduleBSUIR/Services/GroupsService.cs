@@ -3,11 +3,12 @@ using ScheduleBSUIR.Models;
 
 namespace ScheduleBSUIR.Services
 {
-    public class GroupsService(WebService webService, DbService dbService, ILoggingService loggingService)
+    public class GroupsService(WebService webService, DbService dbService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
     {
         private readonly WebService _webService = webService;
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         public async Task<IEnumerable<StudentGroupHeader>> GetGroupHeadersAsync(CancellationToken cancellationToken)
         {
@@ -38,9 +39,24 @@ namespace ScheduleBSUIR.Services
                     throw new ArgumentException("Couldn't obtain groups from web service");
                 }
 
-                // No need to update AccessedAt and other properties for groups list since not using them
-
-                await _dbService.AddOrUpdateAsync(headers);
+                // Use first group in list to check if groups were updated in this day. If so, skip updating in db.
+                var firstGroupHeader = headers.FirstOrDefault();
+                
+                if(firstGroupHeader is null)
+                {
+                    await _dbService.RemoveAllAsync<StudentGroupHeader>();
+                } 
+                else
+                {
+                    var localFirstGroupHeader = await _dbService.GetAsync<StudentGroupHeader>(firstGroupHeader.PrimaryKey);
+                
+                    if(localFirstGroupHeader is null || localFirstGroupHeader.UpdatedAt <= _dateTimeProvider.UtcNow - TimeSpan.FromDays(1))
+                    {
+                        firstGroupHeader.UpdatedAt = _dateTimeProvider.UtcNow;
+                        
+                        await _dbService.AddOrUpdateAsync(headers);
+                    }
+                }
             }
 
             return headers ?? [];

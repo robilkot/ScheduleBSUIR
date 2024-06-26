@@ -5,14 +5,19 @@
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
 
     <converters:ScheduleToColorConverter
         x:Key="ScheduleToColorConverter"/>
+    <toolkit:EnumToIntConverter
+        x:Key="EnumToIntConverter"/>
     <toolkit:ListToStringConverter
         Separator=", "
         x:Key="StringListToStringConverter" />
+    <toolkit:IsNotEqualConverter
+        x:Key="IsNotEqualConverter" />
 
     <DataTemplate
         x:Key="SkeletonLessonTemplate"
@@ -93,11 +98,32 @@
                     Grid.Column="2"
                     VerticalOptions="Center"
                     RowDefinitions="auto,auto">
-                    <Label
+                    <Grid
                         Grid.Row="0"
-                        Style="{StaticResource LabelBodyHeaderStyle}"
-                        Text="{Binding Subject, Mode=OneTime}">
-                    </Label>
+                        ColumnDefinitions="auto,auto">
+                        <Label
+                            Grid.Column="0"
+                            Style="{StaticResource LabelBodyHeaderStyle}"
+                            Text="{Binding Subject, Mode=OneTime}">
+                        </Label>
+                        <Grid
+                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+                            Grid.Column="1"
+                            Padding="10"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            ColumnDefinitions="auto,auto">
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_user">
+                            </Image>
+                            <Label
+                                Grid.Column="1"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}}">
+                            </Label>
+                        </Grid>
+                    </Grid>
                     <Label
                         Grid.Row="1"
                         Style="{StaticResource LabelBodySecondaryStyle}"
@@ -191,13 +217,35 @@
                     BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}}">
                 </Border>
 
-                <Label
+                <Grid
                     Grid.Column="2"
-                    VerticalOptions="Center"
-                    Style="{StaticResource LabelBodyHeaderStyle}"
-                    FontSize="18"
-                    Text="{Binding Subject, Mode=OneTime}">
-                </Label>
+                    ColumnSpacing="5"
+                    ColumnDefinitions="auto,auto">
+                    <Label
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelBodyHeaderStyle}"
+                        FontSize="18"
+                        Text="{Binding Subject, Mode=OneTime}">
+                    </Label>
+                    <Grid
+                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+                        Grid.Column="1"
+                        Padding="10"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        ColumnDefinitions="auto,auto">
+                        <Image
+                            Grid.Column="0"
+                            Source="dark_user">
+                        </Image>
+                        <Label
+                            Grid.Column="1"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}}">
+                        </Label>
+                    </Grid>
+                </Grid>
             </Grid>
         </Border>
     </DataTemplate>

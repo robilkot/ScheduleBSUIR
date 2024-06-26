@@ -147,8 +147,6 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsBusy = true;
 
-            _loggingService.LogInfo($"Getting timetable with id {TimetableId}", displayCaller: false);
-
             try
             {
                 Timetable = await _timetableService.GetTimetableAsync(TimetableId, CancellationToken.None);

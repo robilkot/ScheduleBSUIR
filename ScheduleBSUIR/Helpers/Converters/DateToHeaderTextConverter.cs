@@ -35,7 +35,7 @@ namespace ScheduleBSUIR.Helpers.Converters
                 resultString += "Послезавтра, ";
             }
 
-            resultString += dateTime.ToString("dd MMMM");
+            resultString += dateTime.ToString("ddd, dd MMMM");
 
             return resultString;
         }
