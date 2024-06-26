@@ -53,11 +53,10 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsBusy = true;
 
-            TypedId groupId = selection switch 
+            TypedId groupId = selection switch
             {
                 TypedId id => id,
-                StudentGroupHeader studentGroupHeader => TypedId.Create(studentGroupHeader),
-                _ => throw new UnreachableException(),
+                _ => TypedId.Create(selection),
             };
 
             Dictionary<string, object> navigationParameters = new()

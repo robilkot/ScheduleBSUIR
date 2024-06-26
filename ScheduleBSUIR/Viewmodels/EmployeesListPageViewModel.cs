@@ -1,16 +1,19 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
+using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
     public partial class EmployeesListPageViewModel : BaseViewModel
     {
         private EmployeesService _employeesService;
+        private TimetableService _timetableService;
 
         private List<Employee> _allEmployees = [];
 
@@ -19,36 +22,44 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private List<Employee> _filteredEmployees = [];
 
+        // todo: consume message about (un)favoriting
+        private List<EmployeeId> _favoriteEmployeesIds = [];
+
+        [ObservableProperty]
+        private ObservableCollection<EmployeeId> _filteredFavoriteEmployeesIds = [];
+
         [ObservableProperty]
         private string _employeeFilter = string.Empty;
 
         [ObservableProperty]
         private bool _isRefreshing = false;
 
-        public EmployeesListPageViewModel(EmployeesService employeesService, ILoggingService loggingService)
+        public EmployeesListPageViewModel(EmployeesService employeesService, ILoggingService loggingService, TimetableService timetableService)
             : base(loggingService)
         {
             _employeesService = employeesService;
+            _timetableService = timetableService;
 
             RefreshCommand.Execute(string.Empty);
         }
 
         [RelayCommand]
-        public async Task SelectEmployee(Employee selectedEmployee)
+        public async Task SelectEmployee(object selection)
         {
             if (IsBusy)
                 return;
 
             IsBusy = true;
 
-            // todo check comment in prefs
-            //Preferences.Set(PreferencesKeys.SelectedGroupName, selectedEmployee.Name);
-
-            TypedId emplyeeId = TypedId.Create(selectedEmployee);
+            TypedId employeeId = selection switch
+            {
+                TypedId id => id,
+                _ => TypedId.Create(selection),
+            };
 
             Dictionary<string, object> navigationParameters = new()
             {
-                { NavigationKeys.TimetableId, emplyeeId },
+                { NavigationKeys.TimetableId, employeeId },
             };
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
@@ -67,9 +78,11 @@ namespace ScheduleBSUIR.Viewmodels
             try
             {
                 var employees = await _employeesService.GetEmployeesAsync(cancellationToken);
-
                 _allEmployees = employees.ToList();
                 FilteredEmployees = _allEmployees;
+
+                _favoriteEmployeesIds = await _timetableService.GetFavoriteTimetablesIdsAsync<EmployeeId>();
+                FilteredFavoriteEmployeesIds = _favoriteEmployeesIds.ToObservableCollection();
 
                 EmployeeFilter = string.Empty;
             }
@@ -93,11 +106,17 @@ namespace ScheduleBSUIR.Viewmodels
             if (employeeNameFilter.Length > _currentEmployeeFilter.Length)
             {
                 FilteredEmployees = FilteredEmployees.Where(SearchPredicate(employeeNameFilter)).ToList();
+                FilteredFavoriteEmployeesIds = FilteredFavoriteEmployeesIds
+                    .Where(id => id.DisplayName.Contains(employeeNameFilter, StringComparison.InvariantCultureIgnoreCase))
+                    .ToObservableCollection();
             }
             // Else we have to search in all list :(
             else
             {
                 FilteredEmployees = _allEmployees.Where(SearchPredicate(employeeNameFilter)).ToList();
+                FilteredFavoriteEmployeesIds = _favoriteEmployeesIds
+                    .Where(id => id.DisplayName.Contains(employeeNameFilter, StringComparison.InvariantCultureIgnoreCase))
+                    .ToObservableCollection();
             }
 
             _currentEmployeeFilter = employeeNameFilter;

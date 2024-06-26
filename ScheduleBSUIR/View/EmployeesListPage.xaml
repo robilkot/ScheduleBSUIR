@@ -28,16 +28,13 @@
             ItemsSource="{Binding FilteredEmployees}">
 
             <dx:DXCollectionView.Header>
-                <Grid
+                <VerticalStackLayout
                     Margin="0,100,0,20"
-                    RowDefinitions="auto,auto,auto"
-                    RowSpacing="20">
+                    Spacing="20">
                     <Label
-                        Grid.Row="0"
                         Style="{StaticResource LabelHeaderStyle}"
                         Text="Все преподаватели"/>
                     <Border
-                        Grid.Row="1"
                         Background="{StaticResource DarkControlBackground}"
                         Padding="10,0">
                         <Grid
@@ -61,7 +58,52 @@
                             </Entry>
                         </Grid>
                     </Border>
-                </Grid>
+
+                    <!-- Favorite employees -->
+                    <Label
+                        IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Text="Избранное"
+                        Margin="15,0,0,-10"
+                        Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                    <Border
+                        Background="{StaticResource DarkControlBackground}"
+                        IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                        <VerticalStackLayout
+                            BindableLayout.ItemsSource="{Binding FilteredFavoriteEmployeesIds}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate
+                                    x:DataType="model:StudentGroupId">
+                                    <Grid
+                                        ColumnSpacing="15"
+                                        Padding="15,10"
+                                        ColumnDefinitions="*,auto">
+
+                                        <Label
+                                            Grid.Column="0"
+                                            VerticalOptions="Center"
+                                            LineBreakMode="NoWrap"
+                                            Text="{Binding DisplayName}"
+                                            Style="{StaticResource LabelBodyPrimaryStyle}">
+                                        </Label>
+
+                                        <Image
+                                            Grid.Column="1"
+                                            HeightRequest="16"
+                                            Opacity="0.5"
+                                            Source="dark_arrow_right"/>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:EmployeesListPageViewModel}}, Path=SelectEmployeeCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
             </dx:DXCollectionView.Header>
 
             <dx:DXCollectionView.GroupDescription>
