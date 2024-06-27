@@ -1,18 +1,18 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DevExpress.Data.Helpers;
+using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class GroupListPageViewModel : BaseViewModel
+    public partial class GroupListPageViewModel : BaseViewModel, IRecipient<TimetableFavoritedMessage>, IRecipient<TimetableUnfavoritedMessage>
     {
         private readonly GroupsService _groupsService;
         private readonly TimetableService _timetableService;
@@ -24,7 +24,6 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private List<StudentGroupHeader> _filteredGroups = [];
 
-        // todo: consume message about (un)favoriting
         private List<StudentGroupId> _favoriteGroupsIds = [];
 
         [ObservableProperty]
@@ -41,6 +40,9 @@ namespace ScheduleBSUIR.Viewmodels
         {
             _groupsService = groupsService;
             _timetableService = timetableService;
+
+            WeakReferenceMessenger.Default.Register<TimetableFavoritedMessage>(this);
+            WeakReferenceMessenger.Default.Register<TimetableUnfavoritedMessage>(this);
 
             RefreshCommand.Execute(string.Empty);
         }
@@ -112,6 +114,35 @@ namespace ScheduleBSUIR.Viewmodels
             }
 
             _currentGroupFilter = groupNameFilter;
+        }
+
+        public void Receive(TimetableFavoritedMessage message)
+        {
+            if (message.Value is not StudentGroupId studentGroupId)
+                return;
+
+            _favoriteGroupsIds.Add(studentGroupId);
+
+            // Not to perform filtering for whole collection
+            if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+            {
+                FilteredFavoriteGroupsIds.Add(studentGroupId);
+                OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
+            }
+        }
+
+        public void Receive(TimetableUnfavoritedMessage message)
+        {
+            if (message.Value is not StudentGroupId studentGroupId)
+                return;
+
+            _favoriteGroupsIds.Remove(studentGroupId);
+
+            if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+            {
+                FilteredFavoriteGroupsIds.Remove(studentGroupId);
+                OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
+            }
         }
     }
 }

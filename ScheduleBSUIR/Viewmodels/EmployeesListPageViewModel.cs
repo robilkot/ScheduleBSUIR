@@ -1,16 +1,18 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class EmployeesListPageViewModel : BaseViewModel
+    public partial class EmployeesListPageViewModel : BaseViewModel, IRecipient<TimetableFavoritedMessage>, IRecipient<TimetableUnfavoritedMessage>
     {
         private readonly EmployeesService _employeesService;
         private readonly TimetableService _timetableService;
@@ -22,7 +24,6 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private List<Employee> _filteredEmployees = [];
 
-        // todo: consume message about (un)favoriting
         private List<EmployeeId> _favoriteEmployeesIds = [];
 
         [ObservableProperty]
@@ -39,6 +40,9 @@ namespace ScheduleBSUIR.Viewmodels
         {
             _employeesService = employeesService;
             _timetableService = timetableService;
+
+            WeakReferenceMessenger.Default.Register<TimetableFavoritedMessage>(this);
+            WeakReferenceMessenger.Default.Register<TimetableUnfavoritedMessage>(this);
 
             RefreshCommand.Execute(string.Empty);
         }
@@ -120,6 +124,35 @@ namespace ScheduleBSUIR.Viewmodels
             }
 
             _currentEmployeeFilter = employeeNameFilter;
+        }
+
+        public void Receive(TimetableFavoritedMessage message)
+        {
+            if (message.Value is not EmployeeId employeeId)
+                return;
+
+            _favoriteEmployeesIds.Add(employeeId);
+
+            // Not to perform filtering for whole collection
+            if (employeeId.DisplayName.Contains(_currentEmployeeFilter, StringComparison.InvariantCultureIgnoreCase))
+            {
+                FilteredFavoriteEmployeesIds.Add(employeeId);
+                OnPropertyChanged(nameof(FilteredFavoriteEmployeesIds)); // Otherwise converter won't catch up
+            }
+        }
+
+        public void Receive(TimetableUnfavoritedMessage message)
+        {
+            if (message.Value is not EmployeeId employeeId)
+                return;
+
+            _favoriteEmployeesIds.Remove(employeeId);
+
+            if (employeeId.DisplayName.Contains(_currentEmployeeFilter, StringComparison.InvariantCultureIgnoreCase))
+            {
+                FilteredFavoriteEmployeesIds.Remove(employeeId);
+                OnPropertyChanged(nameof(FilteredFavoriteEmployeesIds)); // Otherwise converter won't catch up
+            }
         }
     }
 }

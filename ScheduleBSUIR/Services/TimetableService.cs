@@ -1,6 +1,8 @@
-﻿using ScheduleBSUIR.Helpers.Constants;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.Messaging;
 using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
@@ -87,6 +89,8 @@ namespace ScheduleBSUIR.Services
                 default: throw new UnreachableException();
             }
 
+            WeakReferenceMessenger.Default.Send(new TimetableFavoritedMessage(timetableId));
+
             _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
         }
 
@@ -104,6 +108,8 @@ namespace ScheduleBSUIR.Services
                     }
                 default: throw new UnreachableException();
             }
+
+            WeakReferenceMessenger.Default.Send(new TimetableUnfavoritedMessage(timetableId));
 
             _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
         }

@@ -9,7 +9,6 @@ using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
-using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -28,7 +27,6 @@ namespace ScheduleBSUIR.Viewmodels
         private DateTime? _lastScheduleDate = null;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Schedule))]
         private bool _isLoadingMoreSchedule = false;
 
         [ObservableProperty]
@@ -58,7 +56,6 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Favorited))]
         private Timetable? _timetable;
         partial void OnTimetableChanged(Timetable? value)
         {
@@ -90,7 +87,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             // Initial case
             _nearestScheduleDate ??= _timetableService.GetNearestScheduleDate(Timetable, SelectedTab, SelectedMode);
-            
+
             _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow)
                 - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
 
@@ -123,7 +120,7 @@ namespace ScheduleBSUIR.Viewmodels
             while (_loadedToDate < _nearestScheduleDate && (scrollToNearest ?? false));
 
             Schedule ??= [];
-            
+
             // todo: also add ScheduleWeek?
             foreach (var day in newSchedules ?? [])
             {
@@ -134,7 +131,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             IsLoadingMoreSchedule = false;
 
-            if(scrollToNearest ?? false)
+            if (scrollToNearest ?? false)
             {
                 ScrollToActiveSchedule();
             }
@@ -250,7 +247,6 @@ namespace ScheduleBSUIR.Viewmodels
 
             Schedule = [];
         }
-
         private int? GetNearestScheduleIndex()
         {
             if (Timetable is null)
