@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DevExpress.Data.XtraReports.Native;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -74,7 +75,7 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _favorited = false;
 
         [ObservableProperty]
-        private ObservableCollection<DaySchedule>? _schedule = null;
+        private ObservableRangeCollection<DaySchedule>? _schedule = null;
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -130,10 +131,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             Schedule ??= [];
 
-            foreach (var schedule in newSchedules ?? [])
-            {
-                Schedule.Add(schedule);
-            }
+            Schedule.AddRange(newSchedules ?? []);
 
             CurrentState = ViewStates.Loaded;
 

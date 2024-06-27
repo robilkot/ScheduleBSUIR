@@ -4,6 +4,7 @@ using MemoryToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Services;
+using ScheduleBSUIR.UnitTests.Services;
 using ScheduleBSUIR.View;
 using ScheduleBSUIR.Viewmodels;
 
@@ -55,7 +56,11 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<DbService>();
             builder.Services.AddSingleton<WebService>();
             builder.Services.AddSingleton<ILoggingService, LoggingService>();
+#if DEBUG
+            builder.Services.AddSingleton<IDateTimeProvider, FixedDateTimeProvider>();
+#else
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProviderService>();
+#endif
 
             return builder.Build();
         }
@@ -69,8 +74,6 @@ namespace ScheduleBSUIR
             string info = $"Unhandled exception: {exception?.Message}\n{exception?.StackTrace}";
 
             logger?.LogError(info, displayCaller: false);
-
-            Shell.Current.DisplayAlert("Exception", info, "OK");
         }
     }
 }

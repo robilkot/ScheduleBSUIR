@@ -91,7 +91,7 @@
                     HeightRequest="60"
                     WidthRequest="8"
                     StrokeShape="RoundRectangle 4"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}}">
+                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
                 </Border>
 
                 <Grid
@@ -100,29 +100,27 @@
                     RowDefinitions="auto,auto">
                     <Grid
                         Grid.Row="0"
-                        ColumnDefinitions="auto,auto">
+                        ColumnDefinitions="auto,auto,auto">
                         <Label
                             Grid.Column="0"
                             Style="{StaticResource LabelBodyHeaderStyle}"
                             Text="{Binding Subject, Mode=OneTime}">
                         </Label>
-                        <Grid
-                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+                        <Image
                             Grid.Column="1"
-                            Padding="10"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            ColumnDefinitions="auto,auto">
-                            <Image
-                                Grid.Column="0"
-                                Source="dark_user">
-                            </Image>
-                            <Label
-                                Grid.Column="1"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}}">
-                            </Label>
-                        </Grid>
+                            Margin="10,0,0,0"
+                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                            WidthRequest="20"
+                            HeightRequest="20"
+                            Source="dark_user">
+                        </Image>
+                        <Label
+                            Grid.Column="2"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}, Mode=OneTime}">
+                        </Label>
                     </Grid>
                     <Label
                         Grid.Row="1"
@@ -143,6 +141,7 @@
                             <Image
                                 VerticalOptions="Center"
                                 HeightRequest="50"
+                                WidthRequest="50"
                                 Aspect="AspectFill">
 
                                 <Image.Source>
@@ -214,13 +213,13 @@
                     HeightRequest="30"
                     WidthRequest="5"
                     StrokeShape="RoundRectangle 2.5"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}}">
+                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
                 </Border>
 
                 <Grid
                     Grid.Column="2"
                     ColumnSpacing="5"
-                    ColumnDefinitions="auto,auto">
+                    ColumnDefinitions="auto,auto,auto">
                     <Label
                         Grid.Column="0"
                         VerticalOptions="Center"
@@ -228,23 +227,20 @@
                         FontSize="18"
                         Text="{Binding Subject, Mode=OneTime}">
                     </Label>
-                    <Grid
-                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+                    <Image
                         Grid.Column="1"
-                        Padding="10"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        ColumnDefinitions="auto,auto">
-                        <Image
-                            Grid.Column="0"
-                            Source="dark_user">
-                        </Image>
-                        <Label
-                            Grid.Column="1"
-                            Style="{StaticResource LabelBodyPrimaryStyle}"
-                            Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}}">
-                        </Label>
-                    </Grid>
+                        Margin="10,0,0,0"
+                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                        WidthRequest="20"
+                        HeightRequest="20"
+                        Source="dark_user">
+                    </Image>
+                    <Label
+                        Grid.Column="2"
+                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}, Mode=OneTime}">
+                    </Label>
                 </Grid>
             </Grid>
         </Border>
