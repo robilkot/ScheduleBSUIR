@@ -11,10 +11,10 @@ namespace ScheduleBSUIR.Models
         public List<string>? Auditories { get; set; }
         public required DateTime StartLessonTime { get; set; }
         public required DateTime EndLessonTime { get; set; }
-        public required string Subject { get; set; }
-        public required string SubjectFullName { get; set; }
+        public string? Subject { get; set; }
+        public string? SubjectFullName { get; set; }
         public string? Note { get; set; }
-        public required string LessonTypeAbbrev { get; set; }
+        public string? LessonTypeAbbrev { get; set; }
         public DateTime? DateLesson { get; set; }
         public required DateTime StartLessonDate { get; set; }
         public required DateTime EndLessonDate { get; set; }

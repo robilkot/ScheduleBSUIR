@@ -18,13 +18,15 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
 
         public TimetableItemTemplateSelector()
         {
-            _dateTimeProvider = App.Current.Handler.MauiContext.Services.GetRequiredService<IDateTimeProvider>();
+            _dateTimeProvider = App.Current!.Handler.MauiContext!.Services.GetRequiredService<IDateTimeProvider>();
         }
 
         public required DataTemplate ActiveScheduleTemplate { get; init; }
         public required DataTemplate InactiveScheduleTemplate { get; init; }
         public required DataTemplate ActiveScheduleDayTemplate { get; init; }
         public required DataTemplate InactiveScheduleDayTemplate { get; init; }
+        public required DataTemplate ActiveAnnouncementTemplate { get; init; }
+        public required DataTemplate InactiveAnnouncementTemplate { get; init; }
         //public required DataTemplate ActiveScheduleWeekTemplate { get; init; }
         //public required DataTemplate InactiveScheduleWeekTemplate { get; init; }
 
@@ -38,7 +40,11 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
 
             template = timetableItem switch
             {
-                Schedule schedule => schedule.DateLesson >= _dateTimeProvider.UtcNow.Date ? ActiveScheduleTemplate : InactiveScheduleTemplate,
+                Schedule schedule =>
+                    schedule.DateLesson >= _dateTimeProvider.UtcNow.Date
+                    ? (schedule.Announcement ? ActiveAnnouncementTemplate : ActiveScheduleTemplate)
+                    : (schedule.Announcement ? InactiveAnnouncementTemplate : InactiveScheduleTemplate),
+
                 ScheduleDay scheduleDay => scheduleDay.Day >= _dateTimeProvider.UtcNow.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
                 //ScheduleWeek => ActiveScheduleWeekTemplate, // todo: template for week?
                 _ => throw new UnreachableException(),

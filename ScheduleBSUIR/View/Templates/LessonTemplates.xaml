@@ -21,6 +21,7 @@
     <toolkit:IsNotEqualConverter
         x:Key="IsNotEqualConverter" />
 
+    <!-- SkeletonLessonTemplate -->
     <DataTemplate
         x:Key="SkeletonLessonTemplate"
         x:DataType="model:Schedule">
@@ -53,8 +54,8 @@
             </Grid>
         </Border>
     </DataTemplate>
-    
-    <!--todo: announcements-->
+
+    <!-- ActiveLessonTemplate -->
     <DataTemplate
         x:Key="ActiveLessonTemplate"
         x:DataType="model:Schedule">
@@ -188,6 +189,7 @@
         </Border>
     </DataTemplate>
 
+    <!-- InactiveLessonTemplate -->
     <DataTemplate
         x:Key="InactiveLessonTemplate"
         x:DataType="model:Schedule">
@@ -241,6 +243,219 @@
                         Style="{StaticResource LabelBodyHeaderStyle}"
                         FontSize="18"
                         Text="{Binding Subject, Mode=OneTime}">
+                    </Label>
+                    <Image
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                        WidthRequest="20"
+                        HeightRequest="20"
+                        Source="dark_user">
+                    </Image>
+                    <Label
+                        Grid.Column="2"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}, Mode=OneTime}">
+                    </Label>
+                </Grid>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!-- ActiveAnnouncementTemplate -->
+    <DataTemplate
+        x:Key="ActiveAnnouncementTemplate"
+        x:DataType="model:Schedule">
+        <Border
+            StrokeThickness="0"
+            MinimumHeightRequest="70"
+            BackgroundColor="{StaticResource DarkControlBackground}"
+            Padding="10,5">
+            <Grid
+                ColumnSpacing="8"
+                ColumnDefinitions="auto,auto,*,auto">
+
+                <Grid
+                    Grid.Column="0"
+                    VerticalOptions="Center"
+                    Margin="8,0,0,0"
+                    RowSpacing="2"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="0"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
+                    </Label>
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="13"
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
+                    </Label>
+                </Grid>
+
+                <Border
+                    x:Name="colorPlank"
+                    Grid.Column="1"
+                    WidthRequest="8"
+                    StrokeShape="RoundRectangle 4"
+                    StrokeThickness="0"
+                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    <Grid
+                        Background="Black"
+                        Opacity="0.5"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Fill">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource ScheduleToPassedPercentageConverter}">
+                                <Binding Path="." Mode="OneTime"/>
+                                <Binding Source="{x:Reference colorPlank}" Path="HeightRequest"/>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Border>
+
+                <Grid
+                    Grid.Column="2"
+                    VerticalOptions="Center"
+                    RowDefinitions="auto,auto,auto">
+                    <Grid
+                        Grid.Row="0"
+                        ColumnDefinitions="auto,auto,auto">
+                        <Label
+                            Grid.Column="0"
+                            Style="{StaticResource LabelBodyHeaderStyle}"
+                            Text="{x:Static model:LessonTypesHelper.AnnouncementAbbreviation}">
+                        </Label>
+                        <Image
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                            WidthRequest="20"
+                            HeightRequest="20"
+                            Source="dark_user">
+                        </Image>
+                        <Label
+                            Grid.Column="2"
+                            VerticalOptions="Center"
+                            IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"
+                            Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}, Mode=OneTime}">
+                        </Label>
+                    </Grid>
+                    <Label
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding Note, Mode=OneTime}">
+                    </Label>
+                    <Label
+                        Grid.Row="2"
+                        Style="{StaticResource LabelBodySecondaryStyle}"
+                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
+                    </Label>
+                </Grid>
+
+                <HorizontalStackLayout
+                    Grid.Column="3"
+                    Spacing="-25"
+                    HorizontalOptions="End"
+                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime}">
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="model:EmployeeDto">
+                            <Image
+                                VerticalOptions="Center"
+                                HeightRequest="50"
+                                WidthRequest="50"
+                                Aspect="AspectFill">
+
+                                <Image.Source>
+                                    <UriImageSource
+                                        Uri="{Binding PhotoLink, Mode=OneTime}"
+                                        CachingEnabled="True"
+                                        CacheValidity="10:00:00:00"/>
+                                </Image.Source>
+
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="25,25"
+                                        RadiusX="25"
+                                        RadiusY="25"/>
+                                </Image.Clip>
+
+                                <Image.Shadow>
+                                    <Shadow
+                                        Brush="Black"
+                                        Opacity="0.5"
+                                        Radius="20"/>
+                                </Image.Shadow>
+                            </Image>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!-- InactiveAnnouncementTemplate -->
+    <DataTemplate
+        x:Key="InactiveAnnouncementTemplate"
+        x:DataType="model:Schedule">
+        <Border
+            Opacity="0.35"
+            StrokeDashArray="16,8"
+            Stroke="White"
+            StrokeThickness="1"
+            HeightRequest="45"
+            BackgroundColor="Transparent"
+            Padding="10,5">
+            <Grid
+                ColumnSpacing="12"
+                ColumnDefinitions="auto,auto,*">
+
+                <Grid
+                    Grid.Column="0"
+                    VerticalOptions="Center"
+                    RowSpacing="2"
+                    RowDefinitions="auto,auto">
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="0"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="13"
+                        Text="{Binding StartLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
+                    </Label>
+                    <Label
+                        HorizontalOptions="End"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        FontSize="11"
+                        Text="{Binding EndLessonTime, StringFormat='{}{0:HH:mm}', Mode=OneTime}">
+                    </Label>
+                </Grid>
+
+                <Border
+                    Grid.Column="1"
+                    HeightRequest="30"
+                    WidthRequest="5"
+                    StrokeShape="RoundRectangle 2.5"
+                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                </Border>
+
+                <Grid
+                    Grid.Column="2"
+                    ColumnDefinitions="auto,auto,auto">
+                    <Label
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelBodyHeaderStyle}"
+                        FontSize="18"
+                        Text="{x:Static model:LessonTypesHelper.AnnouncementAbbreviation}">
                     </Label>
                     <Image
                         Grid.Column="1"

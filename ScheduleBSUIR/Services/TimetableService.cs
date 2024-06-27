@@ -243,7 +243,6 @@ namespace ScheduleBSUIR.Services
             return result;
         }
 
-
         public Task<List<DailySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
             DateTime? startDate,
             DateTime? endDate,

@@ -6,6 +6,7 @@ namespace ScheduleBSUIR.Models
 
     public static class LessonTypesHelper
     {
+        public const string AnnouncementAbbreviation = "Объявление";
         public const string UnknownTypeAbbreviation = "Неизвестно";
 
         public static ImmutableList<LessonType> LessonTypes = [
@@ -19,6 +20,8 @@ namespace ScheduleBSUIR.Models
                 new LessonType("ЛР", "LabColor"),
                 new LessonType("УЛР", "LabColor"),
                 new LessonType("Зачет", "CreditColor"),
+                new LessonType("Дифф. зачет", "CreditColor"),
+                new LessonType(AnnouncementAbbreviation, "UnknownColor"),
                 new LessonType(UnknownTypeAbbreviation, "UnknownColor"),
             ];
 

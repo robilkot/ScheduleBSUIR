@@ -16,7 +16,7 @@ namespace ScheduleBSUIR.Helpers.Converters
                 if (value is not Schedule schedule)
                     return null;
 
-                var lessonType = LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev);
+                var lessonType = LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev ?? LessonTypesHelper.AnnouncementAbbreviation);
 
                 key = lessonType.ColorResourceKey;
 

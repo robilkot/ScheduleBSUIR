@@ -117,6 +117,8 @@
                         InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
                         ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
                         InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+                        ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
+                        InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
                         x:Key="LessonTemplateSelector"/>
                 </ResourceDictionary>
             </dx:DXCollectionView.Resources>
@@ -397,7 +399,7 @@
                     Margin="0,0,0,-5"
                     LineBreakMode="WordWrap"
                     Style="{StaticResource LabelBodyHeaderStyle}"
-                    Text="{Binding SubjectFullName}"/>
+                    Text="{Binding SubjectFullName, TargetNullValue={x:Static model:LessonTypesHelper.AnnouncementAbbreviation}}"/>
 
                 <!--Schedule details-->
                 <Border
@@ -407,8 +409,9 @@
                     <VerticalStackLayout
                         Spacing="20">
                         <!--type-->
-                        <Grid>
-                        <Label
+                        <Grid
+                            IsVisible="{Binding Subject, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                            <Label
                                 Grid.Column="0"
                                 Style="{StaticResource LabelBodyPrimaryStyle}"
                                 Text="Тип"/>
