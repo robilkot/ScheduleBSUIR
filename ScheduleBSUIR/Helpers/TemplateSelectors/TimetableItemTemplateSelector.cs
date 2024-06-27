@@ -8,7 +8,6 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
     class TimetableItemTemplateSelector : DataTemplateSelector
     {
         private readonly IDateTimeProvider _dateTimeProvider;
-        //private readonly ILoggingService _loggingService;
 
         // todo: check this on DXCollectionView
         // OnSelectTemplate gets called on each collectionview actually (even scrolling).
@@ -20,7 +19,6 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         public TimetableItemTemplateSelector()
         {
             _dateTimeProvider = App.Current.Handler.MauiContext.Services.GetRequiredService<IDateTimeProvider>();
-            //_loggingService = App.Current.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
         }
 
         public required DataTemplate ActiveScheduleTemplate { get; init; }

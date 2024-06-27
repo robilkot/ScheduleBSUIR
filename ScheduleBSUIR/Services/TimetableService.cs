@@ -59,6 +59,13 @@ namespace ScheduleBSUIR.Services
                 // Update property for IUpdateAware interface
                 timetable.AccessedAt = _dateTimeProvider.UtcNow;
 
+                // Schedules come unsorted :(
+                timetable.Exams = timetable.Exams?
+                    .OrderBy(s => s.DateLesson)
+                    .ThenBy(s => s.StartLessonTime)
+                    .ThenBy(s => s.EndLessonTime)
+                    .ToList();
+
                 await _dbService.AddOrUpdateAsync(timetable);
             }
 
@@ -140,6 +147,7 @@ namespace ScheduleBSUIR.Services
 
             DateTime? result = null;
 
+            // Assuming the list is sorted
             if (timetableTabs is TimetableTabs.Exams)
             {
                 var lastSchedule = subgroupType switch
@@ -174,6 +182,7 @@ namespace ScheduleBSUIR.Services
 
             DateTime? result = null;
 
+            // Assuming the list is sorted
             if (timetableTabs is TimetableTabs.Exams)
             {
                 var firstSchedule = subgroupType switch
@@ -208,6 +217,7 @@ namespace ScheduleBSUIR.Services
 
             DateTime? result = null;
 
+            // Assuming the list is sorted
             if (timetableTabs is TimetableTabs.Exams)
             {
                 var firstSchedule = subgroupType switch
@@ -234,16 +244,16 @@ namespace ScheduleBSUIR.Services
         }
 
 
-        public Task<List<DaySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
+        public Task<List<DailySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
             DateTime? startDate,
             DateTime? endDate,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
             if (timetable is null)
-                return Task.FromResult<List<DaySchedule>?>(null);
+                return Task.FromResult<List<DailySchedule>?>(null);
 
-            IEnumerable<DaySchedule>? result = null;
+            IEnumerable<DailySchedule>? result = null;
 
             if (timetableTabs is TimetableTabs.Exams)
             {
@@ -265,10 +275,10 @@ namespace ScheduleBSUIR.Services
 
                 result = schedules?
                         .GroupBy(schedule => schedule.DateLesson)
-                        .Select(grouping => new DaySchedule(grouping));
+                        .Select(grouping => new DailySchedule(grouping));
             }
 
-            TaskCompletionSource<List<DaySchedule>?> tcs = new();
+            TaskCompletionSource<List<DailySchedule>?> tcs = new();
 
             _ = Task.Run(() =>
             {

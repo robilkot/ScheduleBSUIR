@@ -107,7 +107,7 @@ namespace ScheduleBSUIR.Viewmodels
             _loadedToDate += TimeSpan.FromDays(1);
 
             // Common case
-            List<DaySchedule> newSchedules = [];
+            List<DailySchedule> newSchedules = [];
 
             do
             {
