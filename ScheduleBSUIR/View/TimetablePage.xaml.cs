@@ -93,20 +93,13 @@ public partial class TimetablePage : ContentPage
         scheduleDetailSheet.State = BottomSheetState.Hidden;
     }
 
-    private void dayScheduleCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void dayScheduleCollectionView_Tap(object sender, CollectionViewGestureEventArgs e)
     {
-        if (sender is not CollectionView collectionView)
+        if (e.Item is not Schedule schedule)
             return;
 
-        if (collectionView.SelectedItem is null)
-        {
-            return;
-        }
-
-        scheduleDetailSheet.BindingContext = (Schedule)collectionView.SelectedItem;
+        scheduleDetailSheet.BindingContext = schedule;
 
         scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
-
-        collectionView.SelectedItem = null;
     }
 }

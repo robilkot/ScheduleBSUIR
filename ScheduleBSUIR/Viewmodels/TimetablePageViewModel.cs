@@ -6,6 +6,7 @@ using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
+using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
@@ -75,7 +76,7 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _favorited = false;
 
         [ObservableProperty]
-        private ObservableRangeCollection<DaySchedule>? _schedule = null;
+        private ObservableRangeCollection<ITimetableItem>? _schedule = null;
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -89,10 +90,10 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? reloadAll = false)
         {
-            if (IsLoadingMoreSchedule)
-                return;
+            //if (IsLoadingMoreSchedule)
+            //    return;
 
-            IsLoadingMoreSchedule = true;
+            //IsLoadingMoreSchedule = true;
 
             if (reloadAll ?? false)
             {
@@ -105,10 +106,10 @@ namespace ScheduleBSUIR.Viewmodels
             }
 
             // Initial case
-            _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
-
             _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow)
                 - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
+
+            _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
 
             // Guard case for overflow if no schedules found or already loaded all possible schedules
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
@@ -131,7 +132,13 @@ namespace ScheduleBSUIR.Viewmodels
 
             Schedule ??= [];
 
-            Schedule.AddRange(newSchedules ?? []);
+            // todo: also add ScheduleWeek?
+            foreach (var day in newSchedules ?? [])
+            {
+                Schedule.Add(new ScheduleDay(day.Day));
+
+                Schedule.AddRange(day);
+            }
 
             CurrentState = ViewStates.Loaded;
 
@@ -214,18 +221,6 @@ namespace ScheduleBSUIR.Viewmodels
             IsTimetableModePopupOpen = !IsTimetableModePopupOpen;
         }
 
-        private void ScrollToActiveSchedule()
-        {
-            int? nearestScheduleIndex = GetNearestScheduleIndex();
-
-            if (nearestScheduleIndex is not null)
-            {
-                ScrollToIndex message = new(nearestScheduleIndex.Value);
-
-                WeakReferenceMessenger.Default.Send(message);
-            }
-        }
-
         // Accepts studentgroup dto or employeedto
         [RelayCommand]
         public async Task NavigateToTimetable(object dto)
@@ -250,15 +245,6 @@ namespace ScheduleBSUIR.Viewmodels
 
                 GetTimetableCommand.Execute(null);
             }
-        }
-        private int? GetNearestScheduleIndex()
-        {
-            if (Timetable is null)
-                return null;
-
-            var foundSchedule = Schedule?.FirstOrDefault(e => e.FirstOrDefault()?.DateLesson >= _dateTimeProvider.UtcNow.Date);
-
-            return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
         }
     }
 }

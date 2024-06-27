@@ -105,49 +105,41 @@
                 </dx:DXCollectionView>
 
                 <!-- Timetable collectionview -->
-                <CollectionView
+                <dx:DXCollectionView
                     x:Name="dayScheduleCollectionView"
                     toolkit:StateView.StateKey="Loaded"
                     Grid.Row="1"
+                    ItemSpacing="5"
                     Margin="15,0"
                     ItemsSource="{Binding Schedule}"
-                    RemainingItemsThreshold="5"
+                    IsLoadMoreEnabled="True"
+                    AllowCascadeUpdate="False"
+                    Tap="dayScheduleCollectionView_Tap"
+                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
                     ItemTemplate="{StaticResource LessonTemplateSelector}"
-                    IsGrouped="True"
-                    SelectionMode="Single"
-                    SelectionChanged="dayScheduleCollectionView_SelectionChanged"
-                    GroupHeaderTemplate="{StaticResource HeaderTemplateSelector}"
-                    RemainingItemsThresholdReachedCommand="{Binding LoadMoreScheduleCommand}">
+                    SelectionMode="None"
+                    LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
 
-                    <CollectionView.Resources>
+                    <dx:DXCollectionView.Resources>
                         <ResourceDictionary>
-                            <templateSelectors:ActiveTemplateSelector
-                                 ActiveTemplate="{StaticResource ActiveHeaderTemplate}"
-                                 InactiveTemplate="{StaticResource InactiveHeaderTemplate}"
-                                 x:Key="HeaderTemplateSelector"/>
-
-                            <templateSelectors:ActiveTemplateSelector
-                                ActiveTemplate="{StaticResource ActiveLessonTemplate}"
-                                InactiveTemplate="{StaticResource InactiveLessonTemplate}"
+                            <templateSelectors:TimetableItemTemplateSelector
+                                ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+                                InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+                                ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+                                InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
                                 x:Key="LessonTemplateSelector"/>
                         </ResourceDictionary>
-                    </CollectionView.Resources>
+                    </dx:DXCollectionView.Resources>
 
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout
-                             Orientation="Vertical"
-                             ItemSpacing="5"/>
-                    </CollectionView.ItemsLayout>
-
-                    <CollectionView.Header>
+                    <dx:DXCollectionView.Header>
                         <controls:TimetableHeader
                              Margin="0,100,0,20"
                              Tab="{Binding SelectedTab}"
                              Timetable="{Binding Timetable, Mode=OneTime}"
                              TimetableId="{Binding TimetableId, Mode=OneTime}"/>
-                    </CollectionView.Header>
+                    </dx:DXCollectionView.Header>
 
-                    <CollectionView.EmptyView>
+                    <!--<CollectionView.EmptyView>
                         <AbsoluteLayout>
                             <Grid
                                  VerticalOptions="Center"
@@ -169,8 +161,8 @@
                                      Text="Занятий больше нет"/>
                             </Grid>
                         </AbsoluteLayout>
-                    </CollectionView.EmptyView>
-                </CollectionView>
+                    </CollectionView.EmptyView>-->
+                </dx:DXCollectionView>
             </toolkit:StateContainer.StateViews>
         </Grid>
 

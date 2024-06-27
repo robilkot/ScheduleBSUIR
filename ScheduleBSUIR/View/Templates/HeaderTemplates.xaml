@@ -2,6 +2,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              x:Class="ScheduleBSUIR.View.Templates.HeaderTemplates">
@@ -11,7 +12,7 @@
 
     <DataTemplate
         x:Key="ActiveHeaderTemplate"
-        x:DataType="model:DaySchedule">
+        x:DataType="uimodel:ScheduleDay">
         <Label
             Margin="0,20,0,0"
             Style="{StaticResource LabelBodyHeaderStyle}"
@@ -20,7 +21,7 @@
 
     <DataTemplate
         x:Key="InactiveHeaderTemplate"
-        x:DataType="model:DaySchedule">
+        x:DataType="uimodel:ScheduleDay">
         <Label
             Margin="0,10,0,0"
             Opacity="0.35"

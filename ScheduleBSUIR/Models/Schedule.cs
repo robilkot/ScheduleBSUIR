@@ -1,8 +1,9 @@
 ﻿using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Interfaces;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Schedule
+    public class Schedule : ITimetableItem
     {
         public required List<int> WeekNumber { get; set; }
         public required List<StudentGroupDto> StudentGroups { get; set; }

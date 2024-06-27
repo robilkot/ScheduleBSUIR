@@ -218,7 +218,6 @@
 
                 <Grid
                     Grid.Column="2"
-                    ColumnSpacing="5"
                     ColumnDefinitions="auto,auto,auto">
                     <Label
                         Grid.Column="0"
@@ -237,6 +236,7 @@
                     </Image>
                     <Label
                         Grid.Column="2"
+                        VerticalOptions="Center"
                         IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         Text="{Binding NumSubgroup, Converter={StaticResource EnumToIntConverter}, Mode=OneTime}">
