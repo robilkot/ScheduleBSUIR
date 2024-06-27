@@ -24,6 +24,7 @@ namespace ScheduleBSUIR.Viewmodels
 
         private readonly TimeSpan _loadingStep = TimeSpan.FromDays(10);
         private DateTime? _loadedToDate = null;
+        private DateTime? _nearestScheduleDate = null;
         private DateTime? _lastScheduleDate = null;
 
         [ObservableProperty]
@@ -40,6 +41,8 @@ namespace ScheduleBSUIR.Viewmodels
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
         partial void OnSelectedTabChanged(TimetableTabs value)
         {
+            ClearLoadedSchedule();
+
             LoadMoreScheduleCommand.Execute(true);
         }
 
@@ -49,6 +52,8 @@ namespace ScheduleBSUIR.Viewmodels
         {
             Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)value);
 
+            ClearLoadedSchedule();
+
             LoadMoreScheduleCommand.Execute(true);
         }
 
@@ -57,6 +62,8 @@ namespace ScheduleBSUIR.Viewmodels
         private Timetable? _timetable;
         partial void OnTimetableChanged(Timetable? value)
         {
+            ClearLoadedSchedule();
+
             LoadMoreScheduleCommand.Execute(true);
         }
 
@@ -76,17 +83,14 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public async Task LoadMoreSchedule(bool? reloadAll = false)
+        public async Task LoadMoreSchedule(bool? scrollToNearest = false)
         {
-            if (reloadAll ?? false)
-            {
-                _loadedToDate = null;
-                _lastScheduleDate = null;
-
-                Schedule = [];
-            }
+            if (Timetable is null)
+                return;
 
             // Initial case
+            _nearestScheduleDate ??= _timetableService.GetNearestScheduleDate(Timetable, SelectedTab, SelectedMode);
+            
             _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow)
                 - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
 
@@ -103,14 +107,23 @@ namespace ScheduleBSUIR.Viewmodels
             _loadedToDate += TimeSpan.FromDays(1);
 
             // Common case
-            var newSchedules = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
+            List<DaySchedule> newSchedules = [];
 
-            _loadedToDate += _loadingStep;
+            do
+            {
+                var daysFromIteration = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
 
-            _loggingService.LogInfo($"GetDaySchedules got {newSchedules?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
+                newSchedules.AddRange(daysFromIteration ?? []);
+
+                _loadedToDate += _loadingStep;
+
+                _loggingService.LogInfo($"GetDaySchedules got {daysFromIteration?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
+            }
+            // Repeat loading if we need to load till nearest schedule. todo: maybe should be single 'if'
+            while (_loadedToDate < _nearestScheduleDate && (scrollToNearest ?? false));
 
             Schedule ??= [];
-
+            
             // todo: also add ScheduleWeek?
             foreach (var day in newSchedules ?? [])
             {
@@ -120,6 +133,11 @@ namespace ScheduleBSUIR.Viewmodels
             }
 
             IsLoadingMoreSchedule = false;
+
+            if(scrollToNearest ?? false)
+            {
+                ScrollToActiveSchedule();
+            }
         }
 
         [RelayCommand]
@@ -153,7 +171,7 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public async Task NavigateBack()
+        public static async Task NavigateBack()
         {
             await Shell.Current.GoToAsync("..");
         }
@@ -210,7 +228,7 @@ namespace ScheduleBSUIR.Viewmodels
             };
 
             // Let bottomsheet close smoothly
-            //await Task.Delay(150);
+            await Task.Delay(150);
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
         }
@@ -221,6 +239,36 @@ namespace ScheduleBSUIR.Viewmodels
                 TimetableId = (TypedId)id;
 
                 GetTimetableCommand.Execute(null);
+            }
+        }
+
+        private void ClearLoadedSchedule()
+        {
+            _loadedToDate = null;
+            _lastScheduleDate = null;
+            _nearestScheduleDate = null;
+
+            Schedule = [];
+        }
+
+        private int? GetNearestScheduleIndex()
+        {
+            if (Timetable is null)
+                return null;
+
+            var foundSchedule = Schedule?.FirstOrDefault(e => e is Schedule schedule && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date);
+
+            return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
+        }
+        private void ScrollToActiveSchedule()
+        {
+            int? nearestScheduleIndex = GetNearestScheduleIndex();
+
+            if (nearestScheduleIndex is not null)
+            {
+                ScrollToIndex message = new(nearestScheduleIndex.Value);
+
+                WeakReferenceMessenger.Default.Send(message);
             }
         }
     }

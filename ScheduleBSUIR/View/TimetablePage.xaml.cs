@@ -1,6 +1,9 @@
+using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Maui.CollectionView;
 using DevExpress.Maui.Controls;
+using DevExpress.Maui.Core.Internal;
 using ScheduleBSUIR.Models;
+using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;
@@ -15,21 +18,21 @@ public partial class TimetablePage : ContentPage
         BindingContext = vm;
         _viewModel = vm;
 
-        //WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
-        //{
-        //    Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
-        //    {
-        //        if (dayScheduleCollectionView is null)
-        //            return;
+        WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
+        {
+            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
+            {
+                if (dayScheduleCollectionView is null)
+                    return;
 
-        //        // Decrement by two to make schedule visible
-        //        //var indexToScrollTo = Math.Clamp(message.Value - 2, 0, int.MaxValue);
+                // Increment value for visual convenience
+                var indexToScrollTo = Math.Clamp(message.Value + 8, 0, dayScheduleCollectionView.ScrollItemCount - 1);
 
-        //        var handle = dayScheduleCollectionView.GetItemHandle(message.Value);
+                var handle = dayScheduleCollectionView.GetItemHandle(indexToScrollTo);
 
-        //        dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
-        //    });
-        //});
+                dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.End);
+            });
+        });
     }
 
     private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)

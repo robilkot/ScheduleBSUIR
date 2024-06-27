@@ -199,6 +199,41 @@ namespace ScheduleBSUIR.Services
             return result;
         }
 
+        public DateTime? GetNearestScheduleDate(Timetable? timetable,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All)
+        {
+            if (timetable is null)
+                return null;
+
+            DateTime? result = null;
+
+            if (timetableTabs is TimetableTabs.Exams)
+            {
+                var firstSchedule = subgroupType switch
+                {
+                    SubgroupType.All => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+
+                    SubgroupType.FirstSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+
+                    SubgroupType.SecondSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+
+                    _ => throw new UnreachableException(),
+                };
+
+                result = firstSchedule?.DateLesson;
+            }
+
+            // todo for schedule tab
+            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
+
+            return result;
+        }
+
+
         public Task<List<DaySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
             DateTime? startDate,
             DateTime? endDate,
