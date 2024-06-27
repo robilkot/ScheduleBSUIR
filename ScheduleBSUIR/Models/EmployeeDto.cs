@@ -1,6 +1,10 @@
-﻿namespace ScheduleBSUIR.Models
+﻿using LiteDB;
+using ScheduleBSUIR.Interfaces;
+using System.Text.Json.Serialization;
+
+namespace ScheduleBSUIR.Models
 {
-    public class EmployeeDto
+    public class EmployeeDto : IAvatarDisplaying
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -14,6 +18,15 @@
         public string UrlId { get; set; } = string.Empty;
         public string? Email { get; set; }
         public List<string>? JobPositions { get; set; }
+        [BsonIgnore]
+        [JsonIgnore]
+        public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
+        [JsonIgnore]
+        [BsonIgnore]
+        public string AvatarText => $"{FirstName?[0]}{MiddleName?[0]}";
+        [JsonIgnore]
+        [BsonIgnore]
+        public string? AvatarUrl => PhotoLink;
 
         public override string ToString()
         {

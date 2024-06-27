@@ -1,6 +1,8 @@
-﻿namespace ScheduleBSUIR.Models
+﻿using ScheduleBSUIR.Interfaces;
+
+namespace ScheduleBSUIR.Models
 {
-    public class StudentGroupDto
+    public class StudentGroupDto : IAvatarDisplaying
     {
         public string Name { get; set; } = string.Empty;
         public int FacultyId { get; set; }
@@ -12,5 +14,7 @@
         public int Id { get; set; }
         public string? CalendarId { get; set; }
         public int EducationDegree { get; set; }
+        public string AvatarText => $"{Name[0..3]}\n{Name[3..6]}";
+        public string? AvatarUrl => null;
     }
 }

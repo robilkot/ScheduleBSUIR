@@ -2,6 +2,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+             xmlns:interfaces="clr-namespace:ScheduleBSUIR.Interfaces"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
@@ -20,6 +21,30 @@
         x:Key="StringListToStringConverter" />
     <toolkit:IsNotEqualConverter
         x:Key="IsNotEqualConverter" />
+
+    <DataTemplate
+        x:Key="avatarTemplate"
+        x:DataType="interfaces:IAvatarDisplaying">
+        <toolkit:AvatarView
+            VerticalOptions="Center"
+            HeightRequest="50"
+            WidthRequest="50"
+            CornerRadius="25"
+            BorderWidth="0"
+            FontAttributes="Bold"
+            FontSize="16"
+            BackgroundColor="{StaticResource DarkLightControlBackground}"
+            TextColor="{StaticResource SecondaryGray}"
+            Text="{Binding AvatarText, Mode=OneTime}"
+            ImageSource="{Binding AvatarUrl, Mode=OneTime}">
+            <toolkit:AvatarView.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.5"
+                    Radius="20"/>
+            </toolkit:AvatarView.Shadow>
+        </toolkit:AvatarView>
+    </DataTemplate>
 
     <!-- SkeletonLessonTemplate -->
     <DataTemplate
@@ -146,45 +171,24 @@
                     </Label>
                 </Grid>
 
+                <!-- Employees and groups avatars -->
                 <HorizontalStackLayout
+                    x:Name="employeesAvatars"
+                    IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                     Grid.Column="3"
                     Spacing="-25"
                     HorizontalOptions="End"
-                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime}">
-
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate
-                            x:DataType="model:EmployeeDto">
-                            <Image
-                                VerticalOptions="Center"
-                                HeightRequest="50"
-                                WidthRequest="50"
-                                Aspect="AspectFill">
-
-                                <Image.Source>
-                                    <UriImageSource
-                                        Uri="{Binding PhotoLink, Mode=OneTime}"
-                                        CachingEnabled="True"
-                                        CacheValidity="10:00:00:00"/>
-                                </Image.Source>
-
-                                <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="25,25"
-                                        RadiusX="25"
-                                        RadiusY="25"/>
-                                </Image.Clip>
-
-                                <Image.Shadow>
-                                    <Shadow
-                                        Brush="Black"
-                                        Opacity="0.5"
-                                        Radius="20"/>
-                                </Image.Shadow>
-                            </Image>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </HorizontalStackLayout>
+                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime}"
+                    BindableLayout.ItemTemplate="{StaticResource avatarTemplate}"/>
+                
+                <!-- Groups avatars -->
+                <HorizontalStackLayout
+                    IsVisible="{Binding Source={x:Reference employeesAvatars}, Path=IsVisible, Converter={toolkit:InvertedBoolConverter}}"
+                    Grid.Column="3"
+                    Spacing="-25"
+                    HorizontalOptions="End"
+                    BindableLayout.ItemsSource="{Binding StudentGroups, Mode=OneTime}"
+                    BindableLayout.ItemTemplate="{StaticResource avatarTemplate}"/>
             </Grid>
         </Border>
     </DataTemplate>

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Employee : ICacheable, IUpdateDateAware
+    public class Employee : ICacheable, IUpdateDateAware, IAvatarDisplaying
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace ScheduleBSUIR.Models
         public string UrlId { get; set; } = string.Empty;
         public List<string>? AcademicDepartment { get; set; }
         public string Fio { get; set; } = string.Empty;
-        [BsonId]
+        [BsonIgnore]
         [JsonIgnore]
         public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
         [BsonId]
@@ -28,6 +28,13 @@ namespace ScheduleBSUIR.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public DateTime AccessedAt { get; set; }
+
+        [JsonIgnore]
+        [BsonIgnore]
+        public string AvatarText => $"{FirstName?[0]}{MiddleName?[0]}";
+        [JsonIgnore]
+        [BsonIgnore]
+        public string? AvatarUrl => PhotoLink;
 
         public override string ToString()
         {

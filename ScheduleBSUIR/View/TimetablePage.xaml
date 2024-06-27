@@ -527,44 +527,27 @@
                                     Padding="15,10"
                                     ColumnDefinitions="auto,*,auto">
 
-                                    <Image
-                                        VerticalOptions="Center"
+                                    <toolkit:AvatarView
                                         Grid.Column="0"
+                                        VerticalOptions="Center"
                                         HeightRequest="50"
                                         WidthRequest="50"
-                                        Aspect="AspectFill">
-                                        <Image.Source>
-                                            <UriImageSource
-                                                Uri="{Binding PhotoLink}"
-                                                CachingEnabled="True"
-                                                CacheValidity="10:00:00:00"/>
-                                        </Image.Source>
-
-                                        <Image.Clip>
-                                            <EllipseGeometry
-                                                    Center="25,25"
-                                                    RadiusX="25"
-                                                    RadiusY="25"/>
-                                        </Image.Clip>
-                                    </Image>
-
-                                    <!--todo: converter?-->
+                                        CornerRadius="25"
+                                        BorderWidth="0"
+                                        FontAttributes="Bold"
+                                        BackgroundColor="Black"
+                                        TextColor="{StaticResource SecondaryGray}"
+                                        Text="{Binding AvatarText, Mode=OneTime}"
+                                        ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
+                                    
                                     <Label
                                         Grid.Column="1"
                                         VerticalOptions="Center"
                                         MaxLines="2"
+                                        Text="{Binding FullName, Mode=OneTime}"
                                         LineHeight="1.1"
                                         LineBreakMode="WordWrap"
-                                        Style="{StaticResource LabelBodyPrimaryStyle}">
-                                        <Label.Text>
-                                            <MultiBinding
-                                                StringFormat="{}{2} {0} {1}">
-                                                <Binding Path="FirstName"/>
-                                                <Binding Path="MiddleName"/>
-                                                <Binding Path="LastName"/>
-                                            </MultiBinding>
-                                        </Label.Text>
-                                    </Label>
+                                        Style="{StaticResource LabelBodyPrimaryStyle}"/>
 
                                     <Image
                                         Grid.Column="2"

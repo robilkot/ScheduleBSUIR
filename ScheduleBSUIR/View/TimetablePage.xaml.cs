@@ -20,7 +20,7 @@ public partial class TimetablePage : ContentPage
 
         WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
         {
-            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(500), () =>
+            Dispatcher.Dispatch(() =>
             {
                 if (dayScheduleCollectionView is null)
                     return;
