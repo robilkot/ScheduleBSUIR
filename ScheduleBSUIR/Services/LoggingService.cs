@@ -10,29 +10,23 @@ namespace ScheduleBSUIR.Services
         public const string LogFileName = "ScheduleBSUIRlog.txt";
         private static string LogFilePath => System.IO.Path.Combine(FileSystem.Current.AppDataDirectory, LogFileName);
 
-        private readonly object locker = new();
+        private static readonly object locker = new();
         public LoggingService()
         {
             OpenLog();
         }
-        public void LogInfo(object? message, bool displayCaller = true)
+        public void LogInfo(object? message, bool displayCaller = false)
         {
-            var caller = displayCaller ?
-                new StackTrace().GetFrame(2)?.GetMethod()?.ReflectedType!.Name
-                : "info";
-            
-            string log = $"[{caller}] {message}";
-
-            _localLog += log += '\n';
+            _localLog += message?.ToString() + '\n';
 
             lock (locker)
             {
-                Debug.WriteLine(log);
+                Debug.WriteLine(message);
                 SaveLog();
             }
         }
 
-        public void LogError(object? message, bool displayCaller = true)
+        public void LogError(object? message, bool displayCaller = false)
         {
             LogInfo(message, displayCaller);
         }
@@ -58,7 +52,7 @@ namespace ScheduleBSUIR.Services
             try
             {
                 using FileStream outputStream = File.OpenWrite(LogFilePath);
-                using StreamWriter streamWriter = new StreamWriter(outputStream);
+                using StreamWriter streamWriter = new(outputStream);
 
                 streamWriter.Write(_localLog);
             }

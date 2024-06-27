@@ -23,9 +23,8 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
 
         public ActiveTemplateSelector()
         {
-            // todo: DI
-            _dateTimeProvider = new DateTimeProviderService();
-            _loggingService = new LoggingService();
+            _dateTimeProvider = App.Current.Handler.MauiContext.Services.GetRequiredService<IDateTimeProvider>();
+            _loggingService = App.Current.Handler.MauiContext.Services.GetRequiredService<ILoggingService>();
         }
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)

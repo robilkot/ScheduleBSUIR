@@ -60,6 +60,7 @@ public partial class TimetablePage : ContentPage
                     {
                         try
                         {
+                            // todo: disposed layout occurs sometimes. crash
                             await StateContainer.ChangeStateWithAnimation(
                                 stateAwareGrid,
                                 message.Value,

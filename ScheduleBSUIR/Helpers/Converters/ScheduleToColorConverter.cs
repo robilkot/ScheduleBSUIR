@@ -1,21 +1,27 @@
 ﻿using ScheduleBSUIR.Models;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace ScheduleBSUIR.Helpers.Converters
 {
     class ScheduleToColorConverter : IValueConverter
     {
+        private readonly Dictionary<object, string?> _cachedResults = [];
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if(value is not Schedule schedule)
-            {
+            if (value is null)
                 return null;
+
+            if (!_cachedResults.TryGetValue(value, out string? key))
+            {
+                if (value is not Schedule schedule)
+                    return null;
+
+                var lessonType = LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev);
+
+                key = lessonType.ColorResourceKey;
+
+                _cachedResults.Add(value, key);
             }
-
-            var lessonType = LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev);
-
-            var key = lessonType.ColorResourceKey;
 
             return App.Current.Resources[key];
         }

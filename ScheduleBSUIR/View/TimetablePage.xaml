@@ -20,8 +20,6 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:DateToHeaderTextConverter
-                x:Key="DateToHeaderTextConverter"/>
             <converters:SubgroupTypeToStringConverter
                 x:Key="SubgroupTypeToStringConverter"/>
             <toolkit:BoolToObjectConverter
@@ -37,6 +35,9 @@
             <toolkit:ListToStringConverter
                 Separator=", "
                 x:Key="ListToStringConverter" />
+            <toolkit:VariableMultiValueConverter 
+                x:Key="VariableMultiValueConverter"
+                ConditionType="All"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -381,7 +382,6 @@
             </dx:DXPopup>
         </Grid>
 
-        <!--todo: dont show groups list when viewing group timetable-->
         <!-- Bottom sheet with schedule details -->
         <dx:BottomSheet 
             x:Name="scheduleDetailSheet" 
@@ -603,14 +603,25 @@
 
                 <!-- Student groups -->
                 <Label
-                    IsVisible="{Binding StudentGroups, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
                     Text="Группы"
                     Margin="15,0,0,-10"
-                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+                    Style="{StaticResource LabelBodySecondaryStyle}">
+                    <Label.IsVisible>
+                        <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                            <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                            <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                        </MultiBinding>
+                    </Label.IsVisible>
+                </Label>
 
                 <Border
-                    IsVisible="{Binding StudentGroups, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
                     BackgroundColor="{StaticResource DarkLightControlBackground}">
+                    <Border.IsVisible>
+                        <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                            <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                            <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                        </MultiBinding>
+                    </Border.IsVisible>
 
                     <VerticalStackLayout
                         Spacing="10"
