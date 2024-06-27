@@ -1,10 +1,6 @@
-using CommunityToolkit.Maui.Layouts;
-using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Maui.CollectionView;
 using DevExpress.Maui.Controls;
-using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;
@@ -34,51 +30,7 @@ public partial class TimetablePage : ContentPage
         //        dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
         //    });
         //});
-
-        WeakReferenceMessenger.Default.Register<SetStateMessage>(this, (sender, message) =>
-        {
-            Dispatcher.Dispatch(async () =>
-            {
-                if (StateContainer.GetCanStateChange(stateAwareGrid) == false)
-                {
-                    if (animationCtsRef?.IsAlive ?? false)
-                    {
-                        if (animationCtsRef.Target is CancellationTokenSource cts)
-                        {
-                            cts.Cancel();
-                        } 
-                    }
-                };
-
-                using(CancellationTokenSource cts = new())
-                {
-                    animationCtsRef = new(cts);
-
-                    var currentState = StateContainer.GetCurrentState(stateAwareGrid);
-
-                    if (currentState != message.Value)
-                    {
-                        try
-                        {
-                            // todo: disposed layout occurs sometimes. crash
-                            await StateContainer.ChangeStateWithAnimation(
-                                stateAwareGrid,
-                                message.Value,
-                                (element, token) => element.FadeTo(0, 250, Easing.SpringIn).WaitAsync(token),
-                                (element, token) => element.FadeTo(1, 250, Easing.SpringOut).WaitAsync(token),
-                                cts.Token);
-                        }
-                        catch(TaskCanceledException)
-                        {
-                            // animation was cancelled due to new state change or something
-                        }
-                    }
-                }
-            });
-        });
     }
-
-    private WeakReference? animationCtsRef = null;
 
     private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
     {

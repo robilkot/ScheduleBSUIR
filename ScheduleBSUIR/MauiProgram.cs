@@ -57,7 +57,7 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<WebService>();
             builder.Services.AddSingleton<ILoggingService, LoggingService>();
 #if DEBUG
-            builder.Services.AddSingleton<IDateTimeProvider, FixedDateTimeProvider>();
+            builder.Services.AddSingleton<IDateTimeProvider, FixedDateTimeProvider>(); // This breaks caching logic if using real web service to get last update dates
 #else
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProviderService>();
 #endif

@@ -42,130 +42,118 @@
     </ContentPage.Resources>
 
     <Grid>
-        <Grid
-            x:Name="stateAwareGrid"
-            toolkit:StateContainer.CurrentState="{Binding CurrentState, Mode=OneTime}"
-            toolkit:StateContainer.CanStateChange="True">
+        <!-- Skeleton of timetable -->
+        <dx:DXCollectionView
+            IsVisible="{Binding Timetable, Converter={toolkit:IsNullConverter}}"
+            ItemSpacing="5"
+            IsPullToRefreshEnabled="True"
+            IsRefreshing="{Binding IsLoadingMoreSchedule}"
+            ItemTemplate="{StaticResource SkeletonLessonTemplate}"
+            PullToRefreshCommand="{Binding GetTimetableCommand}"
+            Margin="15,0">
+            <dx:DXCollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:Int16}">
+                    <x:Int16>0</x:Int16>
+                    <x:Int16>0</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>1</x:Int16>
+                    <x:Int16>2</x:Int16>
+                    <x:Int16>2</x:Int16>
+                </x:Array>
+            </dx:DXCollectionView.ItemsSource>
 
-            <toolkit:StateContainer.StateViews>
-                <!-- Skeleton of timetable -->
-                <dx:DXCollectionView
-                    toolkit:StateView.StateKey="Loading"
-                    ItemSpacing="5"
-                    IsPullToRefreshEnabled="True"
-                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
-                    PullToRefreshCommand="{Binding GetTimetableCommand}"
-                    Margin="15,0">
-                    <dx:DXCollectionView.ItemsSource>
-                        <x:Array Type="{x:Type x:Int16}">
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>0</x:Int16>
-                            <x:Int16>1</x:Int16>
-                            <x:Int16>1</x:Int16>
-                            <x:Int16>1</x:Int16>
-                            <x:Int16>2</x:Int16>
-                            <x:Int16>2</x:Int16>
-                        </x:Array>
-                    </dx:DXCollectionView.ItemsSource>
+            <dx:DXCollectionView.Header>
+                <Grid
+                    Margin="0,100,0,20"
+                    RowDefinitions="auto,auto"
+                    RowSpacing="10">
+                    <Label
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelHeaderStyle}"
+                        Text="{Binding TimetableId.DisplayName}"/>
+                    <Border
+                        Grid.Row="1"
+                        WidthRequest="240"
+                        HorizontalOptions="Start"
+                        HeightRequest="18"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}"/>
+                </Grid>
+            </dx:DXCollectionView.Header>
 
-                    <dx:DXCollectionView.Header>
-                        <Grid
-                            Margin="0,100,0,20"
-                            RowDefinitions="auto,auto"
-                            RowSpacing="10">
-                            <Label
-                                Grid.Column="0"
-                                VerticalOptions="Center"
-                                Style="{StaticResource LabelHeaderStyle}"
-                                Text="{Binding TimetableId.DisplayName}"/>
-                            <Border
-                                Grid.Row="1"
-                                WidthRequest="240"
-                                HorizontalOptions="Start"
-                                HeightRequest="18"
-                                BackgroundColor="{StaticResource DarkLightControlBackground}"/>
-                        </Grid>
-                    </dx:DXCollectionView.Header>
+            <!--<dx:DXCollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Border
+                        Grid.Row="0"
+                        Margin="0,20,0,0"
+                        WidthRequest="240"
+                        HorizontalOptions="Start"
+                        BackgroundColor="{StaticResource DarkControlBackground}"
+                        HeightRequest="20"/>
+                </DataTemplate>
+            </dx:DXCollectionView.GroupHeaderTemplate>-->
+        </dx:DXCollectionView>
 
-                    <!--<dx:DXCollectionView.GroupHeaderTemplate>
-                        <DataTemplate>
-                            <Border
-                                Grid.Row="0"
-                                Margin="0,20,0,0"
-                                WidthRequest="240"
-                                HorizontalOptions="Start"
-                                BackgroundColor="{StaticResource DarkControlBackground}"
-                                HeightRequest="20"/>
-                        </DataTemplate>
-                    </dx:DXCollectionView.GroupHeaderTemplate>-->
+        <!-- Timetable collectionview -->
+        <dx:DXCollectionView
+            x:Name="dayScheduleCollectionView"
+            Grid.Row="1"
+            ItemSpacing="5"
+            Margin="15,0"
+            ItemsSource="{Binding Schedule}"
+            IsLoadMoreEnabled="True"
+            AllowCascadeUpdate="False"
+            Tap="dayScheduleCollectionView_Tap"
+            IsRefreshing="{Binding IsLoadingMoreSchedule}"
+            ItemTemplate="{StaticResource LessonTemplateSelector}"
+            SelectionMode="None"
+            LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
 
-                    <dx:DXCollectionView.ItemTemplate>
-                        <StaticResource Key="SkeletonLessonTemplate"/>
-                    </dx:DXCollectionView.ItemTemplate>
-                </dx:DXCollectionView>
+            <dx:DXCollectionView.Resources>
+                <ResourceDictionary>
+                    <templateSelectors:TimetableItemTemplateSelector
+                        ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+                        InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+                        ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+                        InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+                        x:Key="LessonTemplateSelector"/>
+                </ResourceDictionary>
+            </dx:DXCollectionView.Resources>
 
-                <!-- Timetable collectionview -->
-                <dx:DXCollectionView
-                    x:Name="dayScheduleCollectionView"
-                    toolkit:StateView.StateKey="Loaded"
-                    Grid.Row="1"
-                    ItemSpacing="5"
-                    Margin="15,0"
-                    ItemsSource="{Binding Schedule}"
-                    IsLoadMoreEnabled="True"
-                    AllowCascadeUpdate="False"
-                    Tap="dayScheduleCollectionView_Tap"
-                    IsRefreshing="{Binding IsLoadingMoreSchedule}"
-                    ItemTemplate="{StaticResource LessonTemplateSelector}"
-                    SelectionMode="None"
-                    LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
+            <dx:DXCollectionView.Header>
+                <controls:TimetableHeader
+                    Margin="0,100,0,20"
+                    Tab="{Binding SelectedTab}"
+                    Timetable="{Binding Timetable}"
+                    TimetableId="{Binding TimetableId}"/>
+            </dx:DXCollectionView.Header>
 
-                    <dx:DXCollectionView.Resources>
-                        <ResourceDictionary>
-                            <templateSelectors:TimetableItemTemplateSelector
-                                ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
-                                InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
-                                ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
-                                InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
-                                x:Key="LessonTemplateSelector"/>
-                        </ResourceDictionary>
-                    </dx:DXCollectionView.Resources>
-
-                    <dx:DXCollectionView.Header>
-                        <controls:TimetableHeader
-                             Margin="0,100,0,20"
-                             Tab="{Binding SelectedTab}"
-                             Timetable="{Binding Timetable, Mode=OneTime}"
-                             TimetableId="{Binding TimetableId, Mode=OneTime}"/>
-                    </dx:DXCollectionView.Header>
-
-                    <!--<CollectionView.EmptyView>
-                        <AbsoluteLayout>
-                            <Grid
-                                 VerticalOptions="Center"
-                                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                                 Opacity="0.5"
-                                 RowSpacing="20"
-                                 RowDefinitions="auto,auto">
-                                <Image
-                                     WidthRequest="100"
-                                     VerticalOptions="Center"
-                                     HorizontalOptions="Center"
-                                     Grid.Row="0"
-                                     Source="party"/>
-                                <Label
-                                     Grid.Row="1"
-                                     HorizontalTextAlignment="Center"
-                                     Style="{StaticResource LabelBodyHeaderStyle}"
-                                     Text="Занятий больше нет"/>
-                            </Grid>
-                        </AbsoluteLayout>
-                    </CollectionView.EmptyView>-->
-                </dx:DXCollectionView>
-            </toolkit:StateContainer.StateViews>
-        </Grid>
-
+            <!--<CollectionView.EmptyView>
+                <AbsoluteLayout>
+                    <Grid
+                        VerticalOptions="Center"
+                        AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
+                        AbsoluteLayout.LayoutFlags="PositionProportional"
+                        Opacity="0.5"
+                        RowSpacing="20"
+                        RowDefinitions="auto,auto">
+                        <Image
+                            WidthRequest="100"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Grid.Row="0"
+                            Source="party"/>
+                        <Label
+                            Grid.Row="1"
+                            HorizontalTextAlignment="Center"
+                            Style="{StaticResource LabelBodyHeaderStyle}"
+                            Text="Занятий больше нет"/>
+                    </Grid>
+                </AbsoluteLayout>
+            </CollectionView.EmptyView>-->
+        </dx:DXCollectionView>
+        
         <!-- Navbar -->
         <Grid
             x:Name="navBar"

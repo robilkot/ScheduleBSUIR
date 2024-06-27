@@ -34,18 +34,6 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _isTimetableModePopupOpen = false;
 
         [ObservableProperty]
-        string currentState = ViewStates.Loading;
-        partial void OnCurrentStateChanged(string? oldValue, string newValue)
-        {
-            if (oldValue != newValue)
-            {
-                SetStateMessage setStateMessage = new(newValue);
-
-                WeakReferenceMessenger.Default.Send(setStateMessage);
-            }
-        }
-
-        [ObservableProperty]
         private bool _isBusy;
 
         [ObservableProperty]
@@ -76,7 +64,7 @@ namespace ScheduleBSUIR.Viewmodels
         private bool _favorited = false;
 
         [ObservableProperty]
-        private ObservableRangeCollection<ITimetableItem>? _schedule = null;
+        private ObservableRangeCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
         private TypedId? _timetableId;
@@ -90,19 +78,12 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? reloadAll = false)
         {
-            //if (IsLoadingMoreSchedule)
-            //    return;
-
-            //IsLoadingMoreSchedule = true;
-
             if (reloadAll ?? false)
             {
-                CurrentState = ViewStates.Loading;
-
                 _loadedToDate = null;
                 _lastScheduleDate = null;
 
-                Schedule = null;
+                Schedule = [];
             }
 
             // Initial case
@@ -114,8 +95,6 @@ namespace ScheduleBSUIR.Viewmodels
             // Guard case for overflow if no schedules found or already loaded all possible schedules
             if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
             {
-                CurrentState = ViewStates.Loaded;
-
                 IsLoadingMoreSchedule = false;
                 return;
             }
@@ -139,8 +118,6 @@ namespace ScheduleBSUIR.Viewmodels
 
                 Schedule.AddRange(day);
             }
-
-            CurrentState = ViewStates.Loaded;
 
             IsLoadingMoreSchedule = false;
         }
@@ -233,7 +210,7 @@ namespace ScheduleBSUIR.Viewmodels
             };
 
             // Let bottomsheet close smoothly
-            await Task.Delay(150);
+            //await Task.Delay(150);
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);
         }

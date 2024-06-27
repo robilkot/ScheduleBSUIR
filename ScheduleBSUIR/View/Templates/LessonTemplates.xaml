@@ -11,6 +11,8 @@
 
     <converters:ScheduleToColorConverter
         x:Key="ScheduleToColorConverter"/>
+    <converters:ScheduleToPassedPercentageConverter
+        x:Key="ScheduleToPassedPercentageConverter"/>
     <toolkit:EnumToIntConverter
         x:Key="EnumToIntConverter"/>
     <toolkit:ListToStringConverter
@@ -87,11 +89,25 @@
                 </Grid>
 
                 <Border
+                    x:Name="colorPlank"
                     Grid.Column="1"
                     HeightRequest="60"
                     WidthRequest="8"
                     StrokeShape="RoundRectangle 4"
+                    StrokeThickness="0"
                     BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    <Grid
+                        Background="Black"
+                        Opacity="0.5"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Fill">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource ScheduleToPassedPercentageConverter}">
+                                <Binding Path="." Mode="OneTime"/>
+                                <Binding Source="{x:Reference colorPlank}" Path="HeightRequest"/>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
                 </Border>
 
                 <Grid
