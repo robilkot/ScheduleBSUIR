@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Data.XtraReports.Native;
+using DevExpress.Maui.Core.Internal;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -22,17 +23,16 @@ namespace ScheduleBSUIR.Viewmodels
         private DateTime? _nearestScheduleDate = null;
         private DateTime? _lastScheduleDate = null;
 
-        public TimetablePageViewModel(
-            TimetableService timetableService,
-            ILoggingService loggingService,
-            IDateTimeProvider dateTimeProvider)
-            : base(loggingService)
+        public TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider) : base(loggingService)
         {
             _timetableService = timetableService;
             _dateTimeProvider = dateTimeProvider;
 
             WeakReferenceMessenger.Default.Register(this);
         }
+
+        [ObservableProperty]
+        private bool _isPinnedTimetable = false;
 
         [ObservableProperty]
         private bool _isLoadingMoreSchedule = false;
@@ -42,9 +42,6 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private bool _isTimetableStatePopupOpen = false;
-
-        [ObservableProperty]
-        private bool _isBusy;
 
         [ObservableProperty]
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
@@ -57,9 +54,40 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private SubgroupType _selectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
-        partial void OnSelectedModeChanged(SubgroupType value)
+        partial void OnSelectedModeChanged(SubgroupType oldValue, SubgroupType newValue)
         {
-            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)value);
+            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)newValue);
+
+            //// We may reduce existing collection if moving to subgroup mode from group mode
+            //if (oldValue == SubgroupType.All && newValue != SubgroupType.All)
+            //{
+            //    List<Schedule> itemsToRemove =
+            //        Schedule
+            //        .OfType<Schedule>()
+            //        .Where(item => item.NumSubgroup != newValue && item.NumSubgroup != SubgroupType.All)
+            //        .ToList();
+
+            //    Schedule.RemoveRange(itemsToRemove);
+
+            //    List<ScheduleDay> headersToRemove = 
+            //        Schedule
+            //        .OfType<ScheduleDay>()
+            //        .Where(day => itemsToRemove.Any(schedule => schedule.DateLesson == day.Day))
+            //        .Where((day) =>
+            //        {
+            //            return !Schedule
+            //                .OfType<Schedule>()
+            //                .Any(schedule => schedule.DateLesson == day.Day);
+            //        })
+            //        .ToList();
+
+            //    Schedule.RemoveRange(headersToRemove);
+
+            //    ScrollToActiveSchedule();
+            //}
+            //else
+            //{
+            //}
 
             ClearLoadedSchedule();
 
@@ -78,6 +106,7 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private TimetableState _timetableState = TimetableState.Default;
 
+        // todo: caching
         [ObservableProperty]
         private ObservableRangeCollection<ITimetableItem> _schedule = [];
 
@@ -85,8 +114,8 @@ namespace ScheduleBSUIR.Viewmodels
         private TypedId? _timetableId = default;
         async partial void OnTimetableIdChanged(TypedId? value)
         {
-            TimetableState = value is null 
-                ? TimetableState.Default 
+            TimetableState = value is null
+                ? TimetableState.Default
                 : await _timetableService.GetState(value);
 
             _loggingService.LogInfo($"Timetable {value} state: {TimetableState}", displayCaller: false);
@@ -161,24 +190,25 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task GetTimetable()
         {
-            if (TimetableId is null)
-                return;
-
             if (IsBusy)
                 return;
 
             IsBusy = true;
 
+            if (TimetableId is null)
+            {
+                IsPinnedTimetable = true;
+
+                _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
+
+                TimetableId = await _timetableService.GetPinnedIdAsync();
+            }
+
             try
             {
-                if(TimetableId is null)
-                {
-                    _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
-
-                    TimetableId = await _timetableService.GetPinnedIdAsync();
-                }
-
-                Timetable = await _timetableService.GetTimetableAsync(TimetableId, CancellationToken.None);
+                Timetable = TimetableId is null
+                    ? null
+                    : await _timetableService.GetTimetableAsync(TimetableId, CancellationToken.None);
             }
             catch (Exception ex)
             {
@@ -315,7 +345,10 @@ namespace ScheduleBSUIR.Viewmodels
                 TimetableState = TimetableState.Favorite;
             }
 
-            TimetableId ??= message.Value;
+            if(IsPinnedTimetable)
+            {
+                TimetableId = message.Value;
+            }
         }
     }
 }

@@ -35,18 +35,28 @@ namespace ScheduleBSUIR.Services
 
         public async Task ApplyState(TypedId timetableId, TimetableState state)
         {
+            var currentPinnedId = await GetPinnedIdAsync();
+
             switch (state)
             {
                 case TimetableState.Default:
                     {
                         await RemoveFromFavoritesAsync(timetableId);
-                        await SetPinnedIdAsync(null);
+
+                        if (timetableId.Equals(currentPinnedId))
+                        {
+                            await SetPinnedIdAsync(null);
+                        }
                         break;
                     }
                 case TimetableState.Favorite:
                     {
                         await AddToFavoritesAsync(timetableId);
-                        await SetPinnedIdAsync(null);
+
+                        if (timetableId.Equals(currentPinnedId))
+                        {
+                            await SetPinnedIdAsync(null);
+                        }
                         break;
                     }
                 case TimetableState.Pinned:
@@ -103,11 +113,8 @@ namespace ScheduleBSUIR.Services
 
             return pinnedId?.Equals(id) ?? false;
         }
-        public async Task<Timetable> GetTimetableAsync(TypedId? id, CancellationToken cancellationToken)
+        public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
-            if (id == null)
-                throw new ArgumentException($"Timetable id is null");
-
             Timetable? timetable;
 
             var cachedTimetable = await _dbService.GetAsync<Timetable>(id.PrimaryKey);

@@ -10,11 +10,13 @@ namespace ScheduleBSUIR.View;
 
 public partial class TimetablePage : ContentPage
 {
+    private readonly TimetablePageViewModel _viewmodel;
     public TimetablePage(TimetablePageViewModel vm)
     {
         InitializeComponent();
 
         BindingContext = vm;
+        _viewmodel = vm;
 
         WeakReferenceMessenger.Default.Register<ScrollToIndex>(this, (sender, message) =>
         {
@@ -31,6 +33,13 @@ public partial class TimetablePage : ContentPage
                 dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.End);
             });
         });
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        _viewmodel.GetTimetableCommand.Execute(null);
     }
 
     private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
