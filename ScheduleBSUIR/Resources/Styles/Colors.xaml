@@ -20,14 +20,6 @@
     <Color x:Key="DarkControlBackground">#121212</Color>
     <Color x:Key="DarkLightControlBackground">#222222</Color>
 
-    <Color x:Key="LectureColor">#31ce57</Color>
-    <Color x:Key="PracticeColor">#ff463a</Color>
-    <Color x:Key="LabColor">#fdd70a</Color>
-    <Color x:Key="ExamColor">#be58ff</Color>
-    <Color x:Key="ConsultColor">#ac8e6a</Color>
-    <Color x:Key="CreditColor">#5e5be6</Color>
-    <Color x:Key="UnknownColor">#8f8e94</Color>
-
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
     <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>

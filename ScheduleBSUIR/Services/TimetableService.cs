@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using DevExpress.Data.Linq;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -16,103 +17,6 @@ namespace ScheduleBSUIR.Services
 
         private const string StudentGroupIdType = nameof(StudentGroupIdType);
         private const string EmployeeIdType = nameof(EmployeeIdType);
-
-        public async Task<TimetableState> GetState(TypedId timetableId)
-        {
-            var state = TimetableState.Default;
-
-            if (await IsPinnedAsync(timetableId))
-            {
-                state = TimetableState.Pinned;
-            }
-            else if (await IsFavoritedAsync(timetableId))
-            {
-                state = TimetableState.Favorite;
-            }
-
-            return state;
-        }
-
-        public async Task ApplyState(TypedId timetableId, TimetableState state)
-        {
-            var currentPinnedId = await GetPinnedIdAsync();
-
-            switch (state)
-            {
-                case TimetableState.Default:
-                    {
-                        await RemoveFromFavoritesAsync(timetableId);
-
-                        if (timetableId.Equals(currentPinnedId))
-                        {
-                            await SetPinnedIdAsync(null);
-                        }
-                        break;
-                    }
-                case TimetableState.Favorite:
-                    {
-                        await AddToFavoritesAsync(timetableId);
-
-                        if (timetableId.Equals(currentPinnedId))
-                        {
-                            await SetPinnedIdAsync(null);
-                        }
-                        break;
-                    }
-                case TimetableState.Pinned:
-                    {
-                        await AddToFavoritesAsync(timetableId);
-                        await SetPinnedIdAsync(timetableId);
-                        break;
-                    }
-            }
-        }
-        public async Task<TypedId?> GetPinnedIdAsync()
-        {
-            string preference = Preferences.Get(PreferencesKeys.FavoriteTimetableId, string.Empty);
-
-            if (string.IsNullOrEmpty(preference))
-                return null;
-
-            TypedId? result = null;
-
-            string[] preferenceParts = preference.Split(' ');
-
-            result = preferenceParts[0] switch
-            {
-                StudentGroupIdType => await _dbService.GetAsync<StudentGroupId>(preferenceParts[1]),
-                EmployeeIdType => await _dbService.GetAsync<EmployeeId>(preferenceParts[1]),
-                _ => throw new UnreachableException(),
-            };
-
-            _loggingService.LogInfo($"GetPinnedTimetableId {result}", displayCaller: false);
-
-            return result;
-        }
-        public Task SetPinnedIdAsync(TypedId? id)
-        {
-            string preference = id switch
-            {
-                StudentGroupId studentGroupId => $"{StudentGroupIdType} {studentGroupId.PrimaryKey}",
-                EmployeeId employeeId => $"{EmployeeIdType} {employeeId.PrimaryKey}",
-                null => string.Empty,
-                _ => throw new UnreachableException(),
-            };
-
-            Preferences.Set(PreferencesKeys.FavoriteTimetableId, preference);
-
-            _loggingService.LogInfo($"SetPinnedTimetableId {id} ", displayCaller: false);
-
-            WeakReferenceMessenger.Default.Send(new TimetablePinnedMessage(id));
-
-            return Task.FromResult(true);
-        }
-        public async Task<bool> IsPinnedAsync(TypedId? id)
-        {
-            var pinnedId = await GetPinnedIdAsync();
-
-            return pinnedId?.Equals(id) ?? false;
-        }
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
             Timetable? timetable;
@@ -170,9 +74,97 @@ namespace ScheduleBSUIR.Services
             return timetable;
         }
 
+        #region Timetable states
+        public async Task<TimetableState> GetState(TypedId timetableId) =>
+            await IsPinnedAsync(timetableId)
+            ? TimetableState.Pinned 
+            : await IsFavoritedAsync(timetableId) 
+            ? TimetableState.Favorite 
+            : TimetableState.Default;
+        public async Task ApplyState(TypedId timetableId, TimetableState state)
+        {
+            var currentPinnedId = await GetPinnedIdAsync();
+
+            switch (state)
+            {
+                case TimetableState.Default:
+                    {
+                        await RemoveFromFavoritesAsync(timetableId);
+
+                        if (timetableId.Equals(currentPinnedId))
+                        {
+                            await SetPinnedIdAsync(null);
+                        }
+                        break;
+                    }
+                case TimetableState.Favorite:
+                    {
+                        await AddToFavoritesAsync(timetableId);
+
+                        if (timetableId.Equals(currentPinnedId))
+                        {
+                            await SetPinnedIdAsync(null);
+                        }
+                        break;
+                    }
+                case TimetableState.Pinned:
+                    {
+                        await AddToFavoritesAsync(timetableId);
+                        await SetPinnedIdAsync(timetableId);
+                        break;
+                    }
+            }
+        }
+
+        #endregion
+
+        #region Pinned timetables
+        public async Task<TypedId?> GetPinnedIdAsync()
+        {
+            string preference = Preferences.Get(PreferencesKeys.FavoriteTimetableId, string.Empty);
+
+            if (string.IsNullOrEmpty(preference))
+                return null;
+
+            string[] preferenceParts = preference.Split(' ');
+
+            TypedId? result = preferenceParts[0] switch
+            {
+                StudentGroupIdType => await _dbService.GetAsync<StudentGroupId>(preferenceParts[1]),
+                EmployeeIdType => await _dbService.GetAsync<EmployeeId>(preferenceParts[1]),
+                _ => throw new UnreachableException(),
+            };
+
+            _loggingService.LogInfo($"GetPinnedTimetableId {result}", displayCaller: false);
+
+            return result;
+        }
+        public Task SetPinnedIdAsync(TypedId? id)
+        {
+            string preference = id switch
+            {
+                StudentGroupId studentGroupId => $"{StudentGroupIdType} {studentGroupId.PrimaryKey}",
+                EmployeeId employeeId => $"{EmployeeIdType} {employeeId.PrimaryKey}",
+                null => string.Empty,
+                _ => throw new UnreachableException(),
+            };
+
+            Preferences.Set(PreferencesKeys.FavoriteTimetableId, preference);
+
+            _loggingService.LogInfo($"SetPinnedTimetableId {id} ", displayCaller: false);
+
+            WeakReferenceMessenger.Default.Send(new TimetablePinnedMessage(id));
+
+            return Task.FromResult(true);
+        }
+        public async Task<bool> IsPinnedAsync(TypedId? id) => (await GetPinnedIdAsync())?.Equals(id) ?? false;
+
+        #endregion
+
+        #region Favorite timetables
         public async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            bool alreadyFavorited = false;
+            bool alreadyFavorited;
 
             switch (timetableId)
             {
@@ -221,37 +213,21 @@ namespace ScheduleBSUIR.Services
             _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
         }
 
-        public async Task<bool> IsFavoritedAsync<T>(T? timetableId) where T : TypedId
-        {
-            if (timetableId is null)
-                return false;
-
-            TypedId? timetableIdInDb = timetableId switch
+        public async Task<bool> IsFavoritedAsync<T>(T timetableId) where T : TypedId => timetableId switch
             {
-                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey),
-                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey),
+                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey) is not null,
+                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey) is not null,
                 _ => throw new UnreachableException(),
             };
 
-            return timetableIdInDb is not null;
-        }
+        public async Task<List<StudentGroupId>> GetFavoriteGroupsTimetablesIdsAsync() => await _dbService.GetAllAsync<StudentGroupId>();
 
-        public async Task<List<StudentGroupId>> GetFavoriteGroupsTimetablesIdsAsync()
-        {
-            // Calling GetAllAsync<TypedId> will not return both StudentGroupIds and EmployeeIds because of how LiteDb works 
-            // => using generic method
-            List<StudentGroupId> ids = await _dbService.GetAllAsync<StudentGroupId>();
+        public async Task<List<EmployeeId>> GetFavoriteEmployeesTimetablesIdsAsync() => await _dbService.GetAllAsync<EmployeeId>();
 
-            return ids;
-        }
-        public async Task<List<EmployeeId>> GetFavoriteEmployeesTimetablesIdsAsync()
-        {
-            List<EmployeeId> ids = await _dbService.GetAllAsync<EmployeeId>();
+        #endregion
 
-            return ids;
-        }
-
-        public DateTime? GetLastScheduleDate(Timetable? timetable,
+        // todo: move to schedule generator
+        public DateTime? GetLastScheduleDate(Timetable timetable,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
@@ -286,7 +262,7 @@ namespace ScheduleBSUIR.Services
             return result;
         }
 
-        public DateTime? GetFirstScheduleDate(Timetable? timetable,
+        public DateTime? GetFirstScheduleDate(Timetable timetable,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
@@ -321,7 +297,7 @@ namespace ScheduleBSUIR.Services
             return result;
         }
 
-        public DateTime? GetNearestScheduleDate(Timetable? timetable,
+        public DateTime? GetNearestScheduleDate(Timetable timetable,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
@@ -356,7 +332,7 @@ namespace ScheduleBSUIR.Services
             return result;
         }
 
-        public Task<List<DailySchedule>?> GetDaySchedulesAsync(Timetable? timetable,
+        public Task<List<DailySchedule>?> GetDaySchedulesAsync(Timetable timetable,
             DateTime? startDate,
             DateTime? endDate,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,

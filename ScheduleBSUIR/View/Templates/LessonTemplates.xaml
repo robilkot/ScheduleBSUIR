@@ -33,7 +33,7 @@
             BorderWidth="0"
             FontAttributes="Bold"
             FontSize="16"
-            BackgroundColor="{StaticResource DarkLightControlBackground}"
+            BackgroundColor="{StaticResource DarkControlBackground}"
             TextColor="{StaticResource SecondaryGray}"
             Text="{Binding AvatarText, Mode=OneTime}"
             ImageSource="{Binding AvatarUrl, Mode=OneTime}">
@@ -51,7 +51,7 @@
         x:Key="SkeletonLessonTemplate"
         x:DataType="model:Schedule">
         <Border
-            BackgroundColor="{StaticResource DarkControlBackground}"
+            BackgroundColor="{StaticResource DarkLightControlBackground}"
             HeightRequest="70"
             Padding="10,5">
             <Grid
@@ -64,16 +64,16 @@
                     RowDefinitions="auto,auto">
                     <Border
                         Grid.Row="0"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}"
+                        BackgroundColor="{StaticResource SecondaryGray}"
                         HeightRequest="16"/>
                     <Border
                         Grid.Row="1"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}"
+                        BackgroundColor="{StaticResource SecondaryGray}"
                         HeightRequest="16"/>
                 </Grid>
                 <Ellipse
                     Grid.Column="1"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}"
+                    BackgroundColor="{StaticResource DarkControlBackground}"
                     WidthRequest="50"
                     HeightRequest="50"/>
             </Grid>
@@ -87,7 +87,7 @@
         <Border
             StrokeThickness="0"
             HeightRequest="70"
-            BackgroundColor="{StaticResource DarkControlBackground}"
+            BackgroundColor="{StaticResource DarkLightControlBackground}"
             Padding="10,5">
             <Grid
                 ColumnSpacing="8"
@@ -275,7 +275,7 @@
         <Border
             StrokeThickness="0"
             MinimumHeightRequest="70"
-            BackgroundColor="{StaticResource DarkControlBackground}"
+            BackgroundColor="{StaticResource DarkLightControlBackground}"
             Padding="10,5">
             <Grid
                 ColumnSpacing="8"
@@ -333,7 +333,7 @@
                         <Label
                             Grid.Column="0"
                             Style="{StaticResource LabelBodyHeaderStyle}"
-                            Text="{x:Static model:LessonTypesHelper.AnnouncementAbbreviation}">
+                            Text="{x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}">
                         </Label>
                         <Image
                             Grid.Column="1"
@@ -459,7 +459,7 @@
                         VerticalOptions="Center"
                         Style="{StaticResource LabelBodyHeaderStyle}"
                         FontSize="18"
-                        Text="{x:Static model:LessonTypesHelper.AnnouncementAbbreviation}">
+                        Text="{x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}">
                     </Label>
                     <Image
                         Grid.Column="1"

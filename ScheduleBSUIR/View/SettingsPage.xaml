@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ScheduleBSUIR.View.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel"
+             xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+             xmlns:Converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+             mtk:LeakMonitorBehavior.Cascade="True"
+             mtk:TearDownBehavior.Cascade="True"
+             Title="SettingsPage"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="15,0"
+            Spacing="20">
+            <Grid
+                ColumnSpacing="10"
+                Padding="0,100,0,20">
+                <Label
+                    Style="{StaticResource LabelHeaderStyle}"
+                    Text="Настройки"/>
+            </Grid>
+
+            <!-- Color -->
+            <Label
+                Text="Цвета"
+                Margin="15,0,0,-10"
+                Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+            <Border
+                BackgroundColor="{StaticResource DarkLightControlBackground}">
+                <dx:DXCollectionView
+                    AllowCascadeUpdate="False"
+                    UseRippleEffect="True"
+                    ReduceSizeToContent="True"
+                    ItemSeparatorColor="{StaticResource Gray600}"
+                    ItemSeparatorThickness="1"
+                    ItemsSource="{x:Static constants:LessonTypesHelper.BasicTypes}">
+                    <dx:DXCollectionView.Resources>
+                        <ResourceDictionary>
+                            <Converters:KeyToResourceConverter
+                                x:Key="KeyToResourceConverter"/>
+                        </ResourceDictionary>
+                    </dx:DXCollectionView.Resources>
+                    <dx:DXCollectionView.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="constants:LessonType">
+                            <Grid
+                                Margin="15,0"
+                                x:Name="lessonTypePlank"
+                                HeightRequest="50"
+                                ColumnSpacing="5"
+                                ColumnDefinitions="auto,*,auto,auto,auto">
+
+                                <Label
+                                    Grid.Column="0"
+                                    VerticalOptions="Center"
+                                    MaxLines="2"
+                                    Text="{Binding Fullname, Mode=OneTime}"
+                                    LineHeight="1.1"
+                                    LineBreakMode="WordWrap"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"/>
+
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="16"
+                                    Opacity="0.5"
+                                    Rotation="180"
+                                    Source="dark_arrow_right">
+                                </Image>
+
+                                <Border
+                                    Grid.Column="3"
+                                    WidthRequest="20"
+                                    HeightRequest="20"
+                                    StrokeShape="RoundRectangle 8"
+                                    Background="{Binding ColorResourceKey, Converter={StaticResource KeyToResourceConverter}}"/>
+
+                                <Image
+                                    Grid.Column="4"
+                                    HeightRequest="16"
+                                    Opacity="0.5"
+                                    Source="dark_arrow_right">
+                                </Image>
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="ColorPlank_Tapped"/>
+                                    <!--Tapped="{Binding Source={x:RelativeSource AncestorType={x:Type vm:SettingsPageViewModel}}, Path=}"/>-->
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </DataTemplate>
+                    </dx:DXCollectionView.ItemTemplate>
+                </dx:DXCollectionView>
+            </Border>
+                
+            <!-- Subgroup type popup-->
+            <dx:DXPopup
+                Background="{StaticResource DarkLightControlBackground}"
+                AllowShadow="True"
+                ShadowColor="#CC000000"
+                ShadowRadius="40"
+                ShadowVerticalOffset="10"
+                x:Name="colorPickerPopup">
+                <Border
+                    Padding="15">
+                    <dx:DXColorSelector
+                        x:Name="colorSelector"
+                        HorizontalOptions="Center"
+                        SelectedColorChanged="DXColorSelector_SelectedColorChanged"
+                        ItemsSource="{x:Static constants:LessonsColorsHelper.AvailableColors}"/>
+                </Border>
+            </dx:DXPopup>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

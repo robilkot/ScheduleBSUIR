@@ -1,4 +1,5 @@
-﻿using ScheduleBSUIR.Models;
+﻿using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Models;
 using System.Globalization;
 
 namespace ScheduleBSUIR.Helpers.Converters
@@ -23,7 +24,7 @@ namespace ScheduleBSUIR.Helpers.Converters
                 _cachedResults.Add(value, key);
             }
 
-            return App.Current.Resources[key];
+            return App.Current!.Resources[key];
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

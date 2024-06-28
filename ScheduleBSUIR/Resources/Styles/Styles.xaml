@@ -62,6 +62,9 @@
         <Setter
             Property="StrokeShape"
             Value="RoundRectangle 12"/>
+        <Setter
+            Property="StrokeThickness"
+            Value="0"/>
     </Style>
 
     

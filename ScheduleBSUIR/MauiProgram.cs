@@ -43,11 +43,13 @@ namespace ScheduleBSUIR
             builder.Services.AddTransient<EmployeesListPage>();
             builder.Services.AddTransient<GroupListPage>();
             builder.Services.AddTransient<TimetablePage>();
+            builder.Services.AddTransient<SettingsPage>();
             builder.Services.AddTransient<DebugPage>();
 
             builder.Services.AddTransient<EmployeesListPageViewModel>();
             builder.Services.AddTransient<GroupListPageViewModel>();
             builder.Services.AddTransient<TimetablePageViewModel>();
+            builder.Services.AddTransient<SettingsPageViewModel>();
             builder.Services.AddTransient<DebugPageViewModel>();
 
             builder.Services.AddSingleton<GroupsService>();

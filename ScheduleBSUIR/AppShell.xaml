@@ -8,22 +8,31 @@
 
     <TabBar>
         <Tab
+            Icon="dark_pin"
             Title="Pinned">
             <ShellContent
                 ContentTemplate="{DataTemplate view:TimetablePage}"/>
         </Tab>
         <Tab
+            Icon="dark_users"
             Title="Groups">
             <ShellContent
                 ContentTemplate="{DataTemplate view:GroupListPage}"/>
         </Tab>
         <Tab
+            Icon="dark_lecturer"
             Title="Employees">
             <ShellContent
                 ContentTemplate="{DataTemplate view:EmployeesListPage}"/>
         </Tab>
         <Tab
-            IsVisible="True"
+            Icon="dark_settings"
+            Title="Settings">
+            <ShellContent
+                ContentTemplate="{DataTemplate view:SettingsPage}"/>
+        </Tab>
+        <Tab
+            Icon="dark_search"
             Title="Debug">
             <ShellContent
                 ContentTemplate="{DataTemplate view:DebugPage}"/>

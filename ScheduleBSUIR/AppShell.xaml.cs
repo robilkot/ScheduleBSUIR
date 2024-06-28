@@ -1,4 +1,6 @@
-﻿using ScheduleBSUIR.View;
+﻿using DevExpress.Maui.Core.Internal;
+using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.View;
 
 namespace ScheduleBSUIR
 {
