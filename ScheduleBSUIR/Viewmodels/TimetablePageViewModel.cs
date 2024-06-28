@@ -71,8 +71,12 @@ namespace ScheduleBSUIR.Viewmodels
         private ObservableRangeCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
-        private TypedId? _timetableId;
-        async partial void OnTimetableIdChanged(TypedId? value)
+        private TypedId _timetableId;
+
+        [ObservableProperty]
+        private TypedId? _previousTimetableId;
+
+        async partial void OnTimetableIdChanged(TypedId value)
         {
             Favorited = await _timetableService.IsFavoritedAsync(value);
 
@@ -222,6 +226,7 @@ namespace ScheduleBSUIR.Viewmodels
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, timetableId },
+                { NavigationKeys.PreviousTimetableId, TimetableId },
             };
 
             // Let bottomsheet close smoothly
@@ -234,6 +239,11 @@ namespace ScheduleBSUIR.Viewmodels
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
             {
                 TimetableId = (TypedId)id;
+
+                if (query.TryGetValue(NavigationKeys.PreviousTimetableId, out var prevId))
+                {
+                    PreviousTimetableId = (TypedId?)prevId;
+                }
 
                 GetTimetableCommand.Execute(null);
             }

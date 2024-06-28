@@ -44,7 +44,7 @@
 
             <Label
                 x:Name="optionLabel"
-                WidthRequest="100"
+                WidthRequest="80"
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"

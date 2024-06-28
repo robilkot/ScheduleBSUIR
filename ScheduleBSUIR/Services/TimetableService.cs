@@ -30,7 +30,6 @@ namespace ScheduleBSUIR.Services
                 }
 
                 timetable = cachedTimetable;
-                _loggingService.LogInfo($"Timetable cached for {id}", displayCaller: false);
             }
             else
             {
@@ -40,13 +39,11 @@ namespace ScheduleBSUIR.Services
                 if (cachedTimetable is not null
                     && lastUpdateResponse?.LastUpdateDate <= cachedTimetable.UpdatedAt)
                 {
-                    _loggingService.LogInfo($"Timetable cached for {id}", displayCaller: false);
                     timetable = cachedTimetable;
                 }
                 // Else obtain from api
                 else
                 {
-                    _loggingService.LogInfo($"Timetable NOT cached yet for {id}", displayCaller: false);
                     timetable = await _webService.GetTimetableAsync(id, cancellationToken);
 
                     if (timetable is null)

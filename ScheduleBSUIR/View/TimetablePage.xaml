@@ -10,12 +10,13 @@
              xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:dx="http://schemas.devexpress.com/maui"
-             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
+             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
              mtk:LeakMonitorBehavior.Cascade="True"
              mtk:TearDownBehavior.Cascade="True"
              Shell.NavBarIsVisible="False"
+             x:Name="timetablePage"
              Background="Black">
 
     <ContentPage.Resources>
@@ -42,59 +43,6 @@
     </ContentPage.Resources>
 
     <Grid>
-        <!-- Skeleton of timetable -->
-        <dx:DXCollectionView
-            IsVisible="{Binding Timetable, Converter={toolkit:IsNullConverter}}"
-            ItemSpacing="5"
-            IsPullToRefreshEnabled="True"
-            IsRefreshing="{Binding IsLoadingMoreSchedule}"
-            ItemTemplate="{StaticResource SkeletonLessonTemplate}"
-            PullToRefreshCommand="{Binding GetTimetableCommand}"
-            Margin="15,0">
-            <dx:DXCollectionView.ItemsSource>
-                <x:Array Type="{x:Type x:Int16}">
-                    <x:Int16>0</x:Int16>
-                    <x:Int16>0</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>1</x:Int16>
-                    <x:Int16>2</x:Int16>
-                    <x:Int16>2</x:Int16>
-                </x:Array>
-            </dx:DXCollectionView.ItemsSource>
-
-            <dx:DXCollectionView.Header>
-                <Grid
-                    Margin="0,100,0,20"
-                    RowDefinitions="auto,auto"
-                    RowSpacing="10">
-                    <Label
-                        Grid.Column="0"
-                        VerticalOptions="Center"
-                        Style="{StaticResource LabelHeaderStyle}"
-                        Text="{Binding TimetableId.DisplayName}"/>
-                    <Border
-                        Grid.Row="1"
-                        WidthRequest="240"
-                        HorizontalOptions="Start"
-                        HeightRequest="18"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}"/>
-                </Grid>
-            </dx:DXCollectionView.Header>
-
-            <!--<dx:DXCollectionView.GroupHeaderTemplate>
-                <DataTemplate>
-                    <Border
-                        Grid.Row="0"
-                        Margin="0,20,0,0"
-                        WidthRequest="240"
-                        HorizontalOptions="Start"
-                        BackgroundColor="{StaticResource DarkControlBackground}"
-                        HeightRequest="20"/>
-                </DataTemplate>
-            </dx:DXCollectionView.GroupHeaderTemplate>-->
-        </dx:DXCollectionView>
-
         <!-- Timetable collectionview -->
         <dx:DXCollectionView
             x:Name="dayScheduleCollectionView"
@@ -181,11 +129,30 @@
             <!-- Navigation button -->
             <Grid
                 Grid.Column="0"
-                Padding="0,10,20,10"
-                WidthRequest="40"
+                ColumnDefinitions="auto,auto"
+                MinimumWidthRequest="40"
+                Padding="0,0,20,0"
                 HeightRequest="40">
                 <Image
+                    Grid.Column="0"
+                    Margin="0,10,0,10"
                     Source="dark_arrow_left"/>
+                <Label
+                    Grid.Column="1"
+                    VerticalOptions="Center"
+                    IsVisible="{Binding PreviousTimetableId.DisplayName.Length, Converter={StaticResource SmallerThanConverter}}"
+                    Style="{StaticResource LabelBodySecondaryStyle}"
+                    Text="{Binding PreviousTimetableId.DisplayName}">
+                    <Label.Resources>
+                        <ResourceDictionary>
+                            <x:Int32 x:Key="Threshold">7</x:Int32>
+                            <toolkit:CompareConverter
+                                x:Key="SmallerThanConverter"
+                                ComparisonOperator="Smaller"
+                                ComparingValue="{x:StaticResource Threshold}"/>
+                        </ResourceDictionary>
+                    </Label.Resources>
+                </Label>
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NavigateBackCommand}"/>
                 </Grid.GestureRecognizers>
