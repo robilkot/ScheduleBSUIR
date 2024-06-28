@@ -71,17 +71,19 @@ namespace ScheduleBSUIR.Viewmodels
         private ObservableRangeCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
-        private TypedId _timetableId;
-
-        [ObservableProperty]
-        private TypedId? _previousTimetableId;
-
+        private TypedId _timetableId = default!;
         async partial void OnTimetableIdChanged(TypedId value)
         {
             Favorited = await _timetableService.IsFavoritedAsync(value);
 
             _loggingService.LogInfo($"Timetable {value} is favorited: {Favorited}", displayCaller: false);
         }
+
+        [ObservableProperty]
+        private TypedId? _previousTimetableId;
+
+        [ObservableProperty]
+        private bool _isBackButtonVisible = false;
 
         [RelayCommand]
         public async Task LoadMoreSchedule(bool? scrollToNearest = false)
@@ -223,10 +225,17 @@ namespace ScheduleBSUIR.Viewmodels
         {
             var timetableId = TypedId.Create(dto);
 
+            if (timetableId.Equals(PreviousTimetableId))
+            {
+                await NavigateBack();
+                return;
+            }
+
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, timetableId },
                 { NavigationKeys.PreviousTimetableId, TimetableId },
+                { NavigationKeys.IsBackButtonVisible, true },
             };
 
             // Let bottomsheet close smoothly
@@ -239,14 +248,17 @@ namespace ScheduleBSUIR.Viewmodels
             if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
             {
                 TimetableId = (TypedId)id;
-
-                if (query.TryGetValue(NavigationKeys.PreviousTimetableId, out var prevId))
-                {
-                    PreviousTimetableId = (TypedId?)prevId;
-                }
-
-                GetTimetableCommand.Execute(null);
             }
+            if (query.TryGetValue(NavigationKeys.PreviousTimetableId, out var prevId))
+            {
+                PreviousTimetableId = (TypedId?)prevId;
+            }
+            if (query.TryGetValue(NavigationKeys.IsBackButtonVisible, out var isBackButtonVisible))
+            {
+                IsBackButtonVisible = (bool)isBackButtonVisible;
+            }
+
+            GetTimetableCommand.Execute(null);
         }
 
         private void ClearLoadedSchedule()

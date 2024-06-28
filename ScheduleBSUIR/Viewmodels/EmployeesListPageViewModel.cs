@@ -64,6 +64,7 @@ namespace ScheduleBSUIR.Viewmodels
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, employeeId },
+                { NavigationKeys.IsBackButtonVisible, true },
             };
 
             await Shell.Current.GoToAsync(nameof(TimetablePage), true, navigationParameters);

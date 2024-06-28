@@ -4,16 +4,11 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Models
 {
-    public abstract class TypedId
+    public abstract class TypedId(string id, string? displayName = null)
     {
-        public TypedId(string id, string? displayName = null)
-        {
-            PrimaryKey = id;
-            DisplayName = displayName ?? id;
-        }
         [BsonId]
-        public string PrimaryKey { get; init; }
-        public string DisplayName { get; init; }
+        public string PrimaryKey { get; init; } = id;
+        public string DisplayName { get; init; } = displayName ?? id;
 
         public static TypedId Create(object dto) => dto switch
         {
@@ -26,6 +21,14 @@ namespace ScheduleBSUIR.Models
             _ => throw new UnreachableException()
         };
         public override string ToString() => PrimaryKey;
+        public override bool Equals(object? obj)
+        {
+            if (obj is not TypedId id)
+                return false;
+
+            return PrimaryKey.Equals(id.PrimaryKey);
+        }
+        public override int GetHashCode() => PrimaryKey.GetHashCode();
     }
     public sealed class StudentGroupId : TypedId, ICacheable
     {
