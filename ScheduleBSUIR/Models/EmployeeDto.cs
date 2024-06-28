@@ -30,8 +30,8 @@ namespace ScheduleBSUIR.Models
 
         public override string ToString()
         {
-            string? firstNameSymbol = FirstName is not null ? FirstName[0] + "." : null;
-            string? middleNameSymbol = MiddleName is not null ? MiddleName[0] + "." : null;
+            string? firstNameSymbol = string.IsNullOrEmpty(FirstName) ? null : FirstName[0] + ".";
+            string? middleNameSymbol = string.IsNullOrEmpty(MiddleName) ? null : MiddleName[0] + ".";
 
             return string.Join(' ', LastName, firstNameSymbol, middleNameSymbol);
         }

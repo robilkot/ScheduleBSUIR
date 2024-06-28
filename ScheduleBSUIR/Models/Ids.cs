@@ -1,4 +1,5 @@
-﻿using ScheduleBSUIR.Interfaces;
+﻿using LiteDB;
+using ScheduleBSUIR.Interfaces;
 using System.Diagnostics;
 
 namespace ScheduleBSUIR.Models
@@ -10,6 +11,7 @@ namespace ScheduleBSUIR.Models
             PrimaryKey = id;
             DisplayName = displayName ?? id;
         }
+        [BsonId]
         public string PrimaryKey { get; init; }
         public string DisplayName { get; init; }
 
