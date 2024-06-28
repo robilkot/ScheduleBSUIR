@@ -21,12 +21,10 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
+            <converters:TimetableStateToStringConverter
+                x:Key="TimetableStateToStringConverter"/>
             <converters:SubgroupTypeToStringConverter
                 x:Key="SubgroupTypeToStringConverter"/>
-            <toolkit:BoolToObjectConverter
-                x:Key="BookmarkSelected"
-                TrueObject="dark_bookmark_active"
-                FalseObject="dark_bookmark_inactive"/>
             <toolkit:BoolToObjectConverter
                 x:Key="EnabledOpacityConverter"
                 TrueObject="1"
@@ -165,7 +163,7 @@
                 Tab="{Binding SelectedTab, Mode=TwoWay}">
             </controls:CustomTabbar>
 
-            <!-- Timetable mode toggle -->
+            <!-- Subgroup type toggle -->
             <Grid
                 IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="2"
@@ -208,11 +206,11 @@
                 </Grid>
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer
-                        Command="{Binding ToggleTimetableModePopupCommand}"/>
+                        Command="{Binding ToggleSubgroupTypePopupCommand}"/>
                 </Grid.GestureRecognizers>
             </Grid>
 
-            <!-- Boormark toggle -->
+            <!-- Timetable state toggle -->
             <Grid
                 IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                 Grid.Column="3"
@@ -221,7 +219,26 @@
                 WidthRequest="40"
                 HeightRequest="40">
                 <Image
-                    Source="{Binding Favorited, Converter={StaticResource BookmarkSelected}}"/>
+                    Source="dark_bookmark_inactive">
+                    <Image.Triggers>
+                        <DataTrigger
+                            TargetType="Image"
+                            Binding="{Binding TimetableState}"
+                            Value="{x:Static constants:TimetableState.Favorite}">
+                            <Setter
+                                Property="Source"
+                                Value="dark_bookmark_active"/>
+                        </DataTrigger>
+                        <DataTrigger
+                            TargetType="Image"
+                            Binding="{Binding TimetableState}"
+                            Value="{x:Static constants:TimetableState.Pinned}">
+                            <Setter
+                                Property="Source"
+                                Value="dark_pin"/>
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
                 <Grid.Triggers>
                     <DataTrigger
                         TargetType="Grid"
@@ -234,16 +251,18 @@
                             Property="Opacity"
                             Value="0.5"/>
                     </DataTrigger>
+
+
                 </Grid.Triggers>
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToogleBookmarkCommand}"/>
+                    <TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>
                 </Grid.GestureRecognizers>
             </Grid>
 
-            <!--Timetable mode popup-->
+            <!-- Subgroup type popup-->
             <dx:DXPopup
                 PlacementTarget="{x:Reference navBar}"
-                IsOpen="{Binding IsTimetableModePopupOpen}">
+                IsOpen="{Binding IsSubgroupTypePopupOpen}">
                 <dx:DXPopup.Resources>
                     <ResourceDictionary>
                         <Style TargetType="Grid">
@@ -286,7 +305,7 @@
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding ToggleModeCommand}"
+                                    Command="{Binding SetSubgroupTypeCommand}"
                                     CommandParameter="{x:Static constants:SubgroupType.FirstSubgroup}"/>
                             </Grid.GestureRecognizers>
                         </Grid>
@@ -304,7 +323,7 @@
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding ToggleModeCommand}"
+                                    Command="{Binding SetSubgroupTypeCommand}"
                                     CommandParameter="{x:Static constants:SubgroupType.SecondSubgroup}"/>
                             </Grid.GestureRecognizers>
                         </Grid>
@@ -322,8 +341,99 @@
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding ToggleModeCommand}"
+                                    Command="{Binding SetSubgroupTypeCommand}"
                                     CommandParameter="{x:Static constants:SubgroupType.All}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+            </dx:DXPopup>
+
+            <!-- Timetable state popup-->
+            <dx:DXPopup
+                PlacementTarget="{x:Reference navBar}"
+                IsOpen="{Binding IsTimetableStatePopupOpen}">
+                <dx:DXPopup.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Grid">
+                            <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
+                            <Setter Property="ColumnSpacing" Value="15"/>
+                            <Setter Property="HeightRequest" Value="36"/>
+                        </Style>
+                    </ResourceDictionary>
+                </dx:DXPopup.Resources>
+
+                <Border
+                    Padding="20,10"
+                    BackgroundColor="{StaticResource DarkControlBackground}">
+                    <VerticalStackLayout
+                        Spacing="10">
+                        <VerticalStackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Image">
+                                    <Setter Property="WidthRequest" Value="20"/>
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Style>
+
+                                <Style TargetType="Label">
+                                    <Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>
+                                    <Setter Property="VerticalOptions" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </VerticalStackLayout.Resources>
+
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_bookmark_inactive"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Source={x:Static constants:TimetableState.Default}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Default}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding SetStateCommand}"
+                                    CommandParameter="{x:Static constants:TimetableState.Default}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_bookmark_active"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Source={x:Static constants:TimetableState.Favorite}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Favorite}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding SetStateCommand}"
+                                    CommandParameter="{x:Static constants:TimetableState.Favorite}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+                                Grid.Column="0"
+                                Source="dark_pin"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Source={x:Static constants:TimetableState.Pinned}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+                                Grid.Column="2"
+                                Source="dark_check"
+                                IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Pinned}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding SetStateCommand}"
+                                    CommandParameter="{x:Static constants:TimetableState.Pinned}"/>
                             </Grid.GestureRecognizers>
                         </Grid>
 

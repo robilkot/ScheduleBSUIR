@@ -41,7 +41,7 @@ namespace ScheduleBSUIR.Helpers.Converters
 
                     DateTime lessonDateTime = DateTime.MinValue
                         .AddDays(lessonDate.Day - 1).AddMonths(lessonDate.Month - 1).AddYears(lessonDate.Year - 1)
-                        .AddHours(schedule.StartLessonTime.Hour).AddMinutes(schedule.StartLessonTime.Minute);
+                        .AddHours(schedule.StartLessonTime.ToUniversalTime().Hour).AddMinutes(schedule.StartLessonTime.Minute);
 
                     TimeSpan passedTime = now - lessonDateTime;
 

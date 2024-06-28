@@ -12,25 +12,36 @@ using ScheduleBSUIR.View;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel(
-        TimetableService timetableService,
-        ILoggingService loggingService,
-        IDateTimeProvider dateTimeProvider)
-        : BaseViewModel(loggingService), IQueryAttributable
+    public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetablePinnedMessage>
     {
-        private readonly TimetableService _timetableService = timetableService;
-        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+        private readonly TimetableService _timetableService;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         private readonly TimeSpan _loadingStep = TimeSpan.FromDays(10);
         private DateTime? _loadedToDate = null;
         private DateTime? _nearestScheduleDate = null;
         private DateTime? _lastScheduleDate = null;
 
+        public TimetablePageViewModel(
+            TimetableService timetableService,
+            ILoggingService loggingService,
+            IDateTimeProvider dateTimeProvider)
+            : base(loggingService)
+        {
+            _timetableService = timetableService;
+            _dateTimeProvider = dateTimeProvider;
+
+            WeakReferenceMessenger.Default.Register(this);
+        }
+
         [ObservableProperty]
         private bool _isLoadingMoreSchedule = false;
 
         [ObservableProperty]
-        private bool _isTimetableModePopupOpen = false;
+        private bool _isSubgroupTypePopupOpen = false;
+
+        [ObservableProperty]
+        private bool _isTimetableStatePopupOpen = false;
 
         [ObservableProperty]
         private bool _isBusy;
@@ -65,18 +76,22 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [ObservableProperty]
-        private bool _favorited = false;
+        private TimetableState _timetableState = TimetableState.Default;
 
         [ObservableProperty]
         private ObservableRangeCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
-        private TypedId _timetableId = default!;
-        async partial void OnTimetableIdChanged(TypedId value)
+        private TypedId? _timetableId = default;
+        async partial void OnTimetableIdChanged(TypedId? value)
         {
-            Favorited = await _timetableService.IsFavoritedAsync(value);
+            TimetableState = value is null 
+                ? TimetableState.Default 
+                : await _timetableService.GetState(value);
 
-            _loggingService.LogInfo($"Timetable {value} is favorited: {Favorited}", displayCaller: false);
+            _loggingService.LogInfo($"Timetable {value} state: {TimetableState}", displayCaller: false);
+
+            GetTimetableCommand.Execute(null);
         }
 
         [ObservableProperty]
@@ -156,6 +171,13 @@ namespace ScheduleBSUIR.Viewmodels
 
             try
             {
+                if(TimetableId is null)
+                {
+                    _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
+
+                    TimetableId = await _timetableService.GetPinnedIdAsync();
+                }
+
                 Timetable = await _timetableService.GetTimetableAsync(TimetableId, CancellationToken.None);
             }
             catch (Exception ex)
@@ -180,43 +202,40 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public async Task ToogleBookmark()
+        public async Task SetState(TimetableState newState)
         {
             if (TimetableId is null)
                 return;
 
-            if (Favorited)
-            {
-                await _timetableService.RemoveFromFavoritesAsync(TimetableId);
+            if (newState == TimetableState)
+                return;
 
-                Favorited = false;
+            TimetableState = newState;
 
-                Vibration.Default.Vibrate(80f);
-            }
-            else
-            {
-                await _timetableService.AddToFavoritesAsync(TimetableId);
+            IsTimetableStatePopupOpen = false;
 
-                Favorited = true;
-
-                Vibration.Default.Vibrate(80f);
-                await Task.Delay(150);
-                Vibration.Default.Vibrate(50f);
-            }
+            await _timetableService.ApplyState(TimetableId, newState);
         }
 
         [RelayCommand]
-        public void ToggleMode(SubgroupType mode)
+        public void ToggleStatePopup()
         {
-            SelectedMode = mode;
-
-            IsTimetableModePopupOpen = false;
+            IsSubgroupTypePopupOpen = false;
+            IsTimetableStatePopupOpen = !IsTimetableStatePopupOpen;
         }
 
         [RelayCommand]
-        public void ToggleTimetableModePopup()
+        public void SetSubgroupType(SubgroupType type)
         {
-            IsTimetableModePopupOpen = !IsTimetableModePopupOpen;
+            SelectedMode = type;
+            IsSubgroupTypePopupOpen = false;
+        }
+
+        [RelayCommand]
+        public void ToggleSubgroupTypePopup()
+        {
+            IsTimetableStatePopupOpen = false;
+            IsSubgroupTypePopupOpen = !IsSubgroupTypePopupOpen;
         }
 
         // Accepts studentgroup dto or employeedto
@@ -234,7 +253,7 @@ namespace ScheduleBSUIR.Viewmodels
             Dictionary<string, object> navigationParameters = new()
             {
                 { NavigationKeys.TimetableId, timetableId },
-                { NavigationKeys.PreviousTimetableId, TimetableId },
+                { NavigationKeys.PreviousTimetableId, TimetableId! },
                 { NavigationKeys.IsBackButtonVisible, true },
             };
 
@@ -257,8 +276,6 @@ namespace ScheduleBSUIR.Viewmodels
             {
                 IsBackButtonVisible = (bool)isBackButtonVisible;
             }
-
-            GetTimetableCommand.Execute(null);
         }
 
         private void ClearLoadedSchedule()
@@ -288,6 +305,17 @@ namespace ScheduleBSUIR.Viewmodels
 
                 WeakReferenceMessenger.Default.Send(message);
             }
+        }
+
+        // If we pin some timetable, pages down the stack should update their state. As well as pinned timetable on separate tab
+        public void Receive(TimetablePinnedMessage message)
+        {
+            if (TimetableState == TimetableState.Pinned && !(message.Value?.Equals(TimetableId) ?? false))
+            {
+                TimetableState = TimetableState.Favorite;
+            }
+
+            TimetableId ??= message.Value;
         }
     }
 }

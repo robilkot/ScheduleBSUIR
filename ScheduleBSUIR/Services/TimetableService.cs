@@ -14,8 +14,100 @@ namespace ScheduleBSUIR.Services
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-        public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
+        private const string StudentGroupIdType = nameof(StudentGroupIdType);
+        private const string EmployeeIdType = nameof(EmployeeIdType);
+
+        public async Task<TimetableState> GetState(TypedId timetableId)
         {
+            var state = TimetableState.Default;
+
+            if (await IsPinnedAsync(timetableId))
+            {
+                state = TimetableState.Pinned;
+            }
+            else if (await IsFavoritedAsync(timetableId))
+            {
+                state = TimetableState.Favorite;
+            }
+
+            return state;
+        }
+
+        public async Task ApplyState(TypedId timetableId, TimetableState state)
+        {
+            switch (state)
+            {
+                case TimetableState.Default:
+                    {
+                        await RemoveFromFavoritesAsync(timetableId);
+                        await SetPinnedIdAsync(null);
+                        break;
+                    }
+                case TimetableState.Favorite:
+                    {
+                        await AddToFavoritesAsync(timetableId);
+                        await SetPinnedIdAsync(null);
+                        break;
+                    }
+                case TimetableState.Pinned:
+                    {
+                        await AddToFavoritesAsync(timetableId);
+                        await SetPinnedIdAsync(timetableId);
+                        break;
+                    }
+            }
+        }
+        public async Task<TypedId?> GetPinnedIdAsync()
+        {
+            string preference = Preferences.Get(PreferencesKeys.FavoriteTimetableId, string.Empty);
+
+            if (string.IsNullOrEmpty(preference))
+                return null;
+
+            TypedId? result = null;
+
+            string[] preferenceParts = preference.Split(' ');
+
+            result = preferenceParts[0] switch
+            {
+                StudentGroupIdType => await _dbService.GetAsync<StudentGroupId>(preferenceParts[1]),
+                EmployeeIdType => await _dbService.GetAsync<EmployeeId>(preferenceParts[1]),
+                _ => throw new UnreachableException(),
+            };
+
+            _loggingService.LogInfo($"GetPinnedTimetableId {result}", displayCaller: false);
+
+            return result;
+        }
+        public Task SetPinnedIdAsync(TypedId? id)
+        {
+            string preference = id switch
+            {
+                StudentGroupId studentGroupId => $"{StudentGroupIdType} {studentGroupId.PrimaryKey}",
+                EmployeeId employeeId => $"{EmployeeIdType} {employeeId.PrimaryKey}",
+                null => string.Empty,
+                _ => throw new UnreachableException(),
+            };
+
+            Preferences.Set(PreferencesKeys.FavoriteTimetableId, preference);
+
+            _loggingService.LogInfo($"SetPinnedTimetableId {id} ", displayCaller: false);
+
+            WeakReferenceMessenger.Default.Send(new TimetablePinnedMessage(id));
+
+            return Task.FromResult(true);
+        }
+        public async Task<bool> IsPinnedAsync(TypedId? id)
+        {
+            var pinnedId = await GetPinnedIdAsync();
+
+            return pinnedId?.Equals(id) ?? false;
+        }
+        public async Task<Timetable> GetTimetableAsync(TypedId? id, CancellationToken cancellationToken)
+        {
+            if (id == null)
+                throw new ArgumentException($"Timetable id is null");
+
             Timetable? timetable;
 
             var cachedTimetable = await _dbService.GetAsync<Timetable>(id.PrimaryKey);
@@ -73,33 +165,44 @@ namespace ScheduleBSUIR.Services
 
         public async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
         {
+            bool alreadyFavorited = false;
+
             switch (timetableId)
             {
-                case StudentGroupId studentGroupId: {
+                case StudentGroupId studentGroupId:
+                    {
+                        alreadyFavorited = await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey) is not null;
                         await _dbService.AddOrUpdateAsync(studentGroupId);
                         break;
                     }
-                case EmployeeId employeeId: {
+                case EmployeeId employeeId:
+                    {
+                        alreadyFavorited = await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey) is not null;
                         await _dbService.AddOrUpdateAsync(employeeId);
                         break;
                     }
                 default: throw new UnreachableException();
             }
 
-            WeakReferenceMessenger.Default.Send(new TimetableFavoritedMessage(timetableId));
+            if (!alreadyFavorited)
+            {
+                WeakReferenceMessenger.Default.Send(new TimetableFavoritedMessage(timetableId));
 
-            _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
+                _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
+            }
         }
 
         public async Task RemoveFromFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            switch(timetableId)
+            switch (timetableId)
             {
-                case StudentGroupId studentGroupId: {
+                case StudentGroupId studentGroupId:
+                    {
                         await _dbService.RemoveAsync(studentGroupId);
                         break;
                     }
-                case EmployeeId employeeId: {
+                case EmployeeId employeeId:
+                    {
                         await _dbService.RemoveAsync(employeeId);
                         break;
                     }

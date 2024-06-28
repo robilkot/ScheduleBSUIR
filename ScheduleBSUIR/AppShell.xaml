@@ -8,6 +8,11 @@
 
     <TabBar>
         <Tab
+            Title="Pinned">
+            <ShellContent
+                ContentTemplate="{DataTemplate view:TimetablePage}"/>
+        </Tab>
+        <Tab
             Title="Groups">
             <ShellContent
                 ContentTemplate="{DataTemplate view:GroupListPage}"/>

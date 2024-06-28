@@ -221,7 +221,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"RemoveAsync<IEnumerable<{typeof(T).Name}>> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"RemoveAsync<IEnumerable<{typeof(T).Name}>> {objects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
 
                 tcs.SetResult();
             });
