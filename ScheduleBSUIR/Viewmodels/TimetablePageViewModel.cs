@@ -154,25 +154,27 @@ namespace ScheduleBSUIR.Viewmodels
             _loadedToDate += TimeSpan.FromDays(1);
 
             // Common case
-            List<DailySchedule> newSchedules = [];
+            DateTime targetDate = _loadedToDate.Value + _loadingStep;
 
-            do
+            // Adjust target date if loading to the nearest schedule
+            if (scrollToNearest ?? false)
             {
-                var daysFromIteration = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, _loadedToDate + _loadingStep, SelectedTab, SelectedMode);
-
-                newSchedules.AddRange(daysFromIteration ?? []);
-
-                _loadedToDate += _loadingStep;
-
-                _loggingService.LogInfo($"GetDaySchedules got {daysFromIteration?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
+                while(targetDate < _nearestScheduleDate)
+                {
+                    targetDate += _loadingStep;
+                }
             }
-            // Repeat loading if we need to load till nearest schedule. todo: maybe should be single 'if'
-            while (_loadedToDate < _nearestScheduleDate && (scrollToNearest ?? false));
 
+            var newDays = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, targetDate, SelectedTab, SelectedMode);
+
+            _loadedToDate = targetDate;
+
+            _loggingService.LogInfo($"GetDaySchedules got {newDays?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
+            
             Schedule ??= [];
 
             // todo: also add ScheduleWeek?
-            foreach (var day in newSchedules ?? [])
+            foreach (var day in newDays ?? [])
             {
                 Schedule.Add(new ScheduleDay(day.Day));
 
@@ -182,9 +184,7 @@ namespace ScheduleBSUIR.Viewmodels
             IsLoadingMoreSchedule = false;
 
             if (scrollToNearest ?? false)
-            {
                 ScrollToActiveSchedule();
-            }
         }
 
         [RelayCommand]
