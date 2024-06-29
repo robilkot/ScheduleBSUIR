@@ -124,7 +124,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             _loggingService.LogInfo($"Timetable {value} state: {TimetableState}", displayCaller: false);
 
-            GetTimetableCommand.Execute(null);
+            await GetTimetable(forceReload: true);
         }
 
         [ObservableProperty]
@@ -191,10 +191,12 @@ namespace ScheduleBSUIR.Viewmodels
                 ScrollToActiveSchedule();
         }
 
-        [RelayCommand]
-        public async Task GetTimetable()
+        public async Task GetTimetable(bool forceReload)
         {
             if (IsBusy)
+                return;
+
+            if (!forceReload && Timetable is not null)
                 return;
 
             IsBusy = true;

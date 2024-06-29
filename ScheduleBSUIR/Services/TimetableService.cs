@@ -20,6 +20,8 @@ namespace ScheduleBSUIR.Services
         private const string EmployeeIdType = nameof(EmployeeIdType);
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             Timetable? timetable;
 
             var cachedTimetable = await _dbService.GetAsync<Timetable>(id.PrimaryKey);
@@ -71,6 +73,8 @@ namespace ScheduleBSUIR.Services
 
                 await _dbService.AddOrUpdateAsync(timetable);
             }
+
+            _loggingService.LogInfo($"GetTimetableAsync worked in {stopwatch.Elapsed:ss\\.FFFFF}");
 
             return timetable;
         }
