@@ -23,27 +23,29 @@ namespace ScheduleBSUIR.Helpers.Converters
                 if (values[1] is not double initialHeight)
                     return null;
 
-                var now = _lazyDateTimeProvider.Value.UtcNow;
+                // todo: review after non-exams schedule is implemented
+                var nowUtc = _lazyDateTimeProvider.Value.Now.ToUniversalTime();
+                var scheduleDateUtc = schedule.DateLesson.Value.ToUniversalTime().Date;
 
-                if (now.Date > schedule.DateLesson)
+                if (nowUtc.Date > scheduleDateUtc)
                 {
                     height = initialHeight;
                 }
-                else if(now.Date < schedule.DateLesson)
+                else if(nowUtc.Date < scheduleDateUtc)
                 {
                     height = 0;
                 } 
                 else
                 {
-                    DateTime lessonDate = schedule.DateLesson!.Value;
-
                     TimeSpan scheduleLenght = schedule.EndLessonTime - schedule.StartLessonTime;
 
-                    DateTime lessonDateTime = DateTime.MinValue
-                        .AddDays(lessonDate.Day - 1).AddMonths(lessonDate.Month - 1).AddYears(lessonDate.Year - 1)
-                        .AddHours(schedule.StartLessonTime.ToUniversalTime().Hour).AddMinutes(schedule.StartLessonTime.Minute);
+                    var startLessonTimeUtc = schedule.StartLessonTime.ToUniversalTime();
 
-                    TimeSpan passedTime = now - lessonDateTime;
+                    DateTime lessonDateTimeUtc = scheduleDateUtc
+                        .AddHours(startLessonTimeUtc.Hour).AddMinutes(startLessonTimeUtc.Minute)
+                        .ToUniversalTime();
+
+                    TimeSpan passedTime = nowUtc - lessonDateTimeUtc;
 
                     height = Math.Clamp(passedTime / scheduleLenght, 0d, 1d) * initialHeight;
                 }

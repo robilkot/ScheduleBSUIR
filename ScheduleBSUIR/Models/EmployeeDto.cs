@@ -23,7 +23,7 @@ namespace ScheduleBSUIR.Models
         public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
         [JsonIgnore]
         [BsonIgnore]
-        public string AvatarText => $"{FirstName?[0]}{MiddleName?[0]}";
+        public string AvatarText => $"{FirstName?.FirstOrDefault()}{MiddleName?.FirstOrDefault()}";
         [JsonIgnore]
         [BsonIgnore]
         public string? AvatarUrl => PhotoLink;

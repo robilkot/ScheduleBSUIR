@@ -26,7 +26,7 @@ public partial class SettingsPage : ContentPage
         colorPickerPopup.IsOpen = !colorPickerPopup.IsOpen;
     }
 
-    private void DXColorSelector_SelectedColorChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<Color> e)
+    private async void DXColorSelector_SelectedColorChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<Color> e)
     {
         if (e.NewValue is null)
             return;
@@ -36,6 +36,8 @@ public partial class SettingsPage : ContentPage
 
         if(colorPickerPopup.IsOpen)
         {
+            await Task.Delay(100);
+
             colorPickerPopup.IsOpen = false;
             colorPickerPopup.PlacementTarget.BindingContext = selectedType with { };
         }

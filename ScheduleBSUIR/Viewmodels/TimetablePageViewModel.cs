@@ -32,7 +32,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             SelectedMode = _preferencesService.GetSubgroupTypePreference();
 
-            WeakReferenceMessenger.Default.Register(this);
+            WeakReferenceMessenger.Default.Register<TimetablePinnedMessage>(this);
         }
 
         [ObservableProperty]
@@ -142,7 +142,7 @@ namespace ScheduleBSUIR.Viewmodels
             // Initial case
             _nearestScheduleDate ??= _timetableService.GetNearestScheduleDate(Timetable, SelectedTab, SelectedMode);
 
-            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.UtcNow)
+            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.Now)
                 - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
 
             _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
@@ -327,7 +327,7 @@ namespace ScheduleBSUIR.Viewmodels
             if (Timetable is null)
                 return null;
 
-            var foundSchedule = Schedule?.FirstOrDefault(e => e is Schedule schedule && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date);
+            var foundSchedule = Schedule?.FirstOrDefault(e => e is Schedule schedule && schedule.DateLesson >= _dateTimeProvider.Now.Date);
 
             return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
         }

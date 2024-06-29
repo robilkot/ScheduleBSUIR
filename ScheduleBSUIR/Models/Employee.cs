@@ -31,7 +31,7 @@ namespace ScheduleBSUIR.Models
 
         [JsonIgnore]
         [BsonIgnore]
-        public string AvatarText => $"{FirstName?[0]}{MiddleName?[0]}";
+        public string AvatarText => $"{FirstName?.FirstOrDefault()}{MiddleName?.FirstOrDefault()}";
         [JsonIgnore]
         [BsonIgnore]
         public string? AvatarUrl => PhotoLink;

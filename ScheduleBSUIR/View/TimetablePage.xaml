@@ -12,33 +12,9 @@
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
-             xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
-             mtk:LeakMonitorBehavior.Cascade="True"
-             mtk:TearDownBehavior.Cascade="True"
              Shell.NavBarIsVisible="False"
              x:Name="timetablePage"
              Background="Black">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:TimetableStateToStringConverter
-                x:Key="TimetableStateToStringConverter"/>
-            <converters:SubgroupTypeToStringConverter
-                x:Key="SubgroupTypeToStringConverter"/>
-            <toolkit:BoolToObjectConverter
-                x:Key="EnabledOpacityConverter"
-                TrueObject="1"
-                FalseObject="0.5"/>
-            <toolkit:EnumToIntConverter 
-                x:Key="EnumToIntConverter" />
-            <toolkit:ListToStringConverter
-                Separator=", "
-                x:Key="ListToStringConverter" />
-            <toolkit:VariableMultiValueConverter 
-                x:Key="VariableMultiValueConverter"
-                ConditionType="All"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <Grid>
         <!-- Timetable collectionview -->
@@ -71,7 +47,7 @@
 
             <dx:DXCollectionView.Header>
                 <controls:TimetableHeader
-                    Margin="0,100,0,20"
+                    Margin="0,85,0,20"
                     Tab="{Binding SelectedTab}"
                     Timetable="{Binding Timetable}"
                     TimetableId="{Binding TimetableId}"/>

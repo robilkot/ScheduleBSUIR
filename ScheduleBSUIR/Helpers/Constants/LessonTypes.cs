@@ -10,19 +10,31 @@ namespace ScheduleBSUIR.Helpers.Constants
         public const string AnnouncementAbbreviation = "Объявление";
         public const string UnknownTypeAbbreviation = "Неизвестно";
 
+        public const string LectureAbbreviation = "ЛК";
+        public const string PracticeAbbreviation = "ПЗ";
+        public const string LabAbbreviation = "ЛР";
+        public const string ConsultAbbreviation = "Консультация";
+        public const string ExamAbbreviation = "Экзамен";
+        public const string CreditAbbreviation = "Зачет";
+        public const string DiffCreditAbbreviation = "Дифф. зачет";
+        public const string CandExamAbbreviation = "Канд. экзамен";
+        public const string ULectureAbbreviation = "УЛк";
+        public const string UPracticeAbbreviation = "УПз";
+        public const string ULabAbbreviation = "УЛР";
+
         public static ImmutableList<LessonType> LessonTypes = [
-                new ("ЛК", "Лекция", LectureColor),
-                new ("ПЗ", "Практическое занятие", PracticeColor),
-                new ("ЛР", "Лабораторная работа", LabColor),
-                new ("Консультация", "Консультация", ConsultColor),
-                new ("Экзамен", "Экзамен", ExamColor),
-                new ("Зачет", "Зачет", CreditColor),
+                new (LectureAbbreviation, "Лекция", LectureColor),
+                new (PracticeAbbreviation, "Практическое занятие", PracticeColor),
+                new (LabAbbreviation, "Лабораторная работа", LabColor),
+                new (ConsultAbbreviation, "Консультация", ConsultColor),
+                new (ExamAbbreviation, "Экзамен", ExamColor),
+                new (CreditAbbreviation, "Зачет", CreditColor),
                 new (AnnouncementAbbreviation, AnnouncementAbbreviation, AnnouncementColor),
-                new ("Дифф. зачет", "Дифференцированный зачет", CreditColor),
-                new ("Канд. экзамен", "Кандидатский экзамен", ExamColor),
-                new ("УЛк", "Лекция", LectureColor),
-                new ("УПз", "Практическое занятие", PracticeColor),
-                new ("УЛР", "Лабораторная работа", LabColor),
+                new (DiffCreditAbbreviation, "Дифференцированный зачет", CreditColor),
+                new (CandExamAbbreviation, "Кандидатский экзамен", ExamColor),
+                new (ULectureAbbreviation, "Лекция", LectureColor),
+                new (UPracticeAbbreviation, "Практическое занятие", PracticeColor),
+                new (ULabAbbreviation, "Лабораторная работа", LabColor),
                 new (UnknownTypeAbbreviation, UnknownTypeAbbreviation, UnknownColor),
             ];
 

@@ -41,11 +41,11 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
             template = timetableItem switch
             {
                 Schedule schedule =>
-                    schedule.DateLesson >= _dateTimeProvider.UtcNow.Date
+                    schedule.DateLesson >= _dateTimeProvider.Now.Date
                     ? (schedule.Announcement ? ActiveAnnouncementTemplate : ActiveScheduleTemplate)
                     : (schedule.Announcement ? InactiveAnnouncementTemplate : InactiveScheduleTemplate),
 
-                ScheduleDay scheduleDay => scheduleDay.Day >= _dateTimeProvider.UtcNow.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
+                ScheduleDay scheduleDay => scheduleDay.Day >= _dateTimeProvider.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
                 //ScheduleWeek => ActiveScheduleWeekTemplate, // todo: template for week?
                 _ => throw new UnreachableException(),
             };

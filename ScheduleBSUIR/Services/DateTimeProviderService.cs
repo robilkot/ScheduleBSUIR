@@ -6,6 +6,6 @@ namespace ScheduleBSUIR.Services
     {
         public DateTime Now => DateTime.Now;
 
-        public DateTime UtcNow => DateTime.UtcNow;
+        public DateTime UtcNow => DateTime.Now;
     }
 }

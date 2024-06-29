@@ -50,9 +50,9 @@ namespace ScheduleBSUIR.Services
                 {
                     var localFirstGroupHeader = await _dbService.GetAsync<StudentGroupHeader>(firstGroupHeader.PrimaryKey);
                 
-                    if(localFirstGroupHeader is null || localFirstGroupHeader.UpdatedAt <= _dateTimeProvider.UtcNow - TimeSpan.FromDays(1))
+                    if(localFirstGroupHeader is null || localFirstGroupHeader.UpdatedAt <= _dateTimeProvider.Now - TimeSpan.FromDays(1))
                     {
-                        firstGroupHeader.UpdatedAt = _dateTimeProvider.UtcNow;
+                        firstGroupHeader.UpdatedAt = _dateTimeProvider.Now;
                         
                         await _dbService.AddOrUpdateAsync(headers);
                     }

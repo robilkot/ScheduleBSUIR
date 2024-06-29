@@ -1,4 +1,6 @@
-﻿using ScheduleBSUIR.Helpers.Constants;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Models.Messaging;
 
 namespace ScheduleBSUIR.Services
 {
@@ -101,6 +103,8 @@ namespace ScheduleBSUIR.Services
             App.Current!.Resources[colorPreferenceKey] = value;
 
             Preferences.Set(colorPreferenceKey, value.ToHex());
+
+            WeakReferenceMessenger.Default.Send(new ColorPreferenceUpdatedMessage((colorPreferenceKey, value)));
         }
 
         public Color GetColorPreference(string colorPreferenceKey)

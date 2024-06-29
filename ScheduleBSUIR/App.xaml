@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:ScheduleBSUIR"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:convertersCommon="clr-namespace:ScheduleBSUIR.Helpers.Converters.Common"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleBSUIR.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -13,6 +14,30 @@
                 x:Key="IsNullOrEmptyConverter"/>
             <convertersCommon:IsEmptyConverter
                 x:Key="IsEmptyConverter"/>
+            <convertersCommon:DimensionToCornerRadiusConverter
+                x:Key="DimensionToCornerRadiusConverter"/>
+            <converters:ScheduleToColorConverter
+                x:Key="ScheduleToColorConverter"/>
+            <converters:ScheduleToPassedPercentageConverter
+                x:Key="ScheduleToPassedPercentageConverter"/>
+            <converters:TimetableStateToStringConverter
+                x:Key="TimetableStateToStringConverter"/>
+            <converters:SubgroupTypeToStringConverter
+                x:Key="SubgroupTypeToStringConverter"/>
+            <toolkit:BoolToObjectConverter
+                x:Key="EnabledOpacityConverter"
+                TrueObject="1"
+                FalseObject="0.5"/>
+            <toolkit:EnumToIntConverter 
+                x:Key="EnumToIntConverter" />
+            <toolkit:MathExpressionConverter 
+                x:Key="MathExpressionConverter" />
+            <toolkit:ListToStringConverter
+                Separator=", "
+                x:Key="ListToStringConverter" />
+            <toolkit:VariableMultiValueConverter 
+                x:Key="VariableMultiValueConverter"
+                ConditionType="All"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />

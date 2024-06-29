@@ -58,11 +58,11 @@ namespace ScheduleBSUIR.Services
                     }
 
                     // Update property for ICacheable interface
-                    timetable.UpdatedAt = _dateTimeProvider.UtcNow;
+                    timetable.UpdatedAt = _dateTimeProvider.Now;
                 }
 
                 // Update property for IUpdateAware interface
-                timetable.AccessedAt = _dateTimeProvider.UtcNow;
+                timetable.AccessedAt = _dateTimeProvider.Now;
 
                 // Schedules come unsorted :(
                 timetable.Exams = timetable.Exams?
@@ -317,13 +317,13 @@ namespace ScheduleBSUIR.Services
                 var firstSchedule = subgroupType switch
                 {
                     SubgroupType.All => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.Now.Date),
 
                     SubgroupType.FirstSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
 
                     SubgroupType.SecondSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.UtcNow.Date),
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
 
                     _ => throw new UnreachableException(),
                 };

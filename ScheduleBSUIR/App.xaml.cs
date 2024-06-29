@@ -1,4 +1,6 @@
-﻿namespace ScheduleBSUIR
+﻿using ScheduleBSUIR.View;
+
+namespace ScheduleBSUIR
 {
     public partial class App : Application
     {

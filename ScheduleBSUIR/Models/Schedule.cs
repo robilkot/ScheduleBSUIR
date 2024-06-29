@@ -16,8 +16,8 @@ namespace ScheduleBSUIR.Models
         public string? Note { get; set; }
         public string? LessonTypeAbbrev { get; set; }
         public DateTime? DateLesson { get; set; }
-        public required DateTime StartLessonDate { get; set; }
-        public required DateTime EndLessonDate { get; set; }
+        public DateTime? StartLessonDate { get; set; }
+        public DateTime? EndLessonDate { get; set; }
         public bool Announcement { get; set; }
         public bool Split { get; set; }
         public List<EmployeeDto>? Employees { get; set; }

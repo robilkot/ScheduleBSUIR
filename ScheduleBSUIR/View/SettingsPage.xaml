@@ -9,17 +9,18 @@
              xmlns:dx="http://schemas.devexpress.com/maui"
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
              mtk:LeakMonitorBehavior.Cascade="True"
+             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              mtk:TearDownBehavior.Cascade="True"
              Title="SettingsPage"
              Shell.NavBarIsVisible="False">
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="15,0"
+            Padding="15"
             Spacing="20">
+
             <Grid
-                ColumnSpacing="10"
-                Padding="0,100,0,20">
+                Padding="0,85,0,20">
                 <Label
                     Style="{StaticResource LabelHeaderStyle}"
                     Text="Настройки"/>
@@ -89,8 +90,8 @@
                     </dx:DXCollectionView.ItemTemplate>
                 </dx:DXCollectionView>
             </Border>
-                
-            <!-- Subgroup type popup-->
+
+            <!-- Color selection popup-->
             <dx:DXPopup
                 Opened="ColorPickerPopup_ChangingState"
                 Closed="ColorPickerPopup_ChangingState"
@@ -109,6 +110,31 @@
                         ItemsSource="{x:Static constants:LessonsColorsHelper.AvailableColors}"/>
                 </Border>
             </dx:DXPopup>
+
+            <!-- Examples -->
+            <Label
+                Text="Как выглядит расписание"
+                Margin="25,0,0,-10"
+                Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+            <dx:DXStackLayout
+                ItemSpacing="5"
+                ItemsSource="{Binding ExampleItems}"
+                ItemTemplateSelector="{StaticResource LessonTemplateSelector}">
+
+                <dx:DXStackLayout.Resources>
+                    <ResourceDictionary>
+                        <templateSelectors:TimetableItemTemplateSelector
+                            ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+                            InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+                            ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+                            InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+                            ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
+                            InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
+                            x:Key="LessonTemplateSelector"/>
+                    </ResourceDictionary>
+                </dx:DXStackLayout.Resources>
+            </dx:DXStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -40,7 +40,7 @@ namespace ScheduleBSUIR.Services
                 return;
             }
 
-            DateTime dateToClear = _dateTimeProvider.UtcNow - TimeSpan.FromDays(clearInterval);
+            DateTime dateToClear = _dateTimeProvider.Now - TimeSpan.FromDays(clearInterval);
 
             // Last clear was too recently
             
@@ -72,7 +72,7 @@ namespace ScheduleBSUIR.Services
                 collection.DeleteMany(deletePredicate);
             }
 
-            _preferencesService.SetClearCacheLastDate(_dateTimeProvider.UtcNow);
+            _preferencesService.SetClearCacheLastDate(_dateTimeProvider.Now);
 
             _loggingService.LogInfo($"ClearCacheIfNeeded worked in {stopwatch.Elapsed:ss\\.FFFFF}");
         }
