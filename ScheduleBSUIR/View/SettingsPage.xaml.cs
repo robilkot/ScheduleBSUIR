@@ -1,12 +1,16 @@
 using ScheduleBSUIR.Helpers.Constants;
+using ScheduleBSUIR.Services;
 using ScheduleBSUIR.Viewmodels;
 
 namespace ScheduleBSUIR.View;
 
 public partial class SettingsPage : ContentPage
 {
-    public SettingsPage(SettingsPageViewModel viewmodel)
+    private readonly PreferencesService _preferencesService;
+    public SettingsPage(SettingsPageViewModel viewmodel, PreferencesService preferencesService)
     {
+        _preferencesService = preferencesService;
+        
         InitializeComponent();
 
         BindingContext = viewmodel;
@@ -17,7 +21,7 @@ public partial class SettingsPage : ContentPage
         colorPickerPopup.PlacementTarget = (Microsoft.Maui.Controls.View)sender;
 
         LessonType selectedType = (LessonType)((Microsoft.Maui.Controls.View)sender).BindingContext;
-        colorSelector.SelectedColor = (Color)App.Current!.Resources[selectedType.ColorResourceKey];
+        colorSelector.SelectedColor = _preferencesService.GetColorPreference(selectedType.ColorPreferenceKey);
 
         colorPickerPopup.IsOpen = !colorPickerPopup.IsOpen;
     }
@@ -28,10 +32,7 @@ public partial class SettingsPage : ContentPage
             return;
 
         LessonType selectedType = (LessonType)colorPickerPopup.PlacementTarget.BindingContext;
-
-        App.Current!.Resources[selectedType.ColorResourceKey] = e.NewValue;
-
-        Preferences.Set(selectedType.ColorResourceKey, e.NewValue.ToHex());
+        _preferencesService.SetColorPreference(selectedType.ColorPreferenceKey, e.NewValue);
 
         if(colorPickerPopup.IsOpen)
         {
@@ -40,4 +41,17 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    private void RotateColorPlankArrow()
+    {
+        colorPickerPopup.PlacementTarget
+            .GetVisualTreeDescendants()
+            .OfType<Image>()
+            .FirstOrDefault()
+            ?.RotateTo(colorPickerPopup.IsOpen ? -90 : 90, easing: Easing.CubicInOut);
+    }
+
+    private void ColorPickerPopup_ChangingState(object sender, EventArgs e)
+    {
+        RotateColorPlankArrow();
+    }
 }

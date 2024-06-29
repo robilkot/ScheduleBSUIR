@@ -42,8 +42,8 @@
                     ItemsSource="{x:Static constants:LessonTypesHelper.BasicTypes}">
                     <dx:DXCollectionView.Resources>
                         <ResourceDictionary>
-                            <Converters:KeyToResourceConverter
-                                x:Key="KeyToResourceConverter"/>
+                            <Converters:KeyToColorPreferenceConverter
+                                x:Key="KeyToColorPreferenceConverter"/>
                         </ResourceDictionary>
                     </dx:DXCollectionView.Resources>
                     <dx:DXCollectionView.ItemTemplate>
@@ -54,7 +54,7 @@
                                 x:Name="lessonTypePlank"
                                 HeightRequest="50"
                                 ColumnSpacing="5"
-                                ColumnDefinitions="auto,*,auto,auto,auto">
+                                ColumnDefinitions="auto,*,auto,auto">
 
                                 <Label
                                     Grid.Column="0"
@@ -65,32 +65,24 @@
                                     LineBreakMode="WordWrap"
                                     Style="{StaticResource LabelBodyPrimaryStyle}"/>
 
-                                <Image
-                                    Grid.Column="2"
-                                    HeightRequest="16"
-                                    Opacity="0.5"
-                                    Rotation="180"
-                                    Source="dark_arrow_right">
-                                </Image>
-
                                 <Border
-                                    Grid.Column="3"
+                                    Grid.Column="2"
                                     WidthRequest="20"
                                     HeightRequest="20"
                                     StrokeShape="RoundRectangle 8"
-                                    Background="{Binding ColorResourceKey, Converter={StaticResource KeyToResourceConverter}}"/>
+                                    Background="{Binding ColorPreferenceKey, Converter={StaticResource KeyToColorPreferenceConverter}}"/>
 
                                 <Image
-                                    Grid.Column="4"
+                                    Grid.Column="3"
                                     HeightRequest="16"
                                     Opacity="0.5"
+                                    Rotation="90"
                                     Source="dark_arrow_right">
                                 </Image>
 
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Tapped="ColorPlank_Tapped"/>
-                                    <!--Tapped="{Binding Source={x:RelativeSource AncestorType={x:Type vm:SettingsPageViewModel}}, Path=}"/>-->
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </DataTemplate>
@@ -100,6 +92,8 @@
                 
             <!-- Subgroup type popup-->
             <dx:DXPopup
+                Opened="ColorPickerPopup_ChangingState"
+                Closed="ColorPickerPopup_ChangingState"
                 Background="{StaticResource DarkLightControlBackground}"
                 AllowShadow="True"
                 ShadowColor="#CC000000"

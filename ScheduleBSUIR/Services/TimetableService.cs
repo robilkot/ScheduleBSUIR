@@ -8,12 +8,13 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
-    public class TimetableService(WebService webService, DbService dbService, IDateTimeProvider dateTimeProvider, ILoggingService loggingService)
+    public class TimetableService(WebService webService, DbService dbService, IDateTimeProvider dateTimeProvider, ILoggingService loggingService, PreferencesService preferencesService)
     {
         private readonly WebService _webService = webService;
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+        private readonly PreferencesService _preferencesService = preferencesService;
 
         private const string StudentGroupIdType = nameof(StudentGroupIdType);
         private const string EmployeeIdType = nameof(EmployeeIdType);
@@ -121,7 +122,7 @@ namespace ScheduleBSUIR.Services
         #region Pinned timetables
         public async Task<TypedId?> GetPinnedIdAsync()
         {
-            string preference = Preferences.Get(PreferencesKeys.FavoriteTimetableId, string.Empty);
+            string preference = _preferencesService.GetPinnedIdPreference();
 
             if (string.IsNullOrEmpty(preference))
                 return null;
@@ -149,7 +150,7 @@ namespace ScheduleBSUIR.Services
                 _ => throw new UnreachableException(),
             };
 
-            Preferences.Set(PreferencesKeys.FavoriteTimetableId, preference);
+            _preferencesService.SetPinnedIdPreference(preference);
 
             _loggingService.LogInfo($"SetPinnedTimetableId {id} ", displayCaller: false);
 

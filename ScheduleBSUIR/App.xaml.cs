@@ -16,24 +16,10 @@ namespace ScheduleBSUIR
 
             window.Created += (s, e) =>
             {
-                InitPreferences();
+                //InitPreferences();
             };
 
             return window;
-        }
-
-        // todo: move to serivce?
-        private void InitPreferences()
-        {
-            foreach (var (Key, DefaultColor) in PreferencesKeys.ColorPreferencesKeys.Zip(LessonsColorsHelper.AvailableColors))
-            {
-                string? hexColor = Preferences.Get(Key, null);
-
-                Color newColor = hexColor is null ? DefaultColor : Color.FromRgba(hexColor);
-
-                App.Current!.Resources[Key] = newColor;
-            }
-
         }
     }
 }

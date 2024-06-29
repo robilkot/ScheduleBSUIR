@@ -15,11 +15,13 @@ namespace ScheduleBSUIR.Services
         private readonly LiteDatabase _database;
         private readonly ILoggingService _loggingService;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly PreferencesService _preferencesService;
 
-        public DbService(ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
+        public DbService(ILoggingService loggingService, IDateTimeProvider dateTimeProvider, PreferencesService preferencesService)
         {
             _loggingService = loggingService;
             _dateTimeProvider = dateTimeProvider;
+            _preferencesService = preferencesService;
 
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
 
@@ -30,7 +32,7 @@ namespace ScheduleBSUIR.Services
 
         private async Task ClearCacheIfNeeded()
         {
-            double clearInterval = Preferences.Get(PreferencesKeys.CacheClearInterval, 7d);
+            double clearInterval = _preferencesService.GetClearCacheInterval();
             
             // Clearing is disabled
             if (clearInterval == 0)
@@ -41,13 +43,13 @@ namespace ScheduleBSUIR.Services
             DateTime dateToClear = _dateTimeProvider.UtcNow - TimeSpan.FromDays(clearInterval);
 
             // Last clear was too recently
-            if (DateTime.TryParse(Preferences.Get(PreferencesKeys.CacheClearLastDate, string.Empty), out DateTime lastClearDate))
+            
+            var lastClearDate = _preferencesService.GetClearCacheLastDate();
+
+            if(lastClearDate is not null && lastClearDate > dateToClear)
             {
-                if(lastClearDate > dateToClear)
-                {
-                    _loggingService.LogInfo($"ClearCacheIfNeeded no clearing needed");
-                    return;
-                }
+                _loggingService.LogInfo($"ClearCacheIfNeeded no clearing needed");
+                return;
             }
 
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -70,7 +72,7 @@ namespace ScheduleBSUIR.Services
                 collection.DeleteMany(deletePredicate);
             }
 
-            Preferences.Set(PreferencesKeys.CacheClearLastDate, _dateTimeProvider.UtcNow.ToString());
+            _preferencesService.SetClearCacheLastDate(_dateTimeProvider.UtcNow);
 
             _loggingService.LogInfo($"ClearCacheIfNeeded worked in {stopwatch.Elapsed:ss\\.FFFFF}");
         }

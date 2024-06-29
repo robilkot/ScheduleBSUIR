@@ -16,6 +16,7 @@ namespace ScheduleBSUIR.Viewmodels
     public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetablePinnedMessage>
     {
         private readonly TimetableService _timetableService;
+        private readonly PreferencesService _preferencesService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         private readonly TimeSpan _loadingStep = TimeSpan.FromDays(10);
@@ -23,10 +24,13 @@ namespace ScheduleBSUIR.Viewmodels
         private DateTime? _nearestScheduleDate = null;
         private DateTime? _lastScheduleDate = null;
 
-        public TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider) : base(loggingService)
+        public TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider, PreferencesService preferencesService) : base(loggingService)
         {
             _timetableService = timetableService;
             _dateTimeProvider = dateTimeProvider;
+            _preferencesService = preferencesService;
+
+            SelectedMode = _preferencesService.GetSubgroupTypePreference();
 
             WeakReferenceMessenger.Default.Register(this);
         }
@@ -53,10 +57,10 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [ObservableProperty]
-        private SubgroupType _selectedMode = (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, (int)SubgroupType.All);
+        private SubgroupType _selectedMode;
         partial void OnSelectedModeChanged(SubgroupType oldValue, SubgroupType newValue)
         {
-            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)newValue);
+            _preferencesService.SetSubgroupTypePreference(newValue);
 
             //// We may reduce existing collection if moving to subgroup mode from group mode
             //if (oldValue == SubgroupType.All && newValue != SubgroupType.All)

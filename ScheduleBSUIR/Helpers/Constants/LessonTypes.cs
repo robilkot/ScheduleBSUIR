@@ -3,7 +3,7 @@ using static ScheduleBSUIR.Helpers.Constants.PreferencesKeys;
 
 namespace ScheduleBSUIR.Helpers.Constants
 {
-    public record LessonType(string Abbreviation, string Fullname, string ColorResourceKey);
+    public record LessonType(string Abbreviation, string Fullname, string ColorPreferenceKey);
 
     public static class LessonTypesHelper
     {

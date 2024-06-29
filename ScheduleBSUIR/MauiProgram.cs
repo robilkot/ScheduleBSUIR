@@ -52,6 +52,7 @@ namespace ScheduleBSUIR
             builder.Services.AddTransient<SettingsPageViewModel>();
             builder.Services.AddTransient<DebugPageViewModel>();
 
+            builder.Services.AddSingleton<PreferencesService>();
             builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<EmployeesService>();
             builder.Services.AddSingleton<TimetableService>();
