@@ -1,4 +1,4 @@
-﻿using ScheduleBSUIR.View;
+﻿using ScheduleBSUIR.Helpers.Constants;
 
 namespace ScheduleBSUIR
 {

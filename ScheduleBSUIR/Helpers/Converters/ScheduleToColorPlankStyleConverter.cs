@@ -1,13 +1,11 @@
 ﻿using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models;
-using ScheduleBSUIR.Services;
 using System.Globalization;
 
 namespace ScheduleBSUIR.Helpers.Converters
 {
-    class ScheduleToColorConverter : IValueConverter
+    class ScheduleToColorPlankStyleConverter : IValueConverter
     {
-        private readonly Lazy<PreferencesService> _lazyPreferencesService = new(() => App.Current.Handler?.MauiContext.Services.GetRequiredService<PreferencesService>());
         private readonly Dictionary<object, string?> _cachedResults = [];
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
@@ -19,14 +17,16 @@ namespace ScheduleBSUIR.Helpers.Converters
                 if (value is not Schedule schedule)
                     return null;
 
-                var lessonType = LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev ?? LessonTypesHelper.AnnouncementAbbreviation);
+                var lessonType = schedule.LessonTypeAbbrev is null
+                    ? LessonTypesHelper.Announcement
+                    : LessonTypesHelper.GetByAbbreviation(schedule.LessonTypeAbbrev);
 
-                key = lessonType.ColorPreferenceKey;
+                key = $"{lessonType.ColorPreferenceKey}Style";
 
                 _cachedResults.Add(value, key);
             }
 
-            return _lazyPreferencesService.Value.GetColorPreference(key!);
+            return App.Current.Resources[key];
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

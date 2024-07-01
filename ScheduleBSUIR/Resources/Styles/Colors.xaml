@@ -14,7 +14,7 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
-
+    
     <Color x:Key="SecondaryGray">#BBBBBB</Color>
     <Color x:Key="InactiveGray">#6E6E6E</Color>
     <Color x:Key="DarkControlBackground">#121212</Color>

@@ -26,6 +26,31 @@
                     Text="Настройки"/>
             </Grid>
 
+            <!-- Examples -->
+            <!--<Label
+                Text="Как выглядит расписание"
+                Margin="25,0,0,-10"
+                Style="{StaticResource LabelBodySecondaryStyle}"/>-->
+
+            <dx:DXStackLayout
+                ItemSpacing="5"
+                ItemsSource="{Binding ExampleItems}"
+                ItemTemplateSelector="{StaticResource LessonTemplateSelector}">
+
+                <dx:DXStackLayout.Resources>
+                    <ResourceDictionary>
+                        <templateSelectors:TimetableItemTemplateSelector
+                            ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+                            InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+                            ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+                            InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+                            ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
+                            InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
+                            x:Key="LessonTemplateSelector"/>
+                    </ResourceDictionary>
+                </dx:DXStackLayout.Resources>
+            </dx:DXStackLayout>
+
             <!-- Color -->
             <Label
                 Text="Цвета"
@@ -110,31 +135,7 @@
                         ItemsSource="{x:Static constants:LessonsColorsHelper.AvailableColors}"/>
                 </Border>
             </dx:DXPopup>
-
-            <!-- Examples -->
-            <Label
-                Text="Как выглядит расписание"
-                Margin="25,0,0,-10"
-                Style="{StaticResource LabelBodySecondaryStyle}"/>
-
-            <dx:DXStackLayout
-                ItemSpacing="5"
-                ItemsSource="{Binding ExampleItems}"
-                ItemTemplateSelector="{StaticResource LessonTemplateSelector}">
-
-                <dx:DXStackLayout.Resources>
-                    <ResourceDictionary>
-                        <templateSelectors:TimetableItemTemplateSelector
-                            ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
-                            InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
-                            ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
-                            InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
-                            ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
-                            InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
-                            x:Key="LessonTemplateSelector"/>
-                    </ResourceDictionary>
-                </dx:DXStackLayout.Resources>
-            </dx:DXStackLayout>
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

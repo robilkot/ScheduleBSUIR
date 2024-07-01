@@ -11,6 +11,58 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="ScheduleBSUIR.View.Templates.LessonTemplates">
 
+    <!-- Styles with dynamic resources -->
+    <Style
+        TargetType="Border"
+        x:Key="LectureColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource LectureColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="PracticeColorStyle">
+            <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource PracticeColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="LabColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource LabColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="ConsultColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource ConsultColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="ExamColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource ExamColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="CreditColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource CreditColor}"/>
+    </Style>
+    <Style
+        TargetType="Border"
+        x:Key="AnnouncementColorStyle">
+        <Setter
+            Property="BackgroundColor"
+            Value="{DynamicResource AnnouncementColor}"/>
+    </Style>
+
+    <!-- Converters -->
     <toolkit:EnumToIntConverter
         x:Key="EnumToIntConverter"/>
     <toolkit:ListToStringConverter
@@ -19,6 +71,7 @@
     <toolkit:IsNotEqualConverter
         x:Key="IsNotEqualConverter" />
 
+    <!-- Avatar template -->
     <DataTemplate
         x:Key="avatarTemplate"
         x:DataType="interfaces:IAvatarDisplaying">
@@ -117,7 +170,7 @@
                     HeightRequest="60"
                     StrokeShape="RoundRectangle 4"
                     StrokeThickness="0"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    Style="{Binding ., Converter={StaticResource ScheduleToColorPlankStyleConverter}}">
                     <Grid
                         Background="Black"
                         Opacity="0.5"
@@ -230,7 +283,7 @@
                     Grid.Column="1"
                     HeightRequest="30"
                     StrokeShape="RoundRectangle 2.5"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    Style="{Binding ., Converter={StaticResource ScheduleToColorPlankStyleConverter}}">
                 </Border>
 
                 <Grid
@@ -303,7 +356,7 @@
                     HeightRequest="60"
                     StrokeShape="RoundRectangle 4"
                     StrokeThickness="0"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    Style="{Binding ., Converter={StaticResource ScheduleToColorPlankStyleConverter}}">
                     <Grid
                         Background="Black"
                         Opacity="0.5"
@@ -442,7 +495,7 @@
                     Grid.Column="1"
                     HeightRequest="30"
                     StrokeShape="RoundRectangle 2.5"
-                    BackgroundColor="{Binding ., Converter={StaticResource ScheduleToColorConverter}, Mode=OneTime}">
+                    Style="{Binding ., Converter={StaticResource ScheduleToColorPlankStyleConverter}}">
                 </Border>
 
                 <Grid

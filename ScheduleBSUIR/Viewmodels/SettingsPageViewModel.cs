@@ -26,7 +26,7 @@ namespace ScheduleBSUIR.Viewmodels
                 new ScheduleDay(_dateTimeProvider.Now.AddDays(-1)),
                 new Schedule()
                 {
-                    LessonTypeAbbrev = LessonTypesHelper.PracticeAbbreviation,
+                    LessonTypeAbbrev = LessonTypesHelper.Practice.Abbreviation,
                     Subject = "Прошедшая пара",
                     Auditories = ["Аудитория 0"],
                     StudentGroups = [],
@@ -39,8 +39,8 @@ namespace ScheduleBSUIR.Viewmodels
                 new ScheduleDay(_dateTimeProvider.Now.Date),
                 new Schedule()
                 {
-                    LessonTypeAbbrev = LessonTypesHelper.LectureAbbreviation,
-                    Subject = LessonTypesHelper.GetByAbbreviation(LessonTypesHelper.LectureAbbreviation).Fullname,
+                    LessonTypeAbbrev = LessonTypesHelper.Lecture.Abbreviation,
+                    Subject = "Пример лекции",
                     Auditories = ["Аудитория 1", "Аудитория 2"],
                     Note = "Примечание",
                     StudentGroups = [],

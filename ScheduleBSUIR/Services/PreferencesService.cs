@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models.Messaging;
+using static ScheduleBSUIR.Helpers.Constants.LessonsColorsHelper;
+using static ScheduleBSUIR.Helpers.Constants.PreferencesKeys;
 
 namespace ScheduleBSUIR.Services
 {
@@ -29,23 +31,24 @@ namespace ScheduleBSUIR.Services
 
         public void SetClearCacheInterval(double value)
         {
-            Preferences.Set(PreferencesKeys.CacheClearInterval, value);
+            Preferences.Set(CacheClearInterval, value);
         }
         public double GetClearCacheInterval()
         {
-            return Preferences.Get(PreferencesKeys.CacheClearInterval, 7d);
+            return Preferences.Get(CacheClearInterval, 7d);
         }
 
         public void SetClearCacheLastDate(DateTime value)
         {
-            Preferences.Set(PreferencesKeys.CacheClearLastDate, value.ToString());
+            Preferences.Set(CacheClearLastDate, value.ToString());
         }
         public DateTime? GetClearCacheLastDate()
         {
-            if(DateTime.TryParse(Preferences.Get(PreferencesKeys.CacheClearLastDate, string.Empty), out DateTime lastClearDate))
+            if (DateTime.TryParse(Preferences.Get(CacheClearLastDate, string.Empty), out DateTime lastClearDate))
             {
                 return lastClearDate;
-            } else
+            }
+            else
             {
                 return null;
             }
@@ -56,20 +59,20 @@ namespace ScheduleBSUIR.Services
         #region Timetable preferences
         public void SetSubgroupTypePreference(SubgroupType value)
         {
-            Preferences.Set(PreferencesKeys.SelectedSubgroupType, (int)value);
+            Preferences.Set(SelectedSubgroupType, (int)value);
         }
         public SubgroupType GetSubgroupTypePreference()
         {
-            return (SubgroupType)Preferences.Get(PreferencesKeys.SelectedSubgroupType, 0);
+            return (SubgroupType)Preferences.Get(SelectedSubgroupType, 0);
         }
 
         public void SetPinnedIdPreference(string value)
         {
-            Preferences.Set(PreferencesKeys.SelectedSubgroupType, value);
+            Preferences.Set(FavoriteTimetableId, value);
         }
         public string GetPinnedIdPreference()
         {
-            return Preferences.Get(PreferencesKeys.FavoriteTimetableId, string.Empty);
+            return Preferences.Get(FavoriteTimetableId, string.Empty);
         }
 
         #endregion
@@ -77,27 +80,46 @@ namespace ScheduleBSUIR.Services
         #region Color preferences
         public void InitColorPreferences()
         {
-            foreach (var (Key, DefaultColor) in PreferencesKeys.ColorPreferencesKeys.Zip(LessonsColorsHelper.AvailableColors))
+            ColorPreferencesKeys.ForEach(key =>
             {
-                string? hexColor = Preferences.Get(Key, null);
+                string? hexColor = Preferences.Get(key, null);
 
-                Color newColor = hexColor is null ? DefaultColor : Color.FromRgba(hexColor);
-
-                App.Current!.Resources[Key] = newColor;
-            }
+                if (hexColor is null)
+                {
+                    SetDefaultColorPreference(key);
+                }
+                else
+                {
+                    App.Current!.Resources[key] = Color.FromRgba(hexColor);
+                }
+            });
         }
 
         public void ResetColorPreferences()
         {
-            foreach (var (Key, DefaultColor) in PreferencesKeys.ColorPreferencesKeys.Zip(LessonsColorsHelper.AvailableColors))
+            ColorPreferencesKeys.ForEach(SetDefaultColorPreference);
+        }
+
+        // A place to set default colors
+        private void SetDefaultColorPreference(string key)
+        {
+            App.Current!.Resources[key] = key switch
             {
-                App.Current!.Resources[Key] = DefaultColor;
-            }
+                LectureColor => Green,
+                PracticeColor => Red,
+                LabColor => Yellow,
+                ExamColor => Blue,
+                ConsultColor => Brown,
+                CreditColor => Lightblue,
+                AnnouncementColor => Orange,
+                UnknownColor => Gray,
+                _ => Gray,
+            };
         }
 
         public void SetColorPreference(string colorPreferenceKey, Color value)
         {
-            if (!PreferencesKeys.ColorPreferencesKeys.Contains(colorPreferenceKey))
+            if (!ColorPreferencesKeys.Contains(colorPreferenceKey))
                 throw new ArgumentException("Wrong color preference key");
 
             App.Current!.Resources[colorPreferenceKey] = value;
@@ -109,7 +131,7 @@ namespace ScheduleBSUIR.Services
 
         public Color GetColorPreference(string colorPreferenceKey)
         {
-            if (!PreferencesKeys.ColorPreferencesKeys.Contains(colorPreferenceKey))
+            if (!ColorPreferencesKeys.Contains(colorPreferenceKey))
                 throw new ArgumentException("Wrong color preference key");
 
             return (Color)App.Current!.Resources[colorPreferenceKey];

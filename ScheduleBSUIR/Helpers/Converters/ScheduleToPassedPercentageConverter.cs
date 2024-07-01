@@ -25,7 +25,7 @@ namespace ScheduleBSUIR.Helpers.Converters
 
                 // todo: review after non-exams schedule is implemented
                 var nowUtc = _lazyDateTimeProvider.Value.Now.ToUniversalTime();
-                var scheduleDateUtc = schedule.DateLesson.Value.ToUniversalTime().Date;
+                var scheduleDateUtc = schedule.DateLesson.Value.Date;
 
                 if (nowUtc.Date > scheduleDateUtc)
                 {
@@ -42,8 +42,7 @@ namespace ScheduleBSUIR.Helpers.Converters
                     var startLessonTimeUtc = schedule.StartLessonTime.ToUniversalTime();
 
                     DateTime lessonDateTimeUtc = scheduleDateUtc
-                        .AddHours(startLessonTimeUtc.Hour).AddMinutes(startLessonTimeUtc.Minute)
-                        .ToUniversalTime();
+                        .AddHours(startLessonTimeUtc.Hour).AddMinutes(startLessonTimeUtc.Minute);
 
                     TimeSpan passedTime = nowUtc - lessonDateTimeUtc;
 

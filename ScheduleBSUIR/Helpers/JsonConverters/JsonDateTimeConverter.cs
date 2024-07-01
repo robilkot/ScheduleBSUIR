@@ -28,6 +28,8 @@ namespace ScheduleBSUIR.Helpers.JsonConverters
                 }
             }
 
+            DateTime.SpecifyKind(result, DateTimeKind.Utc);
+
             return result;
         }
 

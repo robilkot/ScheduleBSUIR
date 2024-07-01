@@ -16,8 +16,8 @@
                 x:Key="IsEmptyConverter"/>
             <convertersCommon:DimensionToCornerRadiusConverter
                 x:Key="DimensionToCornerRadiusConverter"/>
-            <converters:ScheduleToColorConverter
-                x:Key="ScheduleToColorConverter"/>
+            <converters:ScheduleToColorPlankStyleConverter
+                x:Key="ScheduleToColorPlankStyleConverter"/>
             <converters:ScheduleToPassedPercentageConverter
                 x:Key="ScheduleToPassedPercentageConverter"/>
             <converters:TimetableStateToStringConverter

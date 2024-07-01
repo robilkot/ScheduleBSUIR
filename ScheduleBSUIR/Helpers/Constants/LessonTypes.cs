@@ -8,40 +8,49 @@ namespace ScheduleBSUIR.Helpers.Constants
     public static class LessonTypesHelper
     {
         public const string AnnouncementAbbreviation = "Объявление";
-        public const string UnknownTypeAbbreviation = "Неизвестно";
 
-        public const string LectureAbbreviation = "ЛК";
-        public const string PracticeAbbreviation = "ПЗ";
-        public const string LabAbbreviation = "ЛР";
-        public const string ConsultAbbreviation = "Консультация";
-        public const string ExamAbbreviation = "Экзамен";
-        public const string CreditAbbreviation = "Зачет";
-        public const string DiffCreditAbbreviation = "Дифф. зачет";
-        public const string CandExamAbbreviation = "Канд. экзамен";
-        public const string ULectureAbbreviation = "УЛк";
-        public const string UPracticeAbbreviation = "УПз";
-        public const string ULabAbbreviation = "УЛР";
+        public static readonly LessonType Lecture = new("ЛК", "Лекция", LectureColor);
+        public static readonly LessonType Practice = new("ПЗ", "Практическое занятие", PracticeColor);
+        public static readonly LessonType Lab = new("ЛР", "Лабораторная работа", LabColor);
+        public static readonly LessonType Consult = new("Консультация", "Консультация", ConsultColor);
+        public static readonly LessonType Exam = new("Экзамен", "Экзамен", ExamColor);
+        public static readonly LessonType Credit = new("Зачет", "Зачет", CreditColor);
+        public static readonly LessonType Announcement = new(AnnouncementAbbreviation, AnnouncementAbbreviation, AnnouncementColor);
+        public static readonly LessonType DiffCredit = new("Дифф. зачет", "Дифференцированный зачет", CreditColor);
+        public static readonly LessonType CandExam = new("Канд. экзамен", "Кандидатский экзамен", ExamColor);
+        public static readonly LessonType ULecture = new("УЛк", "Лекция", LectureColor);
+        public static readonly LessonType UPractice = new("УПз", "Практическое занятие", PracticeColor);
+        public static readonly LessonType ULab = new("УЛР", "Лабораторная работа", LabColor);
 
         public static ImmutableList<LessonType> LessonTypes = [
-                new (LectureAbbreviation, "Лекция", LectureColor),
-                new (PracticeAbbreviation, "Практическое занятие", PracticeColor),
-                new (LabAbbreviation, "Лабораторная работа", LabColor),
-                new (ConsultAbbreviation, "Консультация", ConsultColor),
-                new (ExamAbbreviation, "Экзамен", ExamColor),
-                new (CreditAbbreviation, "Зачет", CreditColor),
-                new (AnnouncementAbbreviation, AnnouncementAbbreviation, AnnouncementColor),
-                new (DiffCreditAbbreviation, "Дифференцированный зачет", CreditColor),
-                new (CandExamAbbreviation, "Кандидатский экзамен", ExamColor),
-                new (ULectureAbbreviation, "Лекция", LectureColor),
-                new (UPracticeAbbreviation, "Практическое занятие", PracticeColor),
-                new (ULabAbbreviation, "Лабораторная работа", LabColor),
-                new (UnknownTypeAbbreviation, UnknownTypeAbbreviation, UnknownColor),
+                Lecture,
+                Practice,
+                Lab,
+                Consult,
+                Exam,
+                Credit,
+                Announcement,
+                DiffCredit,
+                CandExam,
+                ULecture,
+                UPractice,
+                ULab,
             ];
 
-        public static ImmutableList<LessonType> BasicTypes => LessonTypes.Take(7).ToImmutableList();
+        public static ImmutableList<LessonType> BasicTypes = [
+                Lecture,
+                Practice,
+                Lab,
+                Consult,
+                Exam,
+                Credit,
+                Announcement,
+            ];
+
+        // Return announcement type if nothing else found
         public static LessonType GetByAbbreviation(string abbreviation) =>
             LessonTypes
                 .FirstOrDefault(t => t.Abbreviation == abbreviation) ??
-                GetByAbbreviation(UnknownTypeAbbreviation);
+                GetByAbbreviation(AnnouncementAbbreviation);
     }
 }
