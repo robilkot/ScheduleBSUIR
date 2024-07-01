@@ -10,8 +10,9 @@
     Shell.FlyoutBehavior="Disabled">
 
     <TabBar
-        CurrentItem="{Reference settingsPage}">
+        CurrentItem="{Reference pinnedPage}">
         <Tab
+            x:Name="pinnedPage"
             Icon="dark_pin"
             Title="Pinned">
             <ShellContent
@@ -30,7 +31,6 @@
                 ContentTemplate="{DataTemplate view:EmployeesListPage}"/>
         </Tab>
         <Tab
-            x:Name="settingsPage"
             Icon="dark_settings"
             Title="Settings">
             <ShellContent

@@ -26,8 +26,8 @@ namespace ScheduleBSUIR.Viewmodels
                 new ScheduleDay(_dateTimeProvider.Now.AddDays(-1)),
                 new Schedule()
                 {
-                    LessonTypeAbbrev = LessonTypesHelper.Practice.Abbreviation,
-                    Subject = "Прошедшая пара",
+                    LessonTypeAbbrev = LessonTypesHelper.Lecture.Abbreviation,
+                    Subject = "Пример прошедшей пары",
                     Auditories = ["Аудитория 0"],
                     StudentGroups = [],
                     DateLesson = _dateTimeProvider.Now.AddDays(-1).Date,
@@ -39,11 +39,12 @@ namespace ScheduleBSUIR.Viewmodels
                 new ScheduleDay(_dateTimeProvider.Now.Date),
                 new Schedule()
                 {
-                    LessonTypeAbbrev = LessonTypesHelper.Lecture.Abbreviation,
-                    Subject = "Пример лекции",
-                    Auditories = ["Аудитория 1", "Аудитория 2"],
+                    LessonTypeAbbrev = LessonTypesHelper.Lab.Abbreviation,
+                    Subject = "Пример ЛР",
+                    Auditories = ["Аудитория пары"],
                     Note = "Примечание",
                     StudentGroups = [],
+                    NumSubgroup = SubgroupType.FirstSubgroup,
                     DateLesson = _dateTimeProvider.Now.Date,
                     Employees = [ new EmployeeDto() { PhotoLink = "https://avatars.githubusercontent.com/u/82116328?v=4" }],
                     WeekNumber = [1, 2, 3, 4],
@@ -54,8 +55,8 @@ namespace ScheduleBSUIR.Viewmodels
                 {
                     LessonTypeAbbrev = LessonTypesHelper.AnnouncementAbbreviation,
                     Subject = LessonTypesHelper.GetByAbbreviation(LessonTypesHelper.AnnouncementAbbreviation).Fullname,
-                    Auditories = ["Аудитория 3"],
-                    Note = "Расписание может содержать важные объявления (например, о графике досдач)",
+                    Auditories = [],
+                    Note = "Расписание может содержать важную информацию (например, о графике досдач)",
                     StudentGroups = [],
                     DateLesson = _dateTimeProvider.Now.Date,
                     Announcement = true,

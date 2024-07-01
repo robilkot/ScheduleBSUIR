@@ -188,7 +188,7 @@
                 <Grid
                     Grid.Column="2"
                     VerticalOptions="Center"
-                    RowDefinitions="auto,auto">
+                    RowDefinitions="auto,auto,auto">
                     <Grid
                         Grid.Row="0"
                         ColumnDefinitions="auto,auto,auto">
@@ -215,8 +215,15 @@
                     </Grid>
                     <Label
                         Grid.Row="1"
+                        IsVisible="{Binding Auditories, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                         Style="{StaticResource LabelBodySecondaryStyle}"
                         Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
+                    </Label>
+                    <Label
+                        Grid.Row="2"
+                        IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Style="{StaticResource LabelBodyPrimaryStyle}"
+                        Text="{Binding Note, Mode=OneTime}">
                     </Label>
                 </Grid>
 
@@ -401,11 +408,13 @@
                     </Grid>
                     <Label
                         Grid.Row="1"
+                        Margin="0,0,0,5"
                         Style="{StaticResource LabelBodyPrimaryStyle}"
                         Text="{Binding Note, Mode=OneTime}">
                     </Label>
                     <Label
                         Grid.Row="2"
+                        IsVisible="{Binding Auditories, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                         Style="{StaticResource LabelBodySecondaryStyle}"
                         Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
                     </Label>
