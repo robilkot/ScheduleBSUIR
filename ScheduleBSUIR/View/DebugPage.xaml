@@ -27,7 +27,7 @@
                 Grid.Row="1"
                 HeightRequest="70"
                 ColumnSpacing="5"
-                ColumnDefinitions="1*,5*,2*">
+                ColumnDefinitions="*,*,*">
                 <Button 
                     Grid.Column="0"
                     Text="Clear cache"

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using DevExpress.Data.Linq;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -82,9 +81,9 @@ namespace ScheduleBSUIR.Services
         #region Timetable states
         public async Task<TimetableState> GetState(TypedId timetableId) =>
             await IsPinnedAsync(timetableId)
-            ? TimetableState.Pinned 
-            : await IsFavoritedAsync(timetableId) 
-            ? TimetableState.Favorite 
+            ? TimetableState.Pinned
+            : await IsFavoritedAsync(timetableId)
+            ? TimetableState.Favorite
             : TimetableState.Default;
         public async Task ApplyState(TypedId timetableId, TimetableState state)
         {
@@ -219,169 +218,16 @@ namespace ScheduleBSUIR.Services
         }
 
         public async Task<bool> IsFavoritedAsync<T>(T timetableId) where T : TypedId => timetableId switch
-            {
-                StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey) is not null,
-                EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey) is not null,
-                _ => throw new UnreachableException(),
-            };
+        {
+            StudentGroupId studentGroupId => await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey) is not null,
+            EmployeeId employeeId => await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey) is not null,
+            _ => throw new UnreachableException(),
+        };
 
         public async Task<List<StudentGroupId>> GetFavoriteGroupsTimetablesIdsAsync() => await _dbService.GetAllAsync<StudentGroupId>();
 
         public async Task<List<EmployeeId>> GetFavoriteEmployeesTimetablesIdsAsync() => await _dbService.GetAllAsync<EmployeeId>();
 
         #endregion
-
-        // todo: move to schedule generator
-        public DateTime? GetLastScheduleDate(Timetable timetable,
-            TimetableTabs timetableTabs = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All)
-        {
-            if (timetable is null)
-                return null;
-
-            DateTime? result = null;
-
-            // Assuming the list is sorted
-            if (timetableTabs is TimetableTabs.Exams)
-            {
-                var lastSchedule = subgroupType switch
-                {
-                    SubgroupType.All => timetable.Exams?
-                        .LastOrDefault(),
-
-                    SubgroupType.FirstSubgroup => timetable.Exams?
-                        .LastOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
-
-                    SubgroupType.SecondSubgroup => timetable.Exams?
-                        .LastOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
-
-                    _ => throw new UnreachableException(),
-                };
-
-                result = lastSchedule?.DateLesson;
-            }
-
-            // todo for schedule tab           
-            _loggingService.LogInfo($"GetLastScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
-
-            return result;
-        }
-
-        public DateTime? GetFirstScheduleDate(Timetable timetable,
-            TimetableTabs timetableTabs = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All)
-        {
-            if (timetable is null)
-                return null;
-
-            DateTime? result = null;
-
-            // Assuming the list is sorted
-            if (timetableTabs is TimetableTabs.Exams)
-            {
-                var firstSchedule = subgroupType switch
-                {
-                    SubgroupType.All => timetable.Exams?
-                        .FirstOrDefault(),
-
-                    SubgroupType.FirstSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
-
-                    SubgroupType.SecondSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
-
-                    _ => throw new UnreachableException(),
-                };
-
-                result = firstSchedule?.DateLesson;
-            }
-
-            // todo for schedule tab
-            _loggingService.LogInfo($"GetFirstScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
-
-            return result;
-        }
-
-        public DateTime? GetNearestScheduleDate(Timetable timetable,
-            TimetableTabs timetableTabs = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All)
-        {
-            if (timetable is null)
-                return null;
-
-            DateTime? result = null;
-
-            // Assuming the list is sorted
-            if (timetableTabs is TimetableTabs.Exams)
-            {
-                var firstSchedule = subgroupType switch
-                {
-                    SubgroupType.All => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    SubgroupType.FirstSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    SubgroupType.SecondSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    _ => throw new UnreachableException(),
-                };
-
-                result = firstSchedule?.DateLesson;
-            }
-
-            // todo for schedule tab
-            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM")} ({timetableTabs}, {subgroupType}).", displayCaller: false);
-
-            return result;
-        }
-
-        public Task<List<DailySchedule>?> GetDaySchedulesAsync(Timetable timetable,
-            DateTime? startDate,
-            DateTime? endDate,
-            TimetableTabs timetableTabs = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All)
-        {
-            if (timetable is null)
-                return Task.FromResult<List<DailySchedule>?>(null);
-
-            IEnumerable<DailySchedule>? result = null;
-
-            if (timetableTabs is TimetableTabs.Exams)
-            {
-                var schedules = subgroupType switch
-                {
-                    SubgroupType.All => timetable.Exams?
-                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate),
-
-                    SubgroupType.FirstSubgroup => timetable.Exams?
-                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
-                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
-
-                    SubgroupType.SecondSubgroup => timetable.Exams?
-                        .Where(schedule => schedule.DateLesson >= startDate && schedule.DateLesson <= endDate)
-                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
-
-                    _ => throw new UnreachableException(),
-                };
-
-                result = schedules?
-                        .GroupBy(schedule => schedule.DateLesson)
-                        .Select(grouping => new DailySchedule(grouping));
-            }
-
-            TaskCompletionSource<List<DailySchedule>?> tcs = new();
-
-            _ = Task.Run(() =>
-            {
-                // Deferred LINQ
-                var resultList = result?.ToList();
-
-                tcs.SetResult(resultList);
-            });
-
-            return tcs.Task;
-        }
     }
 }

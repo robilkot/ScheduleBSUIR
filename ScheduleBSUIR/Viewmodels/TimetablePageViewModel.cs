@@ -7,7 +7,6 @@ using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
-using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 
@@ -16,19 +15,21 @@ namespace ScheduleBSUIR.Viewmodels
     public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetablePinnedMessage>
     {
         private readonly TimetableService _timetableService;
+        private readonly TimetableItemsGenerator _timetableItemsGenerator;
         private readonly PreferencesService _preferencesService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        private readonly TimeSpan _loadingStep = TimeSpan.FromDays(10);
-        private DateTime? _loadedToDate = null;
-        private DateTime? _nearestScheduleDate = null;
-        private DateTime? _lastScheduleDate = null;
-
-        public TimetablePageViewModel(TimetableService timetableService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider, PreferencesService preferencesService) : base(loggingService)
+        public TimetablePageViewModel(
+            TimetableService timetableService,
+            ILoggingService loggingService,
+            IDateTimeProvider dateTimeProvider,
+            PreferencesService preferencesService,
+            TimetableItemsGenerator timetableItemsGenerator) : base(loggingService)
         {
             _timetableService = timetableService;
             _dateTimeProvider = dateTimeProvider;
             _preferencesService = preferencesService;
+            _timetableItemsGenerator = timetableItemsGenerator;
 
             SelectedMode = _preferencesService.GetSubgroupTypePreference();
 
@@ -51,7 +52,7 @@ namespace ScheduleBSUIR.Viewmodels
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
         partial void OnSelectedTabChanged(TimetableTabs value)
         {
-            ClearLoadedSchedule();
+            Schedule = [];
 
             LoadMoreScheduleCommand.Execute(true);
         }
@@ -62,38 +63,7 @@ namespace ScheduleBSUIR.Viewmodels
         {
             _preferencesService.SetSubgroupTypePreference(newValue);
 
-            //// We may reduce existing collection if moving to subgroup mode from group mode
-            //if (oldValue == SubgroupType.All && newValue != SubgroupType.All)
-            //{
-            //    List<Schedule> itemsToRemove =
-            //        Schedule
-            //        .OfType<Schedule>()
-            //        .Where(item => item.NumSubgroup != newValue && item.NumSubgroup != SubgroupType.All)
-            //        .ToList();
-
-            //    Schedule.RemoveRange(itemsToRemove);
-
-            //    List<ScheduleDay> headersToRemove = 
-            //        Schedule
-            //        .OfType<ScheduleDay>()
-            //        .Where(day => itemsToRemove.Any(schedule => schedule.DateLesson == day.Day))
-            //        .Where((day) =>
-            //        {
-            //            return !Schedule
-            //                .OfType<Schedule>()
-            //                .Any(schedule => schedule.DateLesson == day.Day);
-            //        })
-            //        .ToList();
-
-            //    Schedule.RemoveRange(headersToRemove);
-
-            //    ScrollToActiveSchedule();
-            //}
-            //else
-            //{
-            //}
-
-            ClearLoadedSchedule();
+            Schedule = [];
 
             LoadMoreScheduleCommand.Execute(true);
         }
@@ -102,7 +72,7 @@ namespace ScheduleBSUIR.Viewmodels
         private Timetable? _timetable;
         partial void OnTimetableChanged(Timetable? value)
         {
-            ClearLoadedSchedule();
+            Schedule = [];
 
             LoadMoreScheduleCommand.Execute(true);
         }
@@ -139,51 +109,14 @@ namespace ScheduleBSUIR.Viewmodels
             if (Timetable is null)
                 return;
 
-            // Initial case
-            _nearestScheduleDate ??= _timetableService.GetNearestScheduleDate(Timetable, SelectedTab, SelectedMode);
+            List<ITimetableItem> newDays = await _timetableItemsGenerator.GenerateMoreItems(Timetable, SelectedTab, SelectedMode, generateTillActive: scrollToNearest ?? false);
 
-            _loadedToDate ??= (_timetableService.GetFirstScheduleDate(Timetable, SelectedTab, SelectedMode) ?? _dateTimeProvider.Now)
-                - TimeSpan.FromDays(1); // -One additional day to account for adding extra day down below
-
-            _lastScheduleDate ??= _timetableService.GetLastScheduleDate(Timetable, SelectedTab, SelectedMode);
-
-            // Guard case for overflow if no schedules found or already loaded all possible schedules
-            if (_lastScheduleDate is null || _loadedToDate >= _lastScheduleDate)
+            if (newDays.Count != 0)
             {
-                IsLoadingMoreSchedule = false;
-                return;
+                _loggingService.LogInfo($"GenerateMoreItems returned {newDays.Count} objects", displayCaller: false);
             }
 
-            // Add extra day since GetDaySchedulesAsync accepts [begin, end] dates range
-            _loadedToDate += TimeSpan.FromDays(1);
-
-            // Common case
-            DateTime targetDate = _loadedToDate.Value + _loadingStep;
-
-            // Adjust target date if loading to the nearest schedule
-            if (scrollToNearest ?? false)
-            {
-                while(targetDate < _nearestScheduleDate)
-                {
-                    targetDate += _loadingStep;
-                }
-            }
-
-            var newDays = await _timetableService.GetDaySchedulesAsync(Timetable, _loadedToDate, targetDate, SelectedTab, SelectedMode);
-
-            _loadedToDate = targetDate;
-
-            _loggingService.LogInfo($"GetDaySchedules got {newDays?.Count} objects ({_loadedToDate?.ToString("dd.MM")} - {(_loadedToDate + _loadingStep)?.ToString("dd.MM")})", displayCaller: false);
-            
-            Schedule ??= [];
-
-            // todo: also add ScheduleWeek?
-            foreach (var day in newDays ?? [])
-            {
-                Schedule.Add(new ScheduleDay(day.Day));
-
-                Schedule.AddRange(day);
-            }
+            Schedule.AddRange(newDays);
 
             IsLoadingMoreSchedule = false;
 
@@ -314,14 +247,6 @@ namespace ScheduleBSUIR.Viewmodels
             }
         }
 
-        private void ClearLoadedSchedule()
-        {
-            _loadedToDate = null;
-            _lastScheduleDate = null;
-            _nearestScheduleDate = null;
-
-            Schedule = [];
-        }
         private int? GetNearestScheduleIndex()
         {
             if (Timetable is null)
@@ -333,6 +258,7 @@ namespace ScheduleBSUIR.Viewmodels
         }
         private void ScrollToActiveSchedule()
         {
+            // todo: get from generator and not execute linq each time
             int? nearestScheduleIndex = GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)
@@ -351,7 +277,7 @@ namespace ScheduleBSUIR.Viewmodels
                 TimetableState = TimetableState.Favorite;
             }
 
-            if(IsPinnedTimetable)
+            if (IsPinnedTimetable)
             {
                 TimetableId = message.Value;
             }
