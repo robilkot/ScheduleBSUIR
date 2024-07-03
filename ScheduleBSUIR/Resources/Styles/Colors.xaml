@@ -20,6 +20,8 @@
     <Color x:Key="DarkControlBackground">#121212</Color>
     <Color x:Key="DarkLightControlBackground">#222222</Color>
 
+    <Color x:Key="ListSeparatorColor">#404040</Color>
+
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
     <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>

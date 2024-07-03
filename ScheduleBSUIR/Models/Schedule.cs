@@ -1,10 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using LiteDB;
-using ScheduleBSUIR.Helpers.Constants;
+﻿using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
-using ScheduleBSUIR.Models.Messaging;
-using System.ComponentModel;
-using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {

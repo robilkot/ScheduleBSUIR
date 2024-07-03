@@ -63,7 +63,7 @@
                     AllowCascadeUpdate="False"
                     UseRippleEffect="True"
                     ReduceSizeToContent="True"
-                    ItemSeparatorColor="{StaticResource Gray600}"
+                    ItemSeparatorColor="{StaticResource ListSeparatorColor}"
                     ItemSeparatorThickness="1"
                     ItemsSource="{x:Static constants:LessonTypesHelper.BasicTypes}">
                     <dx:DXCollectionView.Resources>

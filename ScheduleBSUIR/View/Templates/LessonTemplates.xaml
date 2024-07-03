@@ -5,6 +5,7 @@
              xmlns:interfaces="clr-namespace:ScheduleBSUIR.Interfaces"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+             xmlns:convertersCommon="clr-namespace:ScheduleBSUIR.Helpers.Converters.Common"
              xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
@@ -63,6 +64,9 @@
     </Style>
 
     <!-- Converters -->
+    <convertersCommon:IEnumerableCutoffConverter
+        TakeAmount="3"
+        x:Key="IEnumerableCutoffConverter"/>
     <toolkit:EnumToIntConverter
         x:Key="EnumToIntConverter"/>
     <toolkit:ListToStringConverter
@@ -234,16 +238,17 @@
                     Grid.Column="3"
                     Spacing="-25"
                     HorizontalOptions="End"
-                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime}"
+                    BindableLayout.ItemsSource="{Binding Employees, Mode=OneTime, Converter={StaticResource IEnumerableCutoffConverter}}"
                     BindableLayout.ItemTemplate="{StaticResource avatarTemplate}"/>
                 
                 <!-- Groups avatars -->
                 <HorizontalStackLayout
+                    MaximumWidthRequest="100"
                     IsVisible="{Binding Source={x:Reference employeesAvatars}, Path=IsVisible, Converter={toolkit:InvertedBoolConverter}}"
                     Grid.Column="3"
                     Spacing="-25"
                     HorizontalOptions="End"
-                    BindableLayout.ItemsSource="{Binding StudentGroups, Mode=OneTime}"
+                    BindableLayout.ItemsSource="{Binding StudentGroups, Mode=OneTime, Converter={StaticResource IEnumerableCutoffConverter}}"
                     BindableLayout.ItemTemplate="{StaticResource avatarTemplate}"/>
             </Grid>
         </Border>
