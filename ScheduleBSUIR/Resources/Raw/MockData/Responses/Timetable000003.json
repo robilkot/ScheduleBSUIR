@@ -1,0 +1,192 @@
+{
+  "startDate": null,
+  "endDate": null,
+  "startExamsDate": "13.05.2024",
+  "endExamsDate": "26.05.2024",
+  "employeeDto": null,
+  "studentGroupDto": {
+    "name": "000003",
+    "facultyId": 20005,
+    "facultyAbbrev": "ФИТУ",
+    "facultyName": "Факультет информационных технологий и управления",
+    "specialityDepartmentEducationFormId": 20540,
+    "specialityName": "Информационные технологии и управление в технических системах",
+    "specialityAbbrev": "Полигон",
+    "course": 2,
+    "id": 10003,
+    "calendarId": "a1b9e4b559b9fd2ce36ea3b8a16e402be41fab42a469580f51e5e8d2c67086f9@group.calendar.google.com",
+    "educationDegree": 1
+  },
+  "schedules": null,
+  "previousSchedules": null,
+  "currentTerm": null,
+  "previousTerm": null,
+  "exams": [
+    {
+      "auditories": [ "612а-5 к." ],
+      "endLessonTime": "15:00",
+      "lessonTypeAbbrev": "Консультация",
+      "note": null,
+      "numSubgroup": 0,
+      "startLessonTime": "14:00",
+      "studentGroups": [
+        {
+          "specialityName": "Искусственный интеллект",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "221701",
+          "educationDegree": 1
+        }
+      ],
+      "subject": "Много преподов",
+      "subjectFullName": "Очень много преподов",
+      "weekNumber": [ 2 ],
+      "employees": [
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 2",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 3",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 4",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 5",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 6",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 7",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Виктор",
+          "lastName": "Чуешов 8",
+          "middleName": "Иванович",
+          "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        }
+      ],
+      "dateLesson": "11.06.2024",
+      "startLessonDate": null,
+      "endLessonDate": null,
+      "announcement": false,
+      "split": false
+    },
+    {
+      "auditories": [ "612а-5 к." ],
+      "endLessonTime": "15:00",
+      "lessonTypeAbbrev": null,
+      "note": "Это тестовое расписание для проверки всех edge cases, странных, длинных, неполных расписаний и так далее и тому подобное. Очень интересно и увлекательно.",
+      "numSubgroup": 0,
+      "startLessonTime": "14:00",
+      "studentGroups": [
+        {
+          "specialityName": "Искусственный интеллект",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "221701",
+          "educationDegree": 1
+        }
+      ],
+      "subject": null,
+      "subjectFullName": null,
+      "weekNumber": [ 2 ],
+      "employees": null,
+      "dateLesson": "13.06.2024",
+      "startLessonDate": null,
+      "endLessonDate": null,
+      "announcement": true,
+      "split": false
+    }
+  ],
+  "currentPeriod": null
+}

@@ -429,259 +429,274 @@
             Padding="15,30"
             HalfExpandedRatio="0.5"
             BackgroundColor="{StaticResource DarkControlBackground}"
-            IsModal="true"
             x:DataType="model:Schedule">
 
-            <VerticalStackLayout
-                x:Name="sheetContent"
-                Spacing="20">
-                <VerticalStackLayout.Resources>
-                    <ResourceDictionary>
-                        <Style
-                            TargetType="Grid">
-                            <Setter
-                                Property="ColumnDefinitions"
-                                Value="auto, *"/>
-                            <Setter
-                                Property="ColumnSpacing"
-                                Value="10"/>
-                        </Style>
-                    </ResourceDictionary>
-                </VerticalStackLayout.Resources>
+            <ScrollView
+                VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout
+                    x:Name="sheetContent"
+                    Spacing="20">
+                    <VerticalStackLayout.Resources>
+                        <ResourceDictionary>
+                            <Style
+                                TargetType="Grid">
+                                <Setter
+                                    Property="ColumnDefinitions"
+                                    Value="auto, *"/>
+                                <Setter
+                                    Property="ColumnSpacing"
+                                    Value="10"/>
+                            </Style>
+                        </ResourceDictionary>
+                    </VerticalStackLayout.Resources>
 
-                <Label
-                    Margin="0,0,0,-5"
-                    LineBreakMode="WordWrap"
-                    Style="{StaticResource LabelBodyHeaderStyle}"
-                    Text="{Binding SubjectFullName, TargetNullValue={x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}}"/>
-
-                <!--Schedule details-->
-                <Border
-                    Padding="15"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}">
-
-                    <VerticalStackLayout
-                        Spacing="20">
-                        <!--type-->
-                        <Grid
-                            IsVisible="{Binding Subject, Converter={StaticResource IsNotNullOrEmptyConverter}}">
-                            <Label
-                                Grid.Column="0"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="Тип"/>
-                            <Label
-                                Grid.Column="1"
-                                HorizontalTextAlignment="End"
-                                Style="{StaticResource LabelBodySecondaryStyle}"
-                                Text="{Binding LessonTypeAbbrev}"/>
-                        </Grid>
-
-                        <!-- Subgroup (if not whole group) -->
-                        <Grid
-                            IsVisible="{Binding NumSubgroup, Converter={toolkit:IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}">
-                        <Label
-                            Grid.Column="0"
-                            Style="{StaticResource LabelBodyPrimaryStyle}"
-                            Text="Подгруппа"/>
-                            <Label
-                                Grid.Column="1"
-                                HorizontalTextAlignment="End"
-                                Style="{StaticResource LabelBodySecondaryStyle}"
-                                Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
-                        </Grid>
-
-                        <!--date-->
-                        <Grid>
-                            <Label
-                                Grid.Column="0"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="Дата"/>
-                            <Label
-                                Grid.Column="1"
-                                HorizontalTextAlignment="End"
-                                Style="{StaticResource LabelBodySecondaryStyle}"
-                                Text="{Binding DateLesson, StringFormat='{}{0:dd MMMM yyyy г.}'}"/>
-                        </Grid>
-
-                        <!--time-->
-                        <Grid>
-                            <Label
-                                Grid.Column="0"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="Время"/>
-                            <Label
-                                Grid.Column="1"
-                                HorizontalTextAlignment="End"
-                                Style="{StaticResource LabelBodySecondaryStyle}">
-                            <Label.Text>
-                                <MultiBinding
-                                        StringFormat="{}{0} - {1}">
-                                        <Binding
-                                            Path="StartLessonTime"
-                                            StringFormat="{}{0:HH:mm}"/>
-                                        <Binding
-                                            Path="EndLessonTime"
-                                            StringFormat="{}{0:HH:mm}"/>
-                                    </MultiBinding>
-                            </Label.Text>
-                        </Label>
-                        </Grid>
-
-                        <!--auditories-->
-                        <Grid>
-                        <Label
-                                Grid.Column="0"
-                            Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="Аудитория"/>
-                            <Label
-                                Grid.Column="1"
-                                HorizontalTextAlignment="End"
-                                Style="{StaticResource LabelBodySecondaryStyle}"
-                                Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!--Remarks (if present)-->
-                <Label
-                    IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                    Text="Примечания"
-                    Margin="15,0,0,-10"
-                    Style="{StaticResource LabelBodySecondaryStyle}"/>
-
-                <Border
-                    IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
-                    Padding="15"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}">
                     <Label
-                        Text="{Binding Note}"
-                        Style="{StaticResource LabelBodyPrimaryStyle}"/>
-                </Border>
+                        Margin="0,0,0,-5"
+                        LineBreakMode="WordWrap"
+                        Style="{StaticResource LabelBodyHeaderStyle}"
+                        Text="{Binding SubjectFullName, TargetNullValue={x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}}"/>
 
-                <!-- Lecturers -->
-                <Label
-                    IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
-                    Text="Преподаватели"
-                    Margin="15,0,0,-10"
-                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+                    <!--Schedule details-->
+                    <Border
+                        Padding="15"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}">
 
-                <Border
-                    IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
-                    BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        <VerticalStackLayout
+                            Spacing="20">
+                            <!--type-->
+                            <Grid
+                                IsVisible="{Binding Subject, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                                    Text="Тип"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}"
+                                    Text="{Binding LessonTypeAbbrev}"/>
+                            </Grid>
 
-                    <VerticalStackLayout
-                        Spacing="10"
-                        BindableLayout.ItemsSource="{Binding Employees}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate
-                                x:DataType="model:EmployeeDto">
-                                <Grid
-                                    ColumnSpacing="15"
-                                    HeightRequest="70"
-                                    Padding="15,10"
-                                    ColumnDefinitions="auto,*,auto">
+                            <!-- Subgroup (if not whole group) -->
+                            <Grid
+                                IsVisible="{Binding NumSubgroup, Converter={toolkit:IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}">
+                                <Label
+                                Grid.Column="0"
+                                Style="{StaticResource LabelBodyPrimaryStyle}"
+                                Text="Подгруппа"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}"
+                                    Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                            </Grid>
 
-                                    <toolkit:AvatarView
-                                        Grid.Column="0"
-                                        VerticalOptions="Center"
-                                        HeightRequest="50"
-                                        WidthRequest="50"
-                                        CornerRadius="25"
-                                        BorderWidth="0"
-                                        FontAttributes="Bold"
-                                        BackgroundColor="Black"
-                                        TextColor="{StaticResource SecondaryGray}"
-                                        Text="{Binding AvatarText, Mode=OneTime}"
-                                        ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
+                            <!--date-->
+                            <Grid>
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                                    Text="Дата"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}"
+                                    Text="{Binding DateLesson, StringFormat='{}{0:dd MMMM yyyy г.}'}"/>
+                            </Grid>
+
+                            <!--time-->
+                            <Grid>
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                                    Text="Время"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}">
+                                    <Label.Text>
+                                        <MultiBinding
+                                            StringFormat="{}{0} - {1}">
+                                            <Binding
+                                                Path="StartLessonTime"
+                                                StringFormat="{}{0:HH:mm}"/>
+                                            <Binding
+                                                Path="EndLessonTime"
+                                                StringFormat="{}{0:HH:mm}"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </Grid>
+
+                            <!--auditories-->
+                            <Grid>
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                                    Text="Аудитория"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}"
+                                    Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}"/>
+                            </Grid>
+
+                            <!-- Weeks -->
+                            <Grid>
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource LabelBodyPrimaryStyle}"
+                                    Text="Недели"/>
+                                <Label
+                                    Grid.Column="1"
+                                    HorizontalTextAlignment="End"
+                                    Style="{StaticResource LabelBodySecondaryStyle}"
+                                    Text="{Binding WeekNumber, Converter={StaticResource ListToStringConverter}}"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!--Remarks (if present)-->
+                    <Label
+                        IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Text="Примечания"
+                        Margin="15,0,0,-10"
+                        Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                    <Border
+                        IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
+                        Padding="15"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        <Label
+                            Text="{Binding Note}"
+                            Style="{StaticResource LabelBodyPrimaryStyle}"/>
+                    </Border>
+
+                    <!-- Lecturers -->
+                    <Label
+                        IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
+                        Text="Преподаватели"
+                        Margin="15,0,0,-10"
+                        Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                    <Border
+                        IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
+                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+
+                        <VerticalStackLayout
+                            Spacing="10"
+                            BindableLayout.ItemsSource="{Binding Employees}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate
+                                    x:DataType="model:EmployeeDto">
+                                    <Grid
+                                        ColumnSpacing="15"
+                                        HeightRequest="70"
+                                        Padding="15,10"
+                                        ColumnDefinitions="auto,*,auto">
+
+                                        <toolkit:AvatarView
+                                            Grid.Column="0"
+                                            VerticalOptions="Center"
+                                            HeightRequest="50"
+                                            WidthRequest="50"
+                                            CornerRadius="25"
+                                            BorderWidth="0"
+                                            FontAttributes="Bold"
+                                            BackgroundColor="Black"
+                                            TextColor="{StaticResource SecondaryGray}"
+                                            Text="{Binding AvatarText, Mode=OneTime}"
+                                            ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
                                     
-                                    <Label
-                                        Grid.Column="1"
-                                        VerticalOptions="Center"
-                                        MaxLines="2"
-                                        Text="{Binding FullName, Mode=OneTime}"
-                                        LineHeight="1.1"
-                                        LineBreakMode="WordWrap"
-                                        Style="{StaticResource LabelBodyPrimaryStyle}"/>
+                                        <Label
+                                            Grid.Column="1"
+                                            VerticalOptions="Center"
+                                            MaxLines="2"
+                                            Text="{Binding FullName, Mode=OneTime}"
+                                            LineHeight="1.1"
+                                            LineBreakMode="WordWrap"
+                                            Style="{StaticResource LabelBodyPrimaryStyle}"/>
 
-                                    <Image
-                                        Grid.Column="2"
-                                        HeightRequest="16"
-                                        Opacity="0.5"
-                                        Source="dark_arrow_right"/>
+                                        <Image
+                                            Grid.Column="2"
+                                            HeightRequest="16"
+                                            Opacity="0.5"
+                                            Source="dark_arrow_right"/>
 
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Tapped="employee_tapped"
-                                            Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Tapped="employee_tapped"
+                                                Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
 
-                    </VerticalStackLayout>
-                </Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-                <!-- Student groups -->
-                <Label
-                    Text="Группы"
-                    Margin="15,0,0,-10"
-                    Style="{StaticResource LabelBodySecondaryStyle}">
-                    <Label.IsVisible>
-                        <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
-                            <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
-                            <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
-                        </MultiBinding>
-                    </Label.IsVisible>
-                </Label>
+                    <!-- Student groups -->
+                    <Label
+                        Text="Группы"
+                        Margin="15,0,0,-10"
+                        Style="{StaticResource LabelBodySecondaryStyle}">
+                        <Label.IsVisible>
+                            <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                                <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                                <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                            </MultiBinding>
+                        </Label.IsVisible>
+                    </Label>
 
-                <Border
-                    BackgroundColor="{StaticResource DarkLightControlBackground}">
-                    <Border.IsVisible>
-                        <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
-                            <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
-                            <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
-                        </MultiBinding>
-                    </Border.IsVisible>
+                    <Border
+                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        <Border.IsVisible>
+                            <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                                <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                                <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                            </MultiBinding>
+                        </Border.IsVisible>
 
-                    <VerticalStackLayout
-                        Spacing="10"
-                        BindableLayout.ItemsSource="{Binding StudentGroups}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate
-                                x:DataType="model:StudentGroupDto">
-                                <Grid
-                                    ColumnSpacing="15"
-                                    Padding="15,10"
-                                    ColumnDefinitions="*,auto">
+                        <VerticalStackLayout
+                            Spacing="10"
+                            BindableLayout.ItemsSource="{Binding StudentGroups}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate
+                                    x:DataType="model:StudentGroupDto">
+                                    <Grid
+                                        ColumnSpacing="15"
+                                        Padding="15,10"
+                                        ColumnDefinitions="*,auto">
 
-                                    <Label
-                                        Grid.Column="0"
-                                        VerticalOptions="Center"
-                                        LineBreakMode="NoWrap"
-                                        Text="{Binding Name, Mode=OneTime}"
-                                        Style="{StaticResource LabelBodyPrimaryStyle}">
-                                    </Label>
+                                        <Label
+                                            Grid.Column="0"
+                                            VerticalOptions="Center"
+                                            LineBreakMode="NoWrap"
+                                            Text="{Binding Name, Mode=OneTime}"
+                                            Style="{StaticResource LabelBodyPrimaryStyle}">
+                                        </Label>
 
-                                    <Image
-                                        Grid.Column="1"
-                                        HeightRequest="16"
-                                        Opacity="0.5"
-                                        Source="dark_arrow_right"/>
+                                        <Image
+                                            Grid.Column="1"
+                                            HeightRequest="16"
+                                            Opacity="0.5"
+                                            Source="dark_arrow_right"/>
 
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Tapped="employee_tapped"
-                                            Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
-                </Border>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Tapped="employee_tapped"
+                                                Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
                 
-            </VerticalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
         </dx:BottomSheet>
     </Grid>
 </ContentPage>

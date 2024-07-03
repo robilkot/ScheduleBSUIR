@@ -16,23 +16,12 @@ namespace ScheduleBSUIR.Services.Mock
 
         private const string TestDataPath = "MockData/Responses/";
 
-        // todo: move to json like employees
-        private readonly ImmutableList<StudentGroupHeader> _groupsHeaders = [
-                new() { Name = "221701", Id = 23819, SpecialityAbbrev = "3 ИИ" },
-                new() { Name = "221901", Id = 23819, SpecialityAbbrev = "3 ПЭ" },
-                new() { Name = "122471", Id = 24168, SpecialityAbbrev = "2 Подгруппы и примечания" },
-                new() { Name = "314351", Id = 24169, SpecialityAbbrev = "2 Примечание к зачету 6 июня" },
-                new() { Name = "350541", Id = 24143, SpecialityAbbrev = "2 Объявление 28 июня" },
-                new() { Name = "210271", Id = 23923, SpecialityAbbrev = "1 Нет препода 21 июня" },
-                new() { Name = "000001", Id = 00001, SpecialityAbbrev = "_Экзамены null" },
-                new() { Name = "000002", Id = 00002, SpecialityAbbrev = "_Расписание null (сервер не ответил)" },
-                ];
-
         private readonly ImmutableDictionary<string, string> _urlsToFilenames = new Dictionary<string, string>()
         {
+            { "https://iis.bsuir.by/api/v1/schedule?studentGroup=000001", $"{TestDataPath}Timetable000001.json" },
+            { "https://iis.bsuir.by/api/v1/schedule?studentGroup=000003", $"{TestDataPath}Timetable000003.json" },
             { "https://iis.bsuir.by/api/v1/schedule?studentGroup=221701", $"{TestDataPath}Timetable221701.json" },
             { "https://iis.bsuir.by/api/v1/schedule?studentGroup=221901", $"{TestDataPath}Timetable221901.json" },
-            { "https://iis.bsuir.by/api/v1/schedule?studentGroup=000001", $"{TestDataPath}Timetable000001.json" },
             { "https://iis.bsuir.by/api/v1/schedule?studentGroup=210271", $"{TestDataPath}Timetable210271.json" },
             { "https://iis.bsuir.by/api/v1/schedule?studentGroup=314351", $"{TestDataPath}Timetable314351.json" },
             { "https://iis.bsuir.by/api/v1/schedule?studentGroup=122471", $"{TestDataPath}Timetable122471.json" },
@@ -41,6 +30,7 @@ namespace ScheduleBSUIR.Services.Mock
             { "https://iis.bsuir.by/api/v1/employees/schedule/v-chueshov", $"{TestDataPath}Timetablev-chueshov.json" },
             { "https://iis.bsuir.by/api/v1/employees/schedule/ts-ma", $"{TestDataPath}Timetablets-ma.json" },
 
+            { "https://iis.bsuir.by/api/v1/student-groups/filters?name=", $"{TestDataPath}MockGroupsHeaders.json" },
             { "https://iis.bsuir.by/api/v1/employees/all", $"{TestDataPath}MockEmployees.json" },
         }
         .ToImmutableDictionary();
@@ -75,7 +65,9 @@ namespace ScheduleBSUIR.Services.Mock
 
         public Task<IEnumerable<StudentGroupHeader>?> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IEnumerable<StudentGroupHeader>?>(_groupsHeaders);
+            string requestUrl = UrlGenerator.GroupsHeaders(groupNameFilter);
+
+            return GetDeserializedDataAsync<IEnumerable<StudentGroupHeader>>(requestUrl, cancellationToken);
         }
 
         public Task<IEnumerable<Employee>?> GetEmployeesAsync(CancellationToken cancellationToken)
