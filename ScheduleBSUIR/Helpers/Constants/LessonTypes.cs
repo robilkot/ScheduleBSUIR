@@ -50,7 +50,7 @@ namespace ScheduleBSUIR.Helpers.Constants
         // Return announcement type if nothing else found
         public static LessonType GetByAbbreviation(string abbreviation) =>
             LessonTypes
-                .FirstOrDefault(t => t.Abbreviation == abbreviation) ??
+                .FirstOrDefault(t => string.Compare(t.Abbreviation, abbreviation, StringComparison.InvariantCultureIgnoreCase) == 0) ??
                 GetByAbbreviation(AnnouncementAbbreviation);
     }
 }

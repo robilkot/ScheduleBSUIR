@@ -25,12 +25,12 @@
             Margin="15,0"
             ItemsSource="{Binding Schedule}"
             IsLoadMoreEnabled="True"
-            AllowCascadeUpdate="False"
+            LoadMore="dayScheduleCollectionView_LoadMore"
             Tap="dayScheduleCollectionView_Tap"
             IsRefreshing="{Binding IsLoadingMoreSchedule}"
             ItemTemplate="{StaticResource LessonTemplateSelector}"
-            SelectionMode="None"
-            LoadMoreCommand="{Binding LoadMoreScheduleCommand}">
+            AllowCascadeUpdate="False"
+            SelectionMode="None">
 
             <dx:DXCollectionView.Resources>
                 <ResourceDictionary>
@@ -583,10 +583,13 @@
                         IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
                         BackgroundColor="{StaticResource DarkLightControlBackground}">
 
-                        <VerticalStackLayout
-                            Spacing="10"
-                            BindableLayout.ItemsSource="{Binding Employees}">
-                            <BindableLayout.ItemTemplate>
+                        <dx:DXCollectionView
+                            UseRippleEffect="True"
+                            ReduceSizeToContent="True"
+                            ItemSeparatorColor="{StaticResource ListSeparatorColor}"
+                            ItemSeparatorThickness="1"
+                            ItemsSource="{Binding Employees}">
+                            <dx:DXCollectionView.ItemTemplate>
                                 <DataTemplate
                                     x:DataType="model:EmployeeDto">
                                     <Grid
@@ -607,7 +610,7 @@
                                             TextColor="{StaticResource SecondaryGray}"
                                             Text="{Binding AvatarText, Mode=OneTime}"
                                             ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
-                                    
+
                                         <Label
                                             Grid.Column="1"
                                             VerticalOptions="Center"
@@ -631,9 +634,9 @@
                                         </Grid.GestureRecognizers>
                                     </Grid>
                                 </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                            </dx:DXCollectionView.ItemTemplate>
 
-                        </VerticalStackLayout>
+                        </dx:DXCollectionView>
                     </Border>
 
                     <!-- Student groups -->
@@ -658,10 +661,13 @@
                             </MultiBinding>
                         </Border.IsVisible>
 
-                        <VerticalStackLayout
-                            Spacing="10"
-                            BindableLayout.ItemsSource="{Binding StudentGroups}">
-                            <BindableLayout.ItemTemplate>
+                        <dx:DXCollectionView
+                            UseRippleEffect="True"
+                            ReduceSizeToContent="True"
+                            ItemSeparatorColor="{StaticResource ListSeparatorColor}"
+                            ItemSeparatorThickness="1"
+                            ItemsSource="{Binding StudentGroups}">
+                            <dx:DXCollectionView.ItemTemplate>
                                 <DataTemplate
                                     x:DataType="model:StudentGroupDto">
                                     <Grid
@@ -691,8 +697,8 @@
                                         </Grid.GestureRecognizers>
                                     </Grid>
                                 </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
+                            </dx:DXCollectionView.ItemTemplate>
+                        </dx:DXCollectionView>
                     </Border>
                 
                 </VerticalStackLayout>

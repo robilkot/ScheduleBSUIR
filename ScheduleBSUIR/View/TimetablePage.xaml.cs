@@ -64,4 +64,9 @@ public partial class TimetablePage : ContentPage
 
         scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
     }
+
+    private void dayScheduleCollectionView_LoadMore(object sender, EventArgs e)
+    {
+        _viewmodel.LoadMoreScheduleCommand.Execute(null);
+    }
 }

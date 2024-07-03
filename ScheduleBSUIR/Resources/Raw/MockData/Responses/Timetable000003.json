@@ -186,6 +186,124 @@
       "endLessonDate": null,
       "announcement": true,
       "split": false
+    },
+    {
+      "auditories": [ "555-5 к.", "777-7 к.", "333-3 к.", "4444-4 к." ],
+      "endLessonTime": "15:00",
+      "lessonTypeAbbrev": "Лк",
+      "note": "Длинная заметка существует для того, чтобы пугать фронтендеров. Но мы не боимся. Мы справимся. Мы сделаем адаптивно.",
+      "numSubgroup": 1,
+      "startLessonTime": "11:00",
+      "studentGroups": [
+        {
+          "specialityName": "нз",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "122471",
+          "educationDegree": 1
+        },
+        {
+          "specialityName": "нз",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "210271",
+          "educationDegree": 1
+        },
+        {
+          "specialityName": "нз",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "221901",
+          "educationDegree": 1
+        },
+        {
+          "specialityName": "нз",
+          "specialityCode": "1-40 03 01",
+          "numberOfStudents": 25,
+          "name": "000003",
+          "educationDegree": 1
+        }
+      ],
+      "subject": "ТестПредмДлинТекст",
+      "subjectFullName": "Lorem ipsum dolor sit amet, очень длинное название предмета которое точно не влезет в одну строку. Нужно предусмотреть переносы строк в таком случае",
+      "weekNumber": [ 2,3,4 ],
+      "employees": [
+        {
+          "id": 500629,
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "photoLink": "https://avatars.githubusercontent.com/u/82116328?v=4",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "photoLink": "https://avatars.githubusercontent.com/u/82116328?v=4",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "photoLink": "https://avatars.githubusercontent.com/u/82116328?v=4",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "photoLink": "https://avatars.githubusercontent.com/u/82116328?v=4",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        },
+        {
+          "id": 500629,
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "photoLink": "https://avatars.githubusercontent.com/u/82116328?v=4",
+          "degreeAbbrev": "",
+          "degree": "д.ф.н.",
+          "rank": "профессор",
+          "email": "sadovski@bsuir.by",
+          "urlId": "v-chueshov",
+          "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+          "jobPositions": null
+        }
+      ],
+      "dateLesson": "15.06.2024",
+      "startLessonDate": null,
+      "endLessonDate": null,
+      "announcement": false,
+      "split": false
     }
   ],
   "currentPeriod": null
