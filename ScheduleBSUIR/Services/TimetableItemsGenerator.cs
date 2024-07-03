@@ -6,9 +6,10 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
-    public class TimetableItemsGenerator(ILoggingService loggingService)
+    public class TimetableItemsGenerator(ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
     {
         private readonly ILoggingService _loggingService = loggingService;
+        private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
         private const int LoadingStep = 10;
 
@@ -18,10 +19,10 @@ namespace ScheduleBSUIR.Services
         private TimetableTabs _currentTab;
         private SubgroupType _currentSubgroupType;
 
-        public Task<List<ITimetableItem>> GenerateMoreItems(
-            Timetable timetable, 
-            TimetableTabs timetableTabs = TimetableTabs.Schedule, 
-            SubgroupType subgroupType = SubgroupType.All, 
+        public async Task<List<ITimetableItem>> GenerateMoreItems(
+            Timetable timetable,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All,
             bool generateTillActive = false)
         {
             _timetable = timetable;
@@ -37,32 +38,68 @@ namespace ScheduleBSUIR.Services
 
             _schedulesEnumerator ??= GetEnumeratorForParameters();
 
-            TaskCompletionSource<List<ITimetableItem>> tcs = new();
+            // Deferred LINQ
+            List<ITimetableItem> resultList = [];
 
-            _ = Task.Run(() =>
+            await Task.Run(() =>
             {
-                // Deferred LINQ
-                List<ITimetableItem> resultList = [];
+                DateTime? nearestScheduleDate = generateTillActive ? GetNearestScheduleDate(timetable, timetableTabs, subgroupType) : null;
 
-                // todo: generateTillActive
+                DailySchedule? lastObtainedSchedule = null;
 
-                for (int i = 0; i < LoadingStep; i++)
+                do
                 {
-                    if (!_schedulesEnumerator.MoveNext())
-                        break;
+                    for (int i = 0; i < LoadingStep; i++)
+                    {
+                        if (!_schedulesEnumerator.MoveNext())
+                            return;
 
-                    var currentDailySchedule = _schedulesEnumerator.Current;
+                        lastObtainedSchedule = _schedulesEnumerator.Current;
 
-                    // todo: also add ScheduleWeek?
-                    resultList.Add(new ScheduleDay(currentDailySchedule.Day));
+                        resultList.Add(new ScheduleDay(lastObtainedSchedule.Day));
 
-                    resultList.AddRange(currentDailySchedule);
+                        resultList.AddRange(lastObtainedSchedule);
+                    }
                 }
-
-                tcs.SetResult(resultList);
+                while (generateTillActive && nearestScheduleDate is not null
+                && lastObtainedSchedule?.Day.Date < nearestScheduleDate.Value.Date);
             });
 
-            return tcs.Task;
+            return resultList;
+        }
+
+        public DateTime? GetNearestScheduleDate(Timetable timetable,
+            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+            SubgroupType subgroupType = SubgroupType.All)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            DateTime? result = null;
+
+            // Assuming the list is sorted
+            if (timetableTabs is TimetableTabs.Exams)
+            {
+                var firstSchedule = subgroupType switch
+                {
+                    SubgroupType.All => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.Now.Date),
+
+                    SubgroupType.FirstSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
+
+                    SubgroupType.SecondSubgroup => timetable.Exams?
+                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
+
+                    _ => throw new UnreachableException(),
+                };
+
+                result = firstSchedule?.DateLesson;
+            }
+
+            // todo for schedule tab
+            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM") ?? "NULL"} in {stopwatch.Elapsed:ss\\.FFFFF}", displayCaller: false);
+
+            return result;
         }
 
         private IEnumerator<DailySchedule> GetEnumeratorForParameters()
@@ -89,8 +126,6 @@ namespace ScheduleBSUIR.Services
                         .GroupBy(schedule => schedule.DateLesson)
                         .Select(grouping => new DailySchedule(grouping));
             }
-
-            // todo: for schedule tab
 
             return result.GetEnumerator();
         }

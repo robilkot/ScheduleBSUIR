@@ -3,9 +3,9 @@ using ScheduleBSUIR.Models;
 
 namespace ScheduleBSUIR.Services
 {
-    public class EmployeesService(WebService webService, DbService dbService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
+    public class EmployeesService(IWebService webService, DbService dbService, ILoggingService loggingService, IDateTimeProvider dateTimeProvider)
     {
-        private readonly WebService _webService = webService;
+        private readonly IWebService _webService = webService;
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;

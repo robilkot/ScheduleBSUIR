@@ -4,7 +4,7 @@ using MemoryToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Services;
-using ScheduleBSUIR.UnitTests.Services;
+using ScheduleBSUIR.Services.Mock;
 using ScheduleBSUIR.View;
 using ScheduleBSUIR.Viewmodels;
 
@@ -35,7 +35,7 @@ namespace ScheduleBSUIR
                 // This callback will run any time a leak is detected.
                 var logger = App.Current?.MainPage?.Handler?.MauiContext?.Services.GetRequiredService<ILoggingService>();
 
-                logger?.LogInfo($"Leak {collectionTarget.Name}", displayCaller: false);
+                logger?.LogInfo($"LEAK {collectionTarget.Name}", displayCaller: false);
             });
 
             builder.UseGlobalExceptionHandler(MauiExceptions_UnhandledException);
@@ -58,13 +58,17 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<EmployeesService>();
             builder.Services.AddSingleton<TimetableService>();
-            builder.Services.AddSingleton<DbService>();
-            builder.Services.AddSingleton<WebService>();
-            builder.Services.AddSingleton<ILoggingService, LoggingService>();
+
 #if DEBUG
-            builder.Services.AddSingleton<IDateTimeProvider, RealDateTimeProvider>(); // This breaks caching logic if using real web service to get last update dates
+            builder.Services.AddSingleton<IDateTimeProvider, MockDateTimeProvider>(); // This breaks caching logic if using real web service to get last update dates
+            builder.Services.AddSingleton<IWebService, MockWebService>();
+            builder.Services.AddSingleton<DbService>();
+            builder.Services.AddSingleton<ILoggingService, LoggingService>();
 #else
             builder.Services.AddSingleton<IDateTimeProvider, RealDateTimeProvider>();
+            builder.Services.AddSingleton<DbService>();
+            builder.Services.AddSingleton<IWebService, WebService>();
+            builder.Services.AddSingleton<ILoggingService, LoggingService>();
 #endif
 
             return builder.Build();

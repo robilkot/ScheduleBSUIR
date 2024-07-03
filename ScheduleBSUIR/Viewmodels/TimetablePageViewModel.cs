@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DevExpress.Data.XtraReports.Native;
 using DevExpress.Maui.Core.Internal;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
@@ -9,6 +8,7 @@ using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
+using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -80,9 +80,8 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private TimetableState _timetableState = TimetableState.Default;
 
-        // todo: caching
         [ObservableProperty]
-        private ObservableRangeCollection<ITimetableItem> _schedule = [];
+        private ObservableCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
         private TypedId? _timetableId = default;
@@ -116,7 +115,10 @@ namespace ScheduleBSUIR.Viewmodels
                 _loggingService.LogInfo($"GenerateMoreItems returned {newDays.Count} objects", displayCaller: false);
             }
 
-            Schedule.AddRange(newDays);
+            foreach (ITimetableItem item in newDays)
+            {
+                Schedule.Add(item);
+            }
 
             IsLoadingMoreSchedule = false;
 

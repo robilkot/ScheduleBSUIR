@@ -7,9 +7,9 @@ using System.Diagnostics;
 
 namespace ScheduleBSUIR.Services
 {
-    public class TimetableService(WebService webService, DbService dbService, IDateTimeProvider dateTimeProvider, ILoggingService loggingService, PreferencesService preferencesService)
+    public class TimetableService(IWebService webService, DbService dbService, IDateTimeProvider dateTimeProvider, ILoggingService loggingService, PreferencesService preferencesService)
     {
-        private readonly WebService _webService = webService;
+        private readonly IWebService _webService = webService;
         private readonly DbService _dbService = dbService;
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;

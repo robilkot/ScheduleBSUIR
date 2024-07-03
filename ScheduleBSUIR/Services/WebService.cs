@@ -3,12 +3,11 @@ using ScheduleBSUIR.Helpers.JsonConverters;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.API;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace ScheduleBSUIR.Services
 {
-    public class WebService
+    public class WebService : IWebService
     {
         private readonly ILoggingService _loggingService;
         private readonly JsonSerializerOptions _deserializeOptions;
@@ -76,7 +75,7 @@ namespace ScheduleBSUIR.Services
             }
             catch (Exception ex)
             {
-                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} failed with exception: {ex.Message}", displayCaller: false);
+                _loggingService.LogError($"{nameof(GetDeserializedDataAsync)} failed:\n{ex.Message}", displayCaller: false);
             }
 
             return result;

@@ -1,0 +1,26 @@
+{
+  "startDate": null,
+  "endDate": null,
+  "startExamsDate": "13.05.2024",
+  "endExamsDate": "26.05.2024",
+  "employeeDto": null,
+  "studentGroupDto": {
+    "name": "000001",
+    "facultyId": 20005,
+    "facultyAbbrev": "ФИТУ",
+    "facultyName": "Факультет информационных технологий и управления",
+    "specialityDepartmentEducationFormId": 20540,
+    "specialityName": "Информационные технологии и управление в технических системах",
+    "specialityAbbrev": "ИТиУвТС",
+    "course": 3,
+    "id": 24168,
+    "calendarId": "a1b9e4b559b9fd2ce36ea3b8a16e402be41fab42a469580f51e5e8d2c67086f9@group.calendar.google.com",
+    "educationDegree": 1
+  },
+  "schedules": null,
+  "previousSchedules": null,
+  "currentTerm": null,
+  "previousTerm": null,
+  "exams": null,
+  "currentPeriod": null
+}

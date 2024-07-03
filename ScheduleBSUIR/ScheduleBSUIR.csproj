@@ -83,6 +83,12 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\party.png" />
+	  <None Remove="Resources\Raw\MockData\Responses\MockEmployees.json" />
+	  <None Remove="Resources\Raw\MockData\Responses\Timetable000001.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Raw\MockData\Responses\Timetable221701.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -108,6 +114,15 @@
 	  <Compile Update="View\TimetablePage.xaml.cs">
 	    <DependentUpon>TimetablePage.xaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Update="Resources\Raw\MockData\Responses\MockEmployees.json">
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </MauiAsset>
+	  <MauiAsset Update="Resources\Raw\MockData\Responses\Timetable000001.json">
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </MauiAsset>
 	</ItemGroup>
 
 	<ItemGroup>

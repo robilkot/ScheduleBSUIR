@@ -1,0 +1,78 @@
+[
+  {
+    "firstName": "Виктор",
+    "lastName": "Чуешов",
+    "middleName": "Иванович",
+    "degree": "д.ф.н.",
+    "rank": "профессор",
+    "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+    "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.Философии"
+    ],
+    "id": 500629,
+    "urlId": "v-chueshov",
+    "fio": "Чуешов В. И. (профессор)"
+  },
+  {
+    "firstName": "Цзюнь",
+    "lastName": "Ма",
+    "middleName": null,
+    "degree": "",
+    "rank": null,
+    "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/550771",
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИКТ"
+    ],
+    "id": 550771,
+    "urlId": "ts-ma",
+    "fio": "Ма Ц."
+  },
+
+  {
+    "firstName": "Расписания",
+    "lastName": "Нет",
+    "middleName": "Нет",
+    "degree": "",
+    "rank": null,
+    "photoLink": null,
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИИТ"
+    ],
+    "id": 100001,
+    "urlId": "noUrl",
+    "fio": "fio Расписания Нет"
+  },
+  {
+    "firstName": "FirstNameOnly",
+    "lastName": "",
+    "middleName": null,
+    "degree": "",
+    "rank": null,
+    "photoLink": null,
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИИТ"
+    ],
+    "id": 100002,
+    "urlId": "noUrl",
+    "fio": "fio FirstNameOnly"
+  },
+  {
+    "firstName": "",
+    "lastName": "LastNameOnly",
+    "middleName": null,
+    "degree": "",
+    "rank": null,
+    "photoLink": null,
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИИТ"
+    ],
+    "id": 100003,
+    "urlId": "noUrl",
+    "fio": "fio LastNameOnly"
+  }
+]
