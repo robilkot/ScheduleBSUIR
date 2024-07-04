@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.Maui;
+﻿
+#define MOCK
+
+using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using MemoryToolkit.Maui;
 using Microsoft.Extensions.Logging;
@@ -59,17 +62,15 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<EmployeesService>();
             builder.Services.AddSingleton<TimetableService>();
 
-#if DEBUG
+#if MOCK
             builder.Services.AddSingleton<IDateTimeProvider, MockDateTimeProvider>(); // This breaks caching logic if using real web service to get last update dates
             builder.Services.AddSingleton<IWebService, MockWebService>();
-            builder.Services.AddSingleton<DbService>();
-            builder.Services.AddSingleton<ILoggingService, LoggingService>();
-#else
+#else 
             builder.Services.AddSingleton<IDateTimeProvider, RealDateTimeProvider>();
-            builder.Services.AddSingleton<DbService>();
             builder.Services.AddSingleton<IWebService, WebService>();
-            builder.Services.AddSingleton<ILoggingService, LoggingService>();
 #endif
+            builder.Services.AddSingleton<ILoggingService, LoggingService>();
+            builder.Services.AddSingleton<DbService>();
 
             return builder.Build();
         }

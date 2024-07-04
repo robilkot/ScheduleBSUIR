@@ -376,7 +376,7 @@
                                 <Image.Triggers>
                                     <DataTrigger
                                         TargetType="Image"
-                                        Binding="{Binding SelectedMode}"
+                                        Binding="{Binding TimetableState}"
                                         Value="{x:Static constants:TimetableState.Default}">
                                         <Setter
                                             Property="Opacity"
@@ -406,7 +406,7 @@
                                 <Image.Triggers>
                                     <DataTrigger
                                         TargetType="Image"
-                                        Binding="{Binding SelectedMode}"
+                                        Binding="{Binding TimetableState}"
                                         Value="{x:Static constants:TimetableState.Favorite}">
                                         <Setter
                                             Property="Opacity"
@@ -436,7 +436,7 @@
                                 <Image.Triggers>
                                     <DataTrigger
                                          TargetType="Image"
-                                         Binding="{Binding SelectedMode}"
+                                         Binding="{Binding TimetableState}"
                                          Value="{x:Static constants:TimetableState.Pinned}">
                                         <Setter
                                              Property="Opacity"
