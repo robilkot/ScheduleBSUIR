@@ -1,5 +1,6 @@
 ﻿using DevExpress.Xpo.DB;
 using LiteDB;
+using MethodTimer;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -30,6 +31,7 @@ namespace ScheduleBSUIR.Services
             _ = ClearCacheIfNeeded();
         }
 
+        [Time]
         private async Task ClearCacheIfNeeded()
         {
             double clearInterval = _preferencesService.GetClearCacheInterval();
@@ -52,8 +54,6 @@ namespace ScheduleBSUIR.Services
                 return;
             }
 
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
             DeleteStaleObjects<Timetable>();
 
             await RemoveAllAsync<Employee>();
@@ -73,8 +73,6 @@ namespace ScheduleBSUIR.Services
             }
 
             _preferencesService.SetClearCacheLastDate(_dateTimeProvider.Now);
-
-            _loggingService.LogInfo($"ClearCacheIfNeeded worked in {stopwatch.Elapsed:ss\\.FFFFF}");
         }
 
         public async Task ClearDatabase()
@@ -111,14 +109,13 @@ namespace ScheduleBSUIR.Services
             return tcs.Task;
         }
 
+        [Time]
         public Task AddOrUpdateAsync<T>(IEnumerable<T> newObjects) where T : ICacheable
         {
             TaskCompletionSource tcs = new();
 
             Task.Run(() =>
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
                 var collection = _database.GetCollection<T>();
 
                 foreach (var newObject in newObjects)
@@ -135,7 +132,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"AddOrUpdate<{typeof(T).Name}> {newObjects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"AddOrUpdate<{typeof(T).Name}> {newObjects.Count()} objects");
 
                 tcs.SetResult();
             });
@@ -161,19 +158,18 @@ namespace ScheduleBSUIR.Services
             return tcs.Task;
         }
 
+        [Time]
         public Task<List<T>> GetAllAsync<T>() where T : ICacheable
         {
             TaskCompletionSource<List<T>> tcs = new();
 
             _ = Task.Run(() =>
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
                 var collection = _database.GetCollection<T>();
 
                 var result = collection.FindAll().ToList();
 
-                _loggingService.LogInfo($"GetAll<{typeof(T).Name}> {collection.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"GetAll<{typeof(T).Name}> {collection.Count()} objects");
 
                 tcs.SetResult(result);
             });
@@ -206,14 +202,13 @@ namespace ScheduleBSUIR.Services
             return tcs.Task;
         }
 
+        [Time]
         public Task RemoveAsync<T>(IEnumerable<T> objects) where T : ICacheable
         {
             TaskCompletionSource tcs = new();
 
             _ = Task.Run(() =>
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
                 var collection = _database.GetCollection<T>();
 
                 foreach (var obj in objects)
@@ -223,7 +218,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"Remove<IEnumerable<{typeof(T).Name}>> {objects.Count()} objects in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"Remove<IEnumerable<{typeof(T).Name}>> {objects.Count()} objects");
 
                 tcs.SetResult();
             });
@@ -231,21 +226,20 @@ namespace ScheduleBSUIR.Services
             return tcs.Task;
         }
 
+        [Time]
         public Task RemoveAllAsync<T>() where T : ICacheable
         {
             TaskCompletionSource tcs = new();
 
             _ = Task.Run(() =>
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
                 var collection = _database.GetCollection<T>();
 
                 collection.DeleteAll();
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"RemoveAll<{typeof(T).Name}> in {stopwatch.Elapsed:ss\\.FFFFF}");
+                _loggingService.LogInfo($"RemoveAll<{typeof(T).Name}>");
 
                 tcs.SetResult();
             });

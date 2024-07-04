@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using MethodTimer;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
@@ -17,10 +18,10 @@ namespace ScheduleBSUIR.Services
 
         private const string StudentGroupIdType = nameof(StudentGroupIdType);
         private const string EmployeeIdType = nameof(EmployeeIdType);
+        
+        [Time]
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
             Timetable? timetable;
 
             var cachedTimetable = await _dbService.GetAsync<Timetable>(id.PrimaryKey);
@@ -72,8 +73,6 @@ namespace ScheduleBSUIR.Services
 
                 await _dbService.AddOrUpdateAsync(timetable);
             }
-
-            _loggingService.LogInfo($"GetTimetableAsync worked in {stopwatch.Elapsed:ss\\.FFFFF}");
 
             return timetable;
         }

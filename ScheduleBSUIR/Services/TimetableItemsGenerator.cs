@@ -1,4 +1,5 @@
-﻿using ScheduleBSUIR.Helpers.Constants;
+﻿using MethodTimer;
+using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.UI;
@@ -81,13 +82,13 @@ namespace ScheduleBSUIR.Services
         public int? GetNearestScheduleIndex() => _nearestScheduleIndex;
 
         // Assuming the list of exams is sorted
+
+        [Time]
         private DateTime? GetNearestScheduleDate(
             Timetable timetable,
             TimetableTabs timetableTab = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
             // We could optimize by not getting dailyschedules
             var enumerator = GetEnumeratorForParameters(timetable, timetableTab, subgroupType);
 
@@ -98,7 +99,7 @@ namespace ScheduleBSUIR.Services
                 result = enumerator.Current.First().DateLesson;
             }
 
-            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM") ?? "NULL"} in {stopwatch.Elapsed:ss\\.FFFFF}", displayCaller: false);
+            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM") ?? "NULL"}");
 
             return result;
         }
