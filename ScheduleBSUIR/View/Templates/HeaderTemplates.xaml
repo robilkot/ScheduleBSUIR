@@ -9,14 +9,35 @@
     
     <converters:DateToHeaderTextConverter
         x:Key="DateToHeaderTextConverter"/>
+    <converters:OnlyIfMondayAndNotNullConverter
+        x:Key="OnlyIfMondayAndNotNullConverter"/>
 
     <DataTemplate
         x:Key="ActiveHeaderTemplate"
         x:DataType="uimodel:ScheduleDay">
-        <Label
-            Margin="0,20,0,0"
-            Style="{StaticResource LabelBodyHeaderStyle}"
-            Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}, Mode=OneTime}"/>
+        <Grid
+            ColumnDefinitions="auto,*"
+            Margin="10,20,10,0">
+            <Label
+                Grid.Column="0"
+                VerticalOptions="Center"
+                Style="{StaticResource LabelBodyHeaderStyle}"
+                Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}, Mode=OneTime}"/>
+            <Label
+                Grid.Column="1"
+                VerticalOptions="Center"
+                HorizontalOptions="End"
+                Style="{StaticResource LabelBodySecondaryStyle}"
+                Text="{Binding Week, StringFormat='Неделя {0}', Mode=OneTime}">
+                <Label.IsVisible>
+                    <MultiBinding
+                        Converter="{StaticResource OnlyIfMondayAndNotNullConverter}">
+                        <Binding Path="Week" Mode="OneTime"/>
+                        <Binding Path="Day" Mode="OneTime"/>
+                    </MultiBinding>
+                </Label.IsVisible>
+            </Label>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate

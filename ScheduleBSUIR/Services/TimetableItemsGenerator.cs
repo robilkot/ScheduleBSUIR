@@ -61,7 +61,7 @@ namespace ScheduleBSUIR.Services
 
                     lastObtainedSchedule = _schedulesEnumerator.Current;
 
-                    resultList.Add(new ScheduleDay(lastObtainedSchedule.Day));
+                    resultList.Add(new ScheduleDay(lastObtainedSchedule.Day, lastObtainedSchedule.Week));
 
                     resultList.AddRange(lastObtainedSchedule);
                 }
@@ -148,8 +148,9 @@ namespace ScheduleBSUIR.Services
                         Schedule cloned = (Schedule)schedule.Clone();
                         cloned.DateLesson = currentDate;
                         return cloned;
-                    })
-                    .ToList(); // todo: Is it worth it?
+                    });
+
+                DailySchedule currentSchedule = new(schedules, currentWeekNumber);
 
                 currentDate = currentDate.AddDays(1);
 
@@ -158,10 +159,8 @@ namespace ScheduleBSUIR.Services
                     currentWeekNumber += 1;
                 }
 
-                if (schedules.Count > 0)
+                if (schedules.Any())
                 {
-                    DailySchedule currentSchedule = new(schedules);
-
                     yield return currentSchedule;
                 }
             }

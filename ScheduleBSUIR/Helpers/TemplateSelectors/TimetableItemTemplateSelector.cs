@@ -27,8 +27,6 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         public required DataTemplate InactiveScheduleDayTemplate { get; init; }
         public required DataTemplate ActiveAnnouncementTemplate { get; init; }
         public required DataTemplate InactiveAnnouncementTemplate { get; init; }
-        //public required DataTemplate ActiveScheduleWeekTemplate { get; init; }
-        //public required DataTemplate InactiveScheduleWeekTemplate { get; init; }
 
         protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
         {
@@ -46,7 +44,6 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
                     : (schedule.Announcement ? InactiveAnnouncementTemplate : InactiveScheduleTemplate),
 
                 ScheduleDay scheduleDay => scheduleDay.Day >= _dateTimeProvider.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
-                //ScheduleWeek => ActiveScheduleWeekTemplate, // todo: template for week?
                 _ => throw new UnreachableException(),
             };
 
