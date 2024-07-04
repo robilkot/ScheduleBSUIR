@@ -59,19 +59,20 @@
         x:DataType="uimodel:TimetableEnd">
         <Grid
             HorizontalOptions="Center"
-            Margin="40"
-            Opacity="0.5"
-            ColumnSpacing="10"
+            Margin="40,40,40,100"
+            ColumnSpacing="5"
             ColumnDefinitions="auto,auto">
             <Label
                 Grid.Column="0"
+                Opacity="0.5"
+                VerticalOptions="Center"
                 Style="{StaticResource LabelBodyPrimaryStyle}"
                 Text="Пар больше нет"/>
             <Image
                 Grid.Column="1"
                 HeightRequest="30"
                 WidthRequest="30"
-                Source="dark_party"/>
+                Source="fire"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

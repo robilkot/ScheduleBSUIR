@@ -17,49 +17,49 @@
         TargetType="Border"
         x:Key="LectureColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource LectureColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="PracticeColorStyle">
             <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource PracticeColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="LabColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource LabColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="ConsultColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource ConsultColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="ExamColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource ExamColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="CreditColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource CreditColor}"/>
     </Style>
     <Style
         TargetType="Border"
         x:Key="AnnouncementColorStyle">
         <Setter
-            Property="BackgroundColor"
+            Property="Background"
             Value="{DynamicResource AnnouncementColor}"/>
     </Style>
 
@@ -87,16 +87,16 @@
             BorderWidth="0"
             FontAttributes="Bold"
             FontSize="16"
-            BackgroundColor="{StaticResource DarkControlBackground}"
-            TextColor="{StaticResource SecondaryGray}"
+            Background="{StaticResource ModalPageBackgroundBrush}"
+            TextColor="{AppThemeBinding Dark={StaticResource DarkSecondaryTextColor}, Light={StaticResource LightSecondaryTextColor}}"
             Text="{Binding AvatarText, Mode=OneTime}"
             ImageSource="{Binding AvatarUrl, Mode=OneTime}">
-            <toolkit:AvatarView.Shadow>
+            <!--<toolkit:AvatarView.Shadow>
                 <Shadow
                     Brush="Black"
                     Opacity="0.5"
                     Radius="20"/>
-            </toolkit:AvatarView.Shadow>
+            </toolkit:AvatarView.Shadow>-->
         </toolkit:AvatarView>
     </DataTemplate>
 
@@ -105,7 +105,7 @@
         x:Key="SkeletonLessonTemplate"
         x:DataType="model:Schedule">
         <Border
-            BackgroundColor="{StaticResource DarkLightControlBackground}"
+            Background="{StaticResource ControlBackgroundBrush}"
             HeightRequest="70"
             Padding="10,5">
             <Grid
@@ -118,16 +118,16 @@
                     RowDefinitions="auto,auto">
                     <Border
                         Grid.Row="0"
-                        BackgroundColor="{StaticResource SecondaryGray}"
+                        Background="{StaticResource SecondaryTextBrush}"
                         HeightRequest="16"/>
                     <Border
                         Grid.Row="1"
-                        BackgroundColor="{StaticResource SecondaryGray}"
+                        Background="{StaticResource SecondaryTextBrush}"
                         HeightRequest="16"/>
                 </Grid>
                 <Ellipse
                     Grid.Column="1"
-                    BackgroundColor="{StaticResource DarkControlBackground}"
+                    Background="{StaticResource ModalPageBackgroundBrush}"
                     WidthRequest="50"
                     HeightRequest="50"/>
             </Grid>
@@ -141,7 +141,7 @@
         <Border
             StrokeThickness="0"
             MinimumHeightRequest="70"
-            BackgroundColor="{StaticResource DarkLightControlBackground}"
+            Background="{StaticResource ControlBackgroundBrush}"
             Padding="10,5">
             <Grid
                 ColumnSpacing="8"
@@ -207,7 +207,7 @@
                             IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
                             WidthRequest="20"
                             HeightRequest="20"
-                            Source="dark_user">
+                            Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                         </Image>
                         <Label
                             Grid.Column="2"
@@ -221,7 +221,7 @@
                         Grid.Row="1"
                         IsVisible="{Binding Auditories, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                         Style="{StaticResource LabelBodySecondaryStyle}"
-                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
+                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, TargetNullValue='',  Mode=OneTime}">
                     </Label>
                     <Label
                         Grid.Row="2"
@@ -261,7 +261,7 @@
         <Border
             Opacity="0.35"
             StrokeDashArray="16,8"
-            Stroke="White"
+            Stroke="{StaticResource PrimaryTextBrush}"
             StrokeThickness="1"
             HeightRequest="45"
             BackgroundColor="Transparent"
@@ -314,7 +314,7 @@
                         IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
                         WidthRequest="20"
                         HeightRequest="20"
-                        Source="dark_user">
+                        Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                     </Image>
                     <Label
                         Grid.Column="2"
@@ -335,7 +335,7 @@
         <Border
             StrokeThickness="0"
             MinimumHeightRequest="70"
-            BackgroundColor="{StaticResource DarkLightControlBackground}"
+            Background="{StaticResource ControlBackgroundBrush}"
             Padding="10,5">
             <Grid
                 ColumnSpacing="8"
@@ -401,7 +401,7 @@
                             IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
                             WidthRequest="20"
                             HeightRequest="20"
-                            Source="dark_user">
+                            Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                         </Image>
                         <Label
                             Grid.Column="2"
@@ -421,7 +421,7 @@
                         Grid.Row="2"
                         IsVisible="{Binding Auditories, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                         Style="{StaticResource LabelBodySecondaryStyle}"
-                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, Mode=OneTime}">
+                        Text="{Binding Auditories, Converter={StaticResource StringListToStringConverter}, TargetNullValue='', Mode=OneTime}">
                     </Label>
                 </Grid>
 
@@ -475,7 +475,7 @@
         <Border
             Opacity="0.35"
             StrokeDashArray="16,8"
-            Stroke="White"
+            Stroke="{StaticResource PrimaryTextBrush}"
             StrokeThickness="1"
             HeightRequest="45"
             BackgroundColor="Transparent"
@@ -528,7 +528,7 @@
                         IsVisible="{Binding NumSubgroup, Converter={StaticResource IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}, Mode=OneTime}"
                         WidthRequest="20"
                         HeightRequest="20"
-                        Source="dark_user">
+                        Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                     </Image>
                     <Label
                         Grid.Column="2"

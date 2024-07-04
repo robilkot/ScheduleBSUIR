@@ -2,7 +2,7 @@
 
 namespace ScheduleBSUIR.Helpers.Constants
 {
-    public static class LessonsColorsHelper
+    public static class ColorsHelper
     {
         public static readonly Color Green = Color.FromArgb("#31ce57");
         public static readonly Color Red = Color.FromArgb("#ff463a");
@@ -16,15 +16,15 @@ namespace ScheduleBSUIR.Helpers.Constants
         public static readonly Color Gray = Color.FromArgb("#8f8e94");
 
         public static readonly ImmutableList<Color> AvailableColors = [
-            Green,
             Red,
-            Yellow,
-            Brown,
-            Violet,
-            Blue,
-            Orange,
             Pink,
+            Orange,
+            Yellow,
+            Green,
             Lightblue,
+            Blue,
+            Violet,
+            Brown,
             Gray,
         ];
     }

@@ -13,10 +13,10 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              Shell.NavBarIsVisible="False"
-             x:Name="timetablePage"
-             Background="Black">
+             x:Name="timetablePage">
 
-    <Grid>
+    <Grid
+        Background="{StaticResource PageBackgroundBrush}">
         <!-- Timetable collectionview -->
         <dx:DXCollectionView
             x:Name="dayScheduleCollectionView"
@@ -51,30 +51,6 @@
                     Timetable="{Binding Timetable}"
                     TimetableId="{Binding TimetableId}"/>
             </dx:DXCollectionView.Header>
-
-            <!--<CollectionView.EmptyView>
-                <AbsoluteLayout>
-                    <Grid
-                        VerticalOptions="Center"
-                        AbsoluteLayout.LayoutBounds="0.5, 0.5, 250, 200"
-                        AbsoluteLayout.LayoutFlags="PositionProportional"
-                        Opacity="0.5"
-                        RowSpacing="20"
-                        RowDefinitions="auto,auto">
-                        <Image
-                            WidthRequest="100"
-                            VerticalOptions="Center"
-                            HorizontalOptions="Center"
-                            Grid.Row="0"
-                            Source="party"/>
-                        <Label
-                            Grid.Row="1"
-                            HorizontalTextAlignment="Center"
-                            Style="{StaticResource LabelBodyHeaderStyle}"
-                            Text="Занятий больше нет"/>
-                    </Grid>
-                </AbsoluteLayout>
-            </CollectionView.EmptyView>-->
         </dx:DXCollectionView>
         
         <!-- Navbar -->
@@ -91,7 +67,7 @@
                     StartPoint="0,0"
                     EndPoint="0,1">
                     <GradientStop
-                        Color="#AA000000"
+                        Color="{AppThemeBinding Dark='#AA000000', Light='#AAFFFFFF'}"
                         Offset="0.0" />
                     <GradientStop 
                         Color="Transparent"
@@ -110,7 +86,7 @@
                 <Image
                     Grid.Column="0"
                     Margin="0,10,0,10"
-                    Source="dark_arrow_left"/>
+                    Source="{AppThemeBinding Dark=dark_arrow_left, Light=light_arrow_left}"/>
                 <Label
                     Grid.Column="1"
                     VerticalOptions="Center"
@@ -166,7 +142,7 @@
                     </Label>
                     <Image
                         Grid.Column="0"
-                        Source="dark_user">
+                        Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                         <Image.Triggers>
                             <DataTrigger
                                 TargetType="Image"
@@ -174,7 +150,7 @@
                                 Value="True">
                                 <Setter
                                     Property="Source"
-                                    Value="dark_users"/>
+                                    Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
                             </DataTrigger>
                         </Image.Triggers>
                     </Image>
@@ -194,7 +170,7 @@
                 WidthRequest="40"
                 HeightRequest="40">
                 <Image
-                    Source="dark_bookmark_inactive">
+                    Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
                     <Image.Triggers>
                         <DataTrigger
                             TargetType="Image"
@@ -202,7 +178,7 @@
                             Value="{x:Static constants:TimetableState.Favorite}">
                             <Setter
                                 Property="Source"
-                                Value="dark_bookmark_active"/>
+                                Value="{AppThemeBinding Dark=dark_bookmark_active, Light=light_bookmark_active}"/>
                         </DataTrigger>
                         <DataTrigger
                             TargetType="Image"
@@ -210,7 +186,7 @@
                             Value="{x:Static constants:TimetableState.Pinned}">
                             <Setter
                                 Property="Source"
-                                Value="dark_pin"/>
+                                Value="{AppThemeBinding Dark=dark_pin, Light=light_pin}"/>
                         </DataTrigger>
                     </Image.Triggers>
                 </Image>
@@ -226,8 +202,6 @@
                             Property="Opacity"
                             Value="0.5"/>
                     </DataTrigger>
-
-
                 </Grid.Triggers>
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>
@@ -250,7 +224,7 @@
 
                 <Border
                     Padding="20,10"
-                    BackgroundColor="{StaticResource DarkControlBackground}">
+                    Background="{StaticResource ControlBackgroundBrush}">
                     <VerticalStackLayout
                         Spacing="10">
                         <VerticalStackLayout.Resources>
@@ -270,13 +244,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_user"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                        TargetType="Image"
+                                        Binding="{Binding SelectedMode}"
+                                        Value="{x:Static constants:SubgroupType.FirstSubgroup}">
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -288,13 +274,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_user"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                        TargetType="Image"
+                                        Binding="{Binding SelectedMode}"
+                                        Value="{x:Static constants:SubgroupType.SecondSubgroup}">
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:SubgroupType.SecondSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -306,13 +304,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_users"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_users, Light=light_users}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                        TargetType="Image"
+                                        Binding="{Binding SelectedMode}"
+                                        Value="{x:Static constants:SubgroupType.All}">
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:SubgroupType.All}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -341,7 +351,7 @@
 
                 <Border
                     Padding="20,10"
-                    BackgroundColor="{StaticResource DarkControlBackground}">
+                    Background="{StaticResource ControlBackgroundBrush}">
                     <VerticalStackLayout
                         Spacing="10">
                         <VerticalStackLayout.Resources>
@@ -361,13 +371,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_bookmark_inactive"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                        TargetType="Image"
+                                        Binding="{Binding SelectedMode}"
+                                        Value="{x:Static constants:TimetableState.Default}">
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:TimetableState.Default}, Converter={StaticResource TimetableStateToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Default}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -379,13 +401,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_bookmark_active"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_bookmark_active, Light=light_bookmark_active}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                        TargetType="Image"
+                                        Binding="{Binding SelectedMode}"
+                                        Value="{x:Static constants:TimetableState.Favorite}">
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:TimetableState.Favorite}, Converter={StaticResource TimetableStateToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Favorite}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -397,13 +431,25 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Source="dark_pin"/>
+                                Opacity="0.5"
+                                Source="{AppThemeBinding Dark=dark_pin, Light=light_pin}">
+                                <Image.Triggers>
+                                    <DataTrigger
+                                         TargetType="Image"
+                                         Binding="{Binding SelectedMode}"
+                                         Value="{x:Static constants:TimetableState.Pinned}">
+                                        <Setter
+                                             Property="Opacity"
+                                             Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Source={x:Static constants:TimetableState.Pinned}, Converter={StaticResource TimetableStateToStringConverter}}"/>
                             <Image
                                 Grid.Column="2"
-                                Source="dark_check"
+                                Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Pinned}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -425,12 +471,12 @@
             AllowDismiss="True" 
             StateChanged="scheduleDetailSheet_StateChanged"
             CornerRadius="12"
-            Padding="15,30"
             HalfExpandedRatio="0.5"
-            BackgroundColor="{StaticResource DarkControlBackground}"
             x:DataType="model:Schedule">
 
             <ScrollView
+                Padding="15,30"
+                Background="{StaticResource PageBackgroundBrush}"
                 VerticalScrollBarVisibility="Never">
                 <VerticalStackLayout
                     x:Name="sheetContent"
@@ -457,8 +503,7 @@
 
                     <!--Schedule details-->
                     <Border
-                        Padding="15"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        Padding="15">
 
                         <VerticalStackLayout
                             Spacing="20">
@@ -537,7 +582,18 @@
                                     Grid.Column="1"
                                     HorizontalTextAlignment="End"
                                     Style="{StaticResource LabelBodySecondaryStyle}"
-                                    Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}"/>
+                                    Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}">
+                                    <Label.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Auditories, Converter={StaticResource IsEmptyConverter}}"
+                                            Value="True"
+                                            TargetType="Label">
+                                            <Setter
+                                                Property="Text"
+                                                Value="Не указана"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                             </Grid>
 
                             <!-- Weeks -->
@@ -564,8 +620,7 @@
 
                     <Border
                         IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
-                        Padding="15"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        Padding="15">
                         <Label
                             Text="{Binding Note}"
                             Style="{StaticResource LabelBodyPrimaryStyle}"/>
@@ -579,13 +634,12 @@
                         Style="{StaticResource LabelBodySecondaryStyle}"/>
 
                     <Border
-                        IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
-                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                        IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}">
 
                         <dx:DXCollectionView
                             UseRippleEffect="True"
                             ReduceSizeToContent="True"
-                            ItemSeparatorColor="{StaticResource ListSeparatorColor}"
+                            ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
                             ItemSeparatorThickness="1"
                             ItemsSource="{Binding Employees}">
                             <dx:DXCollectionView.ItemTemplate>
@@ -605,8 +659,8 @@
                                             CornerRadius="25"
                                             BorderWidth="0"
                                             FontAttributes="Bold"
-                                            BackgroundColor="Black"
-                                            TextColor="{StaticResource SecondaryGray}"
+                                            Background="{StaticResource ModalPageBackgroundBrush}"
+                                            TextColor="{AppThemeBinding Dark={StaticResource DarkSecondaryTextColor}, Light={StaticResource LightSecondaryTextColor}}"
                                             Text="{Binding AvatarText, Mode=OneTime}"
                                             ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
 
@@ -623,7 +677,7 @@
                                             Grid.Column="2"
                                             HeightRequest="16"
                                             Opacity="0.5"
-                                            Source="dark_arrow_right"/>
+                                            Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
 
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer
@@ -651,8 +705,7 @@
                         </Label.IsVisible>
                     </Label>
 
-                    <Border
-                        BackgroundColor="{StaticResource DarkLightControlBackground}">
+                    <Border>
                         <Border.IsVisible>
                             <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
                                 <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
@@ -663,7 +716,7 @@
                         <dx:DXCollectionView
                             UseRippleEffect="True"
                             ReduceSizeToContent="True"
-                            ItemSeparatorColor="{StaticResource ListSeparatorColor}"
+                            ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
                             ItemSeparatorThickness="1"
                             ItemsSource="{Binding StudentGroups}">
                             <dx:DXCollectionView.ItemTemplate>
@@ -686,7 +739,7 @@
                                             Grid.Column="1"
                                             HeightRequest="16"
                                             Opacity="0.5"
-                                            Source="dark_arrow_right"/>
+                                            Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
 
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer

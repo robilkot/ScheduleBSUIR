@@ -11,12 +11,13 @@
              mtk:LeakMonitorBehavior.Cascade="True"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
              mtk:TearDownBehavior.Cascade="True"
-             Title="SettingsPage"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             Title="SettingsPage">
 
-    <ScrollView>
+    <ScrollView
+        Background="{StaticResource PageBackgroundBrush}">
         <VerticalStackLayout
-            Padding="15"
+            Padding="15,15,15,50"
             Spacing="20">
 
             <Grid
@@ -58,12 +59,12 @@
                 Style="{StaticResource LabelBodySecondaryStyle}"/>
 
             <Border
-                BackgroundColor="{StaticResource DarkLightControlBackground}">
+                Background="{StaticResource ControlBackgroundBrush}">
                 <dx:DXCollectionView
                     AllowCascadeUpdate="False"
                     UseRippleEffect="True"
                     ReduceSizeToContent="True"
-                    ItemSeparatorColor="{StaticResource ListSeparatorColor}"
+                    ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
                     ItemSeparatorThickness="1"
                     ItemsSource="{x:Static constants:LessonTypesHelper.BasicTypes}">
                     <dx:DXCollectionView.Resources>
@@ -103,7 +104,7 @@
                                     HeightRequest="16"
                                     Opacity="0.5"
                                     Rotation="90"
-                                    Source="dark_arrow_right">
+                                    Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}">
                                 </Image>
 
                                 <Grid.GestureRecognizers>
@@ -120,9 +121,9 @@
             <dx:DXPopup
                 Opened="ColorPickerPopup_ChangingState"
                 Closed="ColorPickerPopup_ChangingState"
-                Background="{StaticResource DarkLightControlBackground}"
+                Background="{StaticResource ControlBackgroundBrush}"
                 AllowShadow="True"
-                ShadowColor="#CC000000"
+                ShadowColor="#55000000"
                 ShadowRadius="40"
                 ShadowVerticalOffset="10"
                 x:Name="colorPickerPopup">
@@ -132,7 +133,7 @@
                         x:Name="colorSelector"
                         HorizontalOptions="Center"
                         SelectedColorChanged="DXColorSelector_SelectedColorChanged"
-                        ItemsSource="{x:Static constants:LessonsColorsHelper.AvailableColors}"/>
+                        ItemsSource="{x:Static constants:ColorsHelper.AvailableColors}"/>
                 </Border>
             </dx:DXPopup>
             

@@ -7,9 +7,10 @@
              xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
              mtk:LeakMonitorBehavior.Cascade="True"
              mtk:TearDownBehavior.Cascade="False"
-             Shell.NavBarIsVisible="False"
-             Background="Black">
+             Shell.NavBarIsVisible="False">
+
     <RefreshView
+        Background="{StaticResource PageBackgroundBrush}"
         IsRefreshing="{Binding IsRefreshing}"
         Command="{Binding RefreshCommand}">
         <Grid
@@ -20,7 +21,7 @@
                 <Label 
                     Text="{Binding Log}"
                     FontSize="14"
-                    TextColor="White">
+                    TextColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor}, Light={StaticResource LightPrimaryTextColor}}">
                 </Label>
             </ScrollView>
             <Grid

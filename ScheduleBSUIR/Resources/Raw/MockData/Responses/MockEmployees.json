@@ -46,21 +46,6 @@
     "fio": "fio Расписания Нет"
   },
   {
-    "firstName": "FirstNameOnly",
-    "lastName": "",
-    "middleName": null,
-    "degree": "",
-    "rank": null,
-    "photoLink": null,
-    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
-    "academicDepartment": [
-      "Каф.ИИТ"
-    ],
-    "id": 100002,
-    "urlId": "noUrl",
-    "fio": "fio FirstNameOnly"
-  },
-  {
     "firstName": "",
     "lastName": "LastNameOnly",
     "middleName": null,

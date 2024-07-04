@@ -16,7 +16,7 @@
     </ContentView.Resources>
 
     <Border
-        Background="{StaticResource DarkControlBackground}">
+        Background="{AppThemeBinding Dark={StaticResource ModalPageBackgroundBrush}, Light={StaticResource ControlBackgroundBrush}}">
         <Grid
             x:Name="selectorGrid"
             Padding="2"
@@ -28,7 +28,7 @@
                 HorizontalOptions="Fill"
                 x:Name="selector"
                 VerticalOptions="Fill"
-                Background="{StaticResource DarkLightControlBackground}"
+                Background="{AppThemeBinding Dark={StaticResource ControlBackgroundBrush}, Light={StaticResource ModalPageBackgroundBrush}}"
                 StrokeShape="RoundRectangle 8">
             </Border>
 
@@ -39,7 +39,7 @@
                 HeightRequest="30"
                 Padding="5">
                 <Image
-                    Source="dark_schedule"/>
+                    Source="{AppThemeBinding Dark=dark_schedule, Light=light_schedule}"/>
             </Grid>
 
             <Label
@@ -59,7 +59,7 @@
                 HeightRequest="30"
                 Padding="5">
                 <Image
-                    Source="dark_exams"/>
+                    Source="{AppThemeBinding Dark=dark_exams, Light=light_exams}"/>
             </Grid>
             
             <Grid.GestureRecognizers>

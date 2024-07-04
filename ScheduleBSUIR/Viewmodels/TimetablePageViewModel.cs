@@ -6,7 +6,6 @@ using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
-using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
@@ -118,7 +117,7 @@ namespace ScheduleBSUIR.Viewmodels
                 Schedule.Add(item);
             }
 
-            if(newItems.Count == 0)
+            if (newItems.Count == 0)
             {
                 _scheduleLoaded = true;
             }
@@ -142,7 +141,12 @@ namespace ScheduleBSUIR.Viewmodels
 
                 _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
 
-                TimetableId = await _timetableService.GetPinnedIdAsync();
+                var pinnedId = await _timetableService.GetPinnedIdAsync();
+
+                if (pinnedId is not null)
+                {
+                    TimetableId = pinnedId;
+                }
             }
 
             try
@@ -258,8 +262,11 @@ namespace ScheduleBSUIR.Viewmodels
             await ScrollToActiveSchedule();
         }
 
-        private async Task ScrollToActiveSchedule()
+        public async Task ScrollToActiveSchedule()
         {
+            if (Timetable is null)
+                return;
+
             int? nearestScheduleIndex = _timetableItemsGenerator.GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)

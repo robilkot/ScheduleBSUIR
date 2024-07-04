@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Models.Messaging;
-using static ScheduleBSUIR.Helpers.Constants.LessonsColorsHelper;
+using static ScheduleBSUIR.Helpers.Constants.ColorsHelper;
 using static ScheduleBSUIR.Helpers.Constants.PreferencesKeys;
 
 namespace ScheduleBSUIR.Services
@@ -111,7 +111,7 @@ namespace ScheduleBSUIR.Services
                 ExamColor => Blue,
                 ConsultColor => Brown,
                 CreditColor => Lightblue,
-                AnnouncementColor => Orange,
+                AnnouncementColor => Gray,
                 UnknownColor => Gray,
                 _ => Gray,
             };
