@@ -5,16 +5,17 @@
              xmlns:uimodel="clr-namespace:ScheduleBSUIR.Models.UI"
              xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
              xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
-             x:Class="ScheduleBSUIR.View.Templates.HeaderTemplates">
+             x:Class="ScheduleBSUIR.View.Templates.HelperTemplates">
     
     <converters:DateToHeaderTextConverter
         x:Key="DateToHeaderTextConverter"/>
     <converters:OnlyIfMondayAndNotNullConverter
         x:Key="OnlyIfMondayAndNotNullConverter"/>
 
+    <!-- Active day header template -->
     <DataTemplate
         x:Key="ActiveHeaderTemplate"
-        x:DataType="uimodel:ScheduleDay">
+        x:DataType="uimodel:DayHeader">
         <Grid
             ColumnDefinitions="auto,*"
             Margin="10,20,10,0">
@@ -40,14 +41,37 @@
         </Grid>
     </DataTemplate>
 
+    <!-- Inactive day header template -->
     <DataTemplate
         x:Key="InactiveHeaderTemplate"
-        x:DataType="uimodel:ScheduleDay">
+        x:DataType="uimodel:DayHeader">
         <Label
             Margin="0,10,0,0"
             Opacity="0.35"
             Style="{StaticResource LabelHeaderStyle}"
             FontSize="15"
             Text="{Binding Day, Converter={StaticResource DateToHeaderTextConverter}, Mode=OneTime}"/>
+    </DataTemplate>
+
+    <!-- Timetable end template -->
+    <DataTemplate
+        x:Key="TimetableEndTemplate"
+        x:DataType="uimodel:TimetableEnd">
+        <Grid
+            HorizontalOptions="Center"
+            Margin="40"
+            Opacity="0.5"
+            ColumnSpacing="10"
+            ColumnDefinitions="auto,auto">
+            <Label
+                Grid.Column="0"
+                Style="{StaticResource LabelBodyPrimaryStyle}"
+                Text="Пар больше нет"/>
+            <Image
+                Grid.Column="1"
+                HeightRequest="30"
+                WidthRequest="30"
+                Source="dark_party"/>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

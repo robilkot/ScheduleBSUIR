@@ -12,7 +12,7 @@ namespace ScheduleBSUIR.Services
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-        private const int LoadingStep = 10;
+        private const int DaysPerLoad = 5;
 
         private IEnumerator<DailySchedule>? _schedulesEnumerator = null;
 
@@ -20,13 +20,15 @@ namespace ScheduleBSUIR.Services
         private TimetableTabs _currentTab;
         private SubgroupType _currentSubgroupType;
 
+        private int _currentItemIndex = 0;
         private int? _nearestScheduleIndex = null;
+        private bool _endRecordReturned = false;
 
+        [Time]
         public async Task<List<ITimetableItem>> GenerateMoreItems(
             Timetable timetable,
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All,
-            bool generateTillActive = false)
+            SubgroupType subgroupType = SubgroupType.All)
         {
             _timetable = timetable;
 
@@ -38,6 +40,9 @@ namespace ScheduleBSUIR.Services
                 _schedulesEnumerator?.Dispose();
                 _schedulesEnumerator = null;
                 _nearestScheduleIndex = null;
+
+                _endRecordReturned = false;
+                _currentItemIndex = 0;
             }
 
             _schedulesEnumerator ??= GetEnumeratorForParameters(timetable, timetableTabs, subgroupType);
@@ -47,32 +52,39 @@ namespace ScheduleBSUIR.Services
 
             await Task.Run(() =>
             {
-                DateTime? _nearestScheduleDate = generateTillActive
-                    ? GetNearestScheduleDate(timetable, timetableTabs, subgroupType)
-                    : null;
+                DateTime? _nearestScheduleDate = GetNearestScheduleDate(timetable, timetableTabs, subgroupType);
 
                 DailySchedule? lastObtainedSchedule = null;
 
-                int currentScheduleIndex = 0;
-                
-                do
+                int currentDayIndex = 0;
+
+                while (currentDayIndex < DaysPerLoad)
                 {
                     if (!_schedulesEnumerator.MoveNext())
+                    {
+                        if(!_endRecordReturned)
+                        {
+                            resultList.Add(new TimetableEnd());
+                            _endRecordReturned = true;
+                        }
+
                         return;
+                    }
 
                     lastObtainedSchedule = _schedulesEnumerator.Current;
 
-                    resultList.Add(new ScheduleDay(lastObtainedSchedule.Day, lastObtainedSchedule.Week));
+                    resultList.Add(new DayHeader(lastObtainedSchedule.Day, lastObtainedSchedule.Week));
 
                     resultList.AddRange(lastObtainedSchedule);
-                }
-                while (currentScheduleIndex < LoadingStep ||
-                generateTillActive && _nearestScheduleDate is not null
-                && lastObtainedSchedule?.Day.Date < _nearestScheduleDate.Value.Date);
 
-                if(generateTillActive)
-                {
-                    _nearestScheduleIndex = currentScheduleIndex;
+                    _currentItemIndex += 1 + lastObtainedSchedule.Count;
+                    currentDayIndex += 1;
+
+                    if(_nearestScheduleIndex is null && _nearestScheduleDate is not null && lastObtainedSchedule.Day >= _nearestScheduleDate.Value.Date)
+                    {
+                        _nearestScheduleIndex = _currentItemIndex;
+                        _loggingService.LogInfo($"NearestScheduleIndex set to {_currentItemIndex}");
+                    }
                 }
             });
 
@@ -82,7 +94,6 @@ namespace ScheduleBSUIR.Services
         public int? GetNearestScheduleIndex() => _nearestScheduleIndex;
 
         // Assuming the list of exams is sorted
-
         [Time]
         private DateTime? GetNearestScheduleDate(
             Timetable timetable,
@@ -158,6 +169,11 @@ namespace ScheduleBSUIR.Services
                 if (currentDate.DayOfWeek is DayOfWeek.Sunday)
                 {
                     currentWeekNumber += 1;
+
+                    if(currentWeekNumber == 5)
+                    {
+                        currentWeekNumber = 1;
+                    }
                 }
 
                 if (schedules.Any())

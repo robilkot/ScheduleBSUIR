@@ -23,7 +23,7 @@ namespace ScheduleBSUIR.Viewmodels
         private void InitExampleItems()
         {
             ExampleItems = [
-                new ScheduleDay(_dateTimeProvider.Now.AddDays(-1)),
+                new DayHeader(_dateTimeProvider.Now.AddDays(-1)),
                 new Schedule()
                 {
                     LessonTypeAbbrev = LessonTypesHelper.Lecture.Abbreviation,
@@ -36,7 +36,7 @@ namespace ScheduleBSUIR.Viewmodels
                     StartLessonTime = _dateTimeProvider.Now.AddHours(-5),
                     EndLessonTime = _dateTimeProvider.Now.AddHours(-3),
                 },
-                new ScheduleDay(_dateTimeProvider.Now.Date),
+                new DayHeader(_dateTimeProvider.Now.Date),
                 new Schedule()
                 {
                     LessonTypeAbbrev = LessonTypesHelper.Lab.Abbreviation,

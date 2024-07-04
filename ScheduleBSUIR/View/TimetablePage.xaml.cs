@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using DevExpress.Maui.CollectionView;
 using DevExpress.Maui.Controls;
 using DevExpress.Maui.Core.Internal;
+using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Viewmodels;
@@ -25,12 +26,12 @@ public partial class TimetablePage : ContentPage
                 if (dayScheduleCollectionView is null)
                     return;
 
-                // Increment value for visual convenience
-                var indexToScrollTo = Math.Clamp(message.Value + 8, 0, dayScheduleCollectionView.ScrollItemCount - 1);
+                // Decrement value for visual convenience
+                var indexToScrollTo = Math.Clamp(message.Value - 2, 0, dayScheduleCollectionView.ScrollItemCount - 1);
 
                 var handle = dayScheduleCollectionView.GetItemHandle(indexToScrollTo);
 
-                dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.End);
+                dayScheduleCollectionView.ScrollTo(handle, DevExpress.Maui.Core.DXScrollToPosition.Start);
             });
         });
     }
@@ -65,8 +66,11 @@ public partial class TimetablePage : ContentPage
         scheduleDetailSheet.State = BottomSheetState.HalfExpanded;
     }
 
-    private void dayScheduleCollectionView_LoadMore(object sender, EventArgs e)
+    private async void dayScheduleCollectionView_Scrolled(object sender, DXCollectionViewScrolledEventArgs e)
     {
-        _viewmodel.LoadMoreScheduleCommand.Execute(null);
+        if (e.LastVisibleItemIndex > dayScheduleCollectionView.ScrollItemCount - 10)
+        {
+            await _viewmodel.LoadMoreSchedule();
+        }
     }
 }

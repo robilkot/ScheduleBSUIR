@@ -2,6 +2,8 @@
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.UI;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ScheduleBSUIR.Helpers.TemplateSelectors
 {
@@ -27,23 +29,31 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         public required DataTemplate InactiveScheduleDayTemplate { get; init; }
         public required DataTemplate ActiveAnnouncementTemplate { get; init; }
         public required DataTemplate InactiveAnnouncementTemplate { get; init; }
+        public required DataTemplate TimetableEndTemplate { get; init; }
 
         protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
         {
+            Debug.WriteLine("ONSELECTTEMPLATE");
+
             if (item is not ITimetableItem timetableItem)
                 return null;
 
-            if (_cachedResults.TryGetValue(timetableItem, out DataTemplate? template))
-                return template;
+            ref var cachedTemplate = ref CollectionsMarshal.GetValueRefOrNullRef(_cachedResults, timetableItem);
 
-            template = timetableItem switch
+            if (!Unsafe.IsNullRef(in cachedTemplate))
+                return cachedTemplate;
+
+            DataTemplate template = timetableItem switch
             {
                 Schedule schedule =>
                     schedule.DateLesson >= _dateTimeProvider.Now.Date
                     ? (schedule.Announcement ? ActiveAnnouncementTemplate : ActiveScheduleTemplate)
                     : (schedule.Announcement ? InactiveAnnouncementTemplate : InactiveScheduleTemplate),
 
-                ScheduleDay scheduleDay => scheduleDay.Day >= _dateTimeProvider.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
+                DayHeader header => header.Day >= _dateTimeProvider.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
+
+                TimetableEnd => TimetableEndTemplate,
+
                 _ => throw new UnreachableException(),
             };
 

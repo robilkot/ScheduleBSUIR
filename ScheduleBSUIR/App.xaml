@@ -43,7 +43,7 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
                 <ResourceDictionary Source="View/Templates/LessonTemplates.xaml" />
-                <ResourceDictionary Source="View/Templates/HeaderTemplates.xaml" />
+                <ResourceDictionary Source="View/Templates/HelperTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

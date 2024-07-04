@@ -6,6 +6,7 @@ using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
 using ScheduleBSUIR.Models.Messaging;
+using ScheduleBSUIR.Models.UI;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
@@ -50,31 +51,34 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
-        partial void OnSelectedTabChanged(TimetableTabs value)
+        async partial void OnSelectedTabChanged(TimetableTabs value)
         {
             Schedule = [];
 
-            LoadMoreScheduleCommand.Execute(true);
+            await LoadMoreSchedule();
+            await ScrollToActiveSchedule();
         }
 
         [ObservableProperty]
         private SubgroupType _selectedMode;
-        partial void OnSelectedModeChanged(SubgroupType oldValue, SubgroupType newValue)
+        async partial void OnSelectedModeChanged(SubgroupType value)
         {
-            _preferencesService.SetSubgroupTypePreference(newValue);
+            _preferencesService.SetSubgroupTypePreference(value);
 
             Schedule = [];
 
-            LoadMoreScheduleCommand.Execute(true);
+            await LoadMoreSchedule();
+            await ScrollToActiveSchedule();
         }
 
         [ObservableProperty]
         private Timetable? _timetable;
-        partial void OnTimetableChanged(Timetable? value)
+        async partial void OnTimetableChanged(Timetable? value)
         {
             Schedule = [];
 
-            LoadMoreScheduleCommand.Execute(true);
+            await LoadMoreSchedule();
+            await ScrollToActiveSchedule();
         }
 
         [ObservableProperty]
@@ -102,25 +106,21 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private bool _isBackButtonVisible = false;
 
-        [RelayCommand]
-        public async Task LoadMoreSchedule(bool? scrollToNearest = false)
+        public async Task LoadMoreSchedule()
         {
             if (Timetable is null)
                 return;
 
-            List<ITimetableItem> newDays = await _timetableItemsGenerator.GenerateMoreItems(Timetable, SelectedTab, SelectedMode, generateTillActive: scrollToNearest ?? false);
+            List<ITimetableItem> newItems = await _timetableItemsGenerator.GenerateMoreItems(Timetable, SelectedTab, SelectedMode);
 
-            _loggingService.LogInfo($"GenerateMoreItems returned {newDays.Count} objects", displayCaller: false);
+            _loggingService.LogInfo($"GenerateMoreItems returned {newItems.Count} objects", displayCaller: false);
 
-            foreach (ITimetableItem item in newDays)
+            foreach (ITimetableItem item in newItems)
             {
                 Schedule.Add(item);
             }
 
             IsLoadingMoreSchedule = false;
-
-            if (scrollToNearest ?? false)
-                ScrollToActiveSchedule();
         }
 
         public async Task GetTimetable(bool forceReload)
@@ -246,12 +246,17 @@ namespace ScheduleBSUIR.Viewmodels
             }
         }
 
-        private void ScrollToActiveSchedule()
+        private async Task ScrollToActiveSchedule()
         {
             int? nearestScheduleIndex = _timetableItemsGenerator.GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)
             {
+                while (Schedule.Count < (nearestScheduleIndex + 1))
+                {
+                    await LoadMoreSchedule();
+                }
+
                 ScrollToIndex message = new(nearestScheduleIndex.Value);
 
                 WeakReferenceMessenger.Default.Send(message);

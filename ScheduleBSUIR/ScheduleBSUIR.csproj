@@ -114,6 +114,9 @@
 	  <Compile Update="View\EmployeesListPage.xaml.cs">
 	    <DependentUpon>EmployeesListPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Templates\HelperTemplates.xaml.cs">
+	    <DependentUpon>HelperTemplates.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\TimetablePage.xaml.cs">
 	    <DependentUpon>TimetablePage.xaml</DependentUpon>
 	  </Compile>

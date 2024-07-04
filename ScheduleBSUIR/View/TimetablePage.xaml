@@ -24,9 +24,8 @@
             ItemSpacing="5"
             Margin="15,0"
             ItemsSource="{Binding Schedule}"
-            IsLoadMoreEnabled="True"
-            LoadMore="dayScheduleCollectionView_LoadMore"
             Tap="dayScheduleCollectionView_Tap"
+            Scrolled="dayScheduleCollectionView_Scrolled"
             IsRefreshing="{Binding IsLoadingMoreSchedule}"
             ItemTemplate="{StaticResource LessonTemplateSelector}"
             AllowCascadeUpdate="False"
@@ -41,6 +40,7 @@
                         InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
                         ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
                         InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
+                        TimetableEndTemplate="{StaticResource TimetableEndTemplate}"
                         x:Key="LessonTemplateSelector"/>
                 </ResourceDictionary>
             </dx:DXCollectionView.Resources>
