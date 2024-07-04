@@ -26,7 +26,6 @@
             ItemsSource="{Binding Schedule}"
             Tap="dayScheduleCollectionView_Tap"
             Scrolled="dayScheduleCollectionView_Scrolled"
-            IsRefreshing="{Binding IsLoadingMoreSchedule}"
             ItemTemplate="{StaticResource LessonTemplateSelector}"
             AllowCascadeUpdate="False"
             SelectionMode="None">

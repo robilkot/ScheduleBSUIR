@@ -68,7 +68,8 @@ public partial class TimetablePage : ContentPage
 
     private async void dayScheduleCollectionView_Scrolled(object sender, DXCollectionViewScrolledEventArgs e)
     {
-        if (e.LastVisibleItemIndex > dayScheduleCollectionView.ScrollItemCount - 10)
+        if (e.LastVisibleItemIndex > dayScheduleCollectionView.ScrollItemCount - 10
+            || dayScheduleCollectionView.ScrollItemCount == 0)
         {
             await _viewmodel.LoadMoreSchedule();
         }

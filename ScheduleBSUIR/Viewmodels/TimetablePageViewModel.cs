@@ -37,6 +37,8 @@ namespace ScheduleBSUIR.Viewmodels
             WeakReferenceMessenger.Default.Register<TimetablePinnedMessage>(this);
         }
 
+        private bool _scheduleLoaded = false;
+
         [ObservableProperty]
         private bool _isPinnedTimetable = false;
 
@@ -53,10 +55,7 @@ namespace ScheduleBSUIR.Viewmodels
         private TimetableTabs _selectedTab = TimetableTabs.Exams;
         async partial void OnSelectedTabChanged(TimetableTabs value)
         {
-            Schedule = [];
-
-            await LoadMoreSchedule();
-            await ScrollToActiveSchedule();
+            await ReloadSchedule();
         }
 
         [ObservableProperty]
@@ -65,20 +64,14 @@ namespace ScheduleBSUIR.Viewmodels
         {
             _preferencesService.SetSubgroupTypePreference(value);
 
-            Schedule = [];
-
-            await LoadMoreSchedule();
-            await ScrollToActiveSchedule();
+            await ReloadSchedule();
         }
 
         [ObservableProperty]
         private Timetable? _timetable;
         async partial void OnTimetableChanged(Timetable? value)
         {
-            Schedule = [];
-
-            await LoadMoreSchedule();
-            await ScrollToActiveSchedule();
+            await ReloadSchedule();
         }
 
         [ObservableProperty]
@@ -108,6 +101,11 @@ namespace ScheduleBSUIR.Viewmodels
 
         public async Task LoadMoreSchedule()
         {
+            if (IsLoadingMoreSchedule || _scheduleLoaded)
+                return;
+
+            IsLoadingMoreSchedule = true;
+
             if (Timetable is null)
                 return;
 
@@ -118,6 +116,11 @@ namespace ScheduleBSUIR.Viewmodels
             foreach (ITimetableItem item in newItems)
             {
                 Schedule.Add(item);
+            }
+
+            if(newItems.Count == 0)
+            {
+                _scheduleLoaded = true;
             }
 
             IsLoadingMoreSchedule = false;
@@ -244,6 +247,15 @@ namespace ScheduleBSUIR.Viewmodels
             {
                 IsBackButtonVisible = (bool)isBackButtonVisible;
             }
+        }
+
+        private async Task ReloadSchedule()
+        {
+            Schedule = [];
+            _scheduleLoaded = false;
+
+            await LoadMoreSchedule();
+            await ScrollToActiveSchedule();
         }
 
         private async Task ScrollToActiveSchedule()
