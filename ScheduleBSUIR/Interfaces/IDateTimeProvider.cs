@@ -4,5 +4,6 @@
     {
         DateTime Now { get; }
         DateTime UtcNow { get; }
+        Task<int> GetWeekAsync(DateTime date, CancellationToken cancellationToken);
     }
 }

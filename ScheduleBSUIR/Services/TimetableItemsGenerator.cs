@@ -15,9 +15,11 @@ namespace ScheduleBSUIR.Services
 
         private IEnumerator<DailySchedule>? _schedulesEnumerator = null;
 
-        private Timetable? _timetable = null;
+        private Timetable _timetable;
         private TimetableTabs _currentTab;
         private SubgroupType _currentSubgroupType;
+
+        private int? _nearestScheduleIndex = null;
 
         public async Task<List<ITimetableItem>> GenerateMoreItems(
             Timetable timetable,
@@ -34,100 +36,153 @@ namespace ScheduleBSUIR.Services
 
                 _schedulesEnumerator?.Dispose();
                 _schedulesEnumerator = null;
+                _nearestScheduleIndex = null;
             }
 
-            _schedulesEnumerator ??= GetEnumeratorForParameters();
+            _schedulesEnumerator ??= GetEnumeratorForParameters(timetable, timetableTabs, subgroupType);
 
             // Deferred LINQ
             List<ITimetableItem> resultList = [];
 
             await Task.Run(() =>
             {
-                DateTime? nearestScheduleDate = generateTillActive ? GetNearestScheduleDate(timetable, timetableTabs, subgroupType) : null;
+                DateTime? _nearestScheduleDate = generateTillActive
+                    ? GetNearestScheduleDate(timetable, timetableTabs, subgroupType)
+                    : null;
 
                 DailySchedule? lastObtainedSchedule = null;
 
+                int currentScheduleIndex = 0;
+                
                 do
                 {
-                    for (int i = 0; i < LoadingStep; i++)
-                    {
-                        if (!_schedulesEnumerator.MoveNext())
-                            return;
+                    if (!_schedulesEnumerator.MoveNext())
+                        return;
 
-                        lastObtainedSchedule = _schedulesEnumerator.Current;
+                    lastObtainedSchedule = _schedulesEnumerator.Current;
 
-                        resultList.Add(new ScheduleDay(lastObtainedSchedule.Day));
+                    resultList.Add(new ScheduleDay(lastObtainedSchedule.Day));
 
-                        resultList.AddRange(lastObtainedSchedule);
-                    }
+                    resultList.AddRange(lastObtainedSchedule);
                 }
-                while (generateTillActive && nearestScheduleDate is not null
-                && lastObtainedSchedule?.Day.Date < nearestScheduleDate.Value.Date);
+                while (currentScheduleIndex < LoadingStep ||
+                generateTillActive && _nearestScheduleDate is not null
+                && lastObtainedSchedule?.Day.Date < _nearestScheduleDate.Value.Date);
+
+                if(generateTillActive)
+                {
+                    _nearestScheduleIndex = currentScheduleIndex;
+                }
             });
 
             return resultList;
         }
 
-        public DateTime? GetNearestScheduleDate(Timetable timetable,
-            TimetableTabs timetableTabs = TimetableTabs.Schedule,
+        public int? GetNearestScheduleIndex() => _nearestScheduleIndex;
+
+        // Assuming the list of exams is sorted
+        private DateTime? GetNearestScheduleDate(
+            Timetable timetable,
+            TimetableTabs timetableTab = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            DateTime? result = null;
+            // We could optimize by not getting dailyschedules
+            var enumerator = GetEnumeratorForParameters(timetable, timetableTab, subgroupType);
 
-            // Assuming the list is sorted
-            if (timetableTabs is TimetableTabs.Exams)
+            DateTime? result = default;
+
+            if (enumerator.MoveNext())
             {
-                var firstSchedule = subgroupType switch
-                {
-                    SubgroupType.All => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    SubgroupType.FirstSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.SecondSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    SubgroupType.SecondSubgroup => timetable.Exams?
-                        .FirstOrDefault(schedule => schedule.NumSubgroup != SubgroupType.FirstSubgroup && schedule.DateLesson >= _dateTimeProvider.Now.Date),
-
-                    _ => throw new UnreachableException(),
-                };
-
-                result = firstSchedule?.DateLesson;
+                result = enumerator.Current.First().DateLesson;
             }
 
-            // todo for schedule tab
             _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM") ?? "NULL"} in {stopwatch.Elapsed:ss\\.FFFFF}", displayCaller: false);
 
             return result;
         }
 
-        private IEnumerator<DailySchedule> GetEnumeratorForParameters()
+        private IEnumerator<DailySchedule> GetEnumeratorForParameters(Timetable timetable, TimetableTabs timetableTabs, SubgroupType subgroupType)
         {
-            IEnumerable<DailySchedule> result = [];
-
-            if (_currentTab is TimetableTabs.Exams)
+            return timetableTabs switch
             {
-                var allSchedules = _currentSubgroupType switch
+                TimetableTabs.Exams when timetable.Exams is not null => GetExamsEnumerator(timetable, subgroupType),
+                TimetableTabs.Schedule when timetable.Schedules is not null => GetScheduleEnumerator(timetable, subgroupType),
+                _ => Enumerable.Empty<DailySchedule>().GetEnumerator()
+            };
+        }
+
+        private IEnumerator<DailySchedule> GetExamsEnumerator(Timetable timetable, SubgroupType subgroupType)
+        {
+            var enumerable = timetable.Exams!
+                    .OnlySubgroup(subgroupType)
+                    .GroupBy(schedule => schedule.DateLesson)
+                    .Select(grouping => new DailySchedule(grouping))
+                    ?? [];
+
+            return enumerable.GetEnumerator();
+        }
+
+        private IEnumerator<DailySchedule> GetScheduleEnumerator(Timetable timetable, SubgroupType subgroupType)
+        {
+            DateTime startDate = _dateTimeProvider.Now.AddDays(-1);
+            DateTime? endDate = timetable.EndDate;
+
+            if (endDate is null || startDate > endDate)
+                yield break;
+
+            DateTime currentDate = startDate;
+            int currentWeekNumber = _dateTimeProvider.GetWeekAsync(currentDate, CancellationToken.None).GetAwaiter().GetResult(); // todo: this does not run on main thread by design, but maybe refactor? 
+
+            while (currentDate <= endDate)
+            {
+                var schedulesOnThisDay = timetable.Schedules!.GetByDayOfWeek(currentDate.DayOfWeek);
+
+                var schedules = schedulesOnThisDay
+                    .Where(schedule => schedule.WeekNumber.Contains(currentWeekNumber))
+                    .Where(schedule => schedule.EndLessonDate >= currentDate)
+                    .OnlySubgroup(subgroupType)
+                    .Select(schedule =>
+                    {
+                        Schedule cloned = (Schedule)schedule.Clone();
+                        cloned.DateLesson = currentDate;
+                        return cloned;
+                    })
+                    .ToList(); // todo: Is it worth it?
+
+                currentDate = currentDate.AddDays(1);
+
+                if (currentDate.DayOfWeek is DayOfWeek.Sunday)
                 {
-                    SubgroupType.All => _timetable?.Exams,
-
-                    SubgroupType.FirstSubgroup => _timetable?.Exams?
-                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
-
-                    SubgroupType.SecondSubgroup => _timetable?.Exams?
-                        .Where(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
-
-                    _ => throw new UnreachableException(),
+                    currentWeekNumber += 1;
                 }
-                ?? [];
 
-                result = allSchedules
-                        .GroupBy(schedule => schedule.DateLesson)
-                        .Select(grouping => new DailySchedule(grouping));
+                if (schedules.Count > 0)
+                {
+                    DailySchedule currentSchedule = new(schedules);
+
+                    yield return currentSchedule;
+                }
             }
+        }
+    }
+    public static class TimetableItemsGeneratorExtensions
+    {
+        public static IEnumerable<Schedule> OnlySubgroup(this IEnumerable<Schedule> schedules, SubgroupType subgroupType)
+        {
+            return subgroupType switch
+            {
+                SubgroupType.All => schedules,
 
-            return result.GetEnumerator();
+                SubgroupType.FirstSubgroup => schedules
+                    .Where(schedule => schedule is { NumSubgroup: not SubgroupType.SecondSubgroup }),
+
+                SubgroupType.SecondSubgroup => schedules
+                    .Where(schedule => schedule is { NumSubgroup: not SubgroupType.FirstSubgroup }),
+
+                _ => throw new UnreachableException(),
+            };
         }
     }
 }

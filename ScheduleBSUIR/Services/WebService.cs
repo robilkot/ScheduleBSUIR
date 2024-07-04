@@ -52,6 +52,13 @@ namespace ScheduleBSUIR.Services
             return GetDeserializedDataAsync<IEnumerable<Employee>>(requestUrl, cancellationToken);
         }
 
+        public Task<int?> GetCurrentWeekAsync(CancellationToken cancellationToken)
+        {
+            var requestUrl = UrlGenerator.CurrentWeek();
+
+            return GetDeserializedDataAsync<int?>(requestUrl, cancellationToken);
+        }
+
         private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
         {
             T? result = default;

@@ -9,5 +9,6 @@ namespace ScheduleBSUIR.Interfaces
         Task<IEnumerable<StudentGroupHeader>?> GetGroupHeadersAsync(string groupNameFilter, CancellationToken cancellationToken);
         Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken);
         Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken);
+        Task<int?> GetCurrentWeekAsync(CancellationToken cancellationToken);
     }
 }

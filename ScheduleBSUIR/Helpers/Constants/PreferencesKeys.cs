@@ -6,8 +6,12 @@ namespace ScheduleBSUIR.Helpers.Constants
     {
         public const string FavoriteTimetableId = nameof(FavoriteTimetableId);
         public const string SelectedSubgroupType = nameof(SelectedSubgroupType);
+
         public const string CacheClearInterval = nameof(CacheClearInterval);
         public const string CacheClearLastDate = nameof(CacheClearLastDate);
+
+        public const string WeekUpdateDate = nameof(WeekUpdateDate);
+        public const string Week = nameof(Week);
 
         public const string LectureColor = nameof(LectureColor);
         public const string PracticeColor = nameof(PracticeColor);

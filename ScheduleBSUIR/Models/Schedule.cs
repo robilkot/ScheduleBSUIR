@@ -3,7 +3,7 @@ using ScheduleBSUIR.Interfaces;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Schedule : ITimetableItem
+    public class Schedule : ITimetableItem, ICloneable
     {
         public required List<int> WeekNumber { get; set; }
         public required List<StudentGroupDto> StudentGroups { get; set; }
@@ -21,5 +21,10 @@ namespace ScheduleBSUIR.Models
         public bool Announcement { get; set; }
         public bool Split { get; set; }
         public List<EmployeeDto>? Employees { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();    
+        }
     }
 }

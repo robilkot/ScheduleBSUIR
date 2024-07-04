@@ -8,7 +8,7 @@ namespace ScheduleBSUIR.Models
     {
         public EmployeeDto? EmployeeDto { get; set; }
         public StudentGroupDto? StudentGroupDto { get; set; }
-        public Dictionary<string, List<Schedule>>? Schedules { get; set; }
+        public TimetableWeek? Schedules { get; set; }
         public List<Schedule>? Exams { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

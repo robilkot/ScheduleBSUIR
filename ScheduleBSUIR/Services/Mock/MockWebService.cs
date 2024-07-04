@@ -77,6 +77,11 @@ namespace ScheduleBSUIR.Services.Mock
             return GetDeserializedDataAsync<IEnumerable<Employee>>(requestUrl, cancellationToken);
         }
 
+        public Task<int?> GetCurrentWeekAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult<int?>(2);
+        }
+
         private async Task<T?> GetDeserializedDataAsync<T>(string url, CancellationToken cancellationToken)
         {
             T? result = default;

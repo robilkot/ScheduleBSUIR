@@ -1,6 +1,6 @@
 {
-  "startDate": null,
-  "endDate": null,
+  "startDate": "09.02.2024",
+  "endDate": "07.06.2024",
   "startExamsDate": "13.05.2024",
   "endExamsDate": "26.05.2024",
   "employeeDto": null,
@@ -17,7 +17,2062 @@
     "calendarId": "a1b9e4b559b9fd2ce36ea3b8a16e402be41fab42a469580f51e5e8d2c67086f9@group.calendar.google.com",
     "educationDegree": 1
   },
-  "schedules": null,
+  "schedules": {
+    "Суббота": [
+      {
+        "auditories": [ "322а-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": "04.05 в ауд. 311-4",
+        "numSubgroup": 1,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 540746,
+            "firstName": "Александр",
+            "middleName": "Андреевич",
+            "lastName": "Жук",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/540746",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "a.zhuk@bsuir.by",
+            "urlId": "a-zhuk",
+            "calendarId": "1uovm1b56bljhuanfr7dut3258@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "10.02.2024",
+        "endLessonDate": "01.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "419-4 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "К.Ч.",
+        "subjectFullName": "Кураторский,информационный час",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "17.02.2024",
+        "endLessonDate": "25.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "322а-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": " 04.05 в ауд. 311-4 ",
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 540746,
+            "firstName": "Александр",
+            "middleName": "Андреевич",
+            "lastName": "Жук",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/540746",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "a.zhuk@bsuir.by",
+            "urlId": "a-zhuk",
+            "calendarId": "1uovm1b56bljhuanfr7dut3258@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "10.02.2024",
+        "endLessonDate": "01.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "427-4 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Полит",
+        "subjectFullName": "Политология",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 500346,
+            "firstName": "Инна",
+            "middleName": "Валерьевна",
+            "lastName": "Вашкевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500346",
+            "degree": "кандидат исторических наук",
+            "degreeAbbrev": "к.и.н.",
+            "rank": "доцент",
+            "email": "innavashkevich@bsuir.by",
+            "urlId": "i-vashkevich",
+            "calendarId": "47g58rubt6fj3vu9gm6volsr6s@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "17.02.2024",
+        "endLessonDate": "25.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "322а-5 к." ],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ЛР",
+        "note": " 04.05 в ауд. 311-4 ",
+        "numSubgroup": 2,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 540746,
+            "firstName": "Александр",
+            "middleName": "Андреевич",
+            "lastName": "Жук",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/540746",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "a.zhuk@bsuir.by",
+            "urlId": "a-zhuk",
+            "calendarId": "1uovm1b56bljhuanfr7dut3258@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "10.02.2024",
+        "endLessonDate": "01.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "301-4 к." ],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Философ",
+        "subjectFullName": "Философия",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 536079,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Амоненко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/536079",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "s.amonenko@bsuir.by",
+            "urlId": "s-amonenko",
+            "calendarId": "31tvc43pplslblt2lhgc04tobs@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "17.02.2024",
+        "endLessonDate": "25.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "301-4 к." ],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Философ",
+        "subjectFullName": "Философия",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 536079,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Амоненко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/536079",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "s.amonenko@bsuir.by",
+            "urlId": "s-amonenko",
+            "calendarId": "31tvc43pplslblt2lhgc04tobs@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "17.02.2024",
+        "endLessonDate": "11.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "15:00",
+        "lessonTypeAbbrev": "Консультация",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2 ],
+        "employees": [
+          {
+            "id": 500381,
+            "firstName": "Владимир",
+            "middleName": "Владимирович",
+            "lastName": "Захаров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500381",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": null,
+            "email": "zakharov@bsuir.by",
+            "urlId": "v-zakharov",
+            "calendarId": "5an78lkd8iq49j7ac867c0gd2o@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "15.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      }
+    ],
+    "Четверг": [
+      {
+        "auditories": [],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СпецП",
+        "subjectFullName": "Специальная подготовка",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "15.02.2024",
+        "endLessonDate": "06.06.2024",
+        "announcement": false,
+        "split": true
+      },
+      {
+        "auditories": [],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СпецП",
+        "subjectFullName": "Специальная подготовка",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "15.02.2024",
+        "endLessonDate": "06.06.2024",
+        "announcement": false,
+        "split": true
+      },
+      {
+        "auditories": [],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СпецП",
+        "subjectFullName": "Специальная подготовка",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "15.02.2024",
+        "endLessonDate": "06.06.2024",
+        "announcement": false,
+        "split": true
+      },
+      {
+        "auditories": [],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СпецП",
+        "subjectFullName": "Специальная подготовка",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "15.02.2024",
+        "endLessonDate": "06.06.2024",
+        "announcement": false,
+        "split": true
+      },
+      {
+        "auditories": [ "316-4 к." ],
+        "endLessonTime": "15:00",
+        "lessonTypeAbbrev": "Консультация",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Философ",
+        "subjectFullName": "Философия",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500629,
+            "firstName": "Виктор",
+            "middleName": "Иванович",
+            "lastName": "Чуешов",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+            "degree": "доктор философских наук",
+            "degreeAbbrev": "д.ф.н.",
+            "rank": "профессор",
+            "email": "v.chueshov@bsuir.by",
+            "urlId": "v-chueshov",
+            "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "20.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      }
+    ],
+    "Пятница": [
+      {
+        "auditories": [ "607-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 2,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "16.02.2024",
+        "endLessonDate": "07.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "607-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 1,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "01.03.2024",
+        "endLessonDate": "24.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "515-4 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СПЭ",
+        "subjectFullName": "Современная политэкономия",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 500955,
+            "firstName": "Елена",
+            "middleName": "Эрнстовна",
+            "lastName": "Титова",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500955",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "titova@bsuir.by",
+            "urlId": "e-titova",
+            "calendarId": "kgj85q5iqs35i8e08s73281drk@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "09.02.2024",
+        "endLessonDate": "31.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "901-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ОУИС",
+        "subjectFullName": "Основы управления интеллектуальной собственностью",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 500081,
+            "firstName": "Светлана",
+            "middleName": "Эдуардовна",
+            "lastName": "Саванович",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500081",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "svetasav@bsuir.by",
+            "urlId": "s-savanovich",
+            "calendarId": "o9q6f8air1lmji2ushshgtqb2k@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "16.02.2024",
+        "endLessonDate": "07.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "209-4 к." ],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ЛК",
+        "note": "последняя лк 17.05",
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СПЭ",
+        "subjectFullName": "Современная политэкономия",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 500955,
+            "firstName": "Елена",
+            "middleName": "Эрнстовна",
+            "lastName": "Титова",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500955",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "titova@bsuir.by",
+            "urlId": "e-titova",
+            "calendarId": "kgj85q5iqs35i8e08s73281drk@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "09.02.2024",
+        "endLessonDate": "07.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "209-4 к." ],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Полит",
+        "subjectFullName": "Политология",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 500346,
+            "firstName": "Инна",
+            "middleName": "Валерьевна",
+            "lastName": "Вашкевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500346",
+            "degree": "кандидат исторических наук",
+            "degreeAbbrev": "к.и.н.",
+            "rank": "доцент",
+            "email": "innavashkevich@bsuir.by",
+            "urlId": "i-vashkevich",
+            "calendarId": "47g58rubt6fj3vu9gm6volsr6s@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "09.02.2024",
+        "endLessonDate": "07.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "15:00",
+        "lessonTypeAbbrev": "Консультация",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 4 ],
+        "employees": [
+          {
+            "id": 502183,
+            "firstName": "Даниил",
+            "middleName": "Вячеславович",
+            "lastName": "Шункевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/502183",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "shunkevich@bsuir.by",
+            "urlId": "d-shunkevich",
+            "calendarId": "9fru31v5q3qolefvg67pume680@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "28.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "414-5 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 500381,
+            "firstName": "Владимир",
+            "middleName": "Владимирович",
+            "lastName": "Захаров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500381",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": null,
+            "email": "zakharov@bsuir.by",
+            "urlId": "v-zakharov",
+            "calendarId": "5an78lkd8iq49j7ac867c0gd2o@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "09.02.2024",
+        "endLessonDate": "31.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "316-4 к." ],
+        "endLessonTime": "22:00",
+        "lessonTypeAbbrev": "Экзамен",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "16:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Философ",
+        "subjectFullName": "Философия",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500629,
+            "firstName": "Виктор",
+            "middleName": "Иванович",
+            "lastName": "Чуешов",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+            "degree": "доктор философских наук",
+            "degreeAbbrev": "д.ф.н.",
+            "rank": "профессор",
+            "email": "v.chueshov@bsuir.by",
+            "urlId": "v-chueshov",
+            "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "21.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      }
+    ],
+    "Вторник": [
+      {
+        "auditories": [ "607-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 536003,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Никифоров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/536003",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "s.nikiforov@bsuir.by",
+            "urlId": "s-nikiforov",
+            "calendarId": "gq5h01aktf1ul28soo2fr14f90@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "13.02.2024",
+        "endLessonDate": "04.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "607-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 1,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 536003,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Никифоров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/536003",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "s.nikiforov@bsuir.by",
+            "urlId": "s-nikiforov",
+            "calendarId": "gq5h01aktf1ul28soo2fr14f90@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "13.02.2024",
+        "endLessonDate": "04.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 2,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "13.02.2024",
+        "endLessonDate": "04.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "607-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 2,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 536003,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Никифоров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/536003",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "s.nikiforov@bsuir.by",
+            "urlId": "s-nikiforov",
+            "calendarId": "gq5h01aktf1ul28soo2fr14f90@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "20.02.2024",
+        "endLessonDate": "28.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 1,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "20.02.2024",
+        "endLessonDate": "28.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "214-4 к." ],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "13.02.2024",
+        "endLessonDate": "04.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "203-4 к." ],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ИГИСиТ",
+        "subjectFullName": "Интеллектуальные геоинформационные системы и технологии",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "13.02.2024",
+        "endLessonDate": "04.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "15:00",
+        "lessonTypeAbbrev": "Консультация",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 2 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "11.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "420-4 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СПЭ",
+        "subjectFullName": "Современная политэкономия",
+        "weekNumber": [ 2 ],
+        "employees": [
+          {
+            "id": 500955,
+            "firstName": "Елена",
+            "middleName": "Эрнстовна",
+            "lastName": "Титова",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500955",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "titova@bsuir.by",
+            "urlId": "e-titova",
+            "calendarId": "kgj85q5iqs35i8e08s73281drk@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "20.02.2024",
+        "endLessonDate": "14.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ИГИСиТ",
+        "subjectFullName": "Интеллектуальные геоинформационные системы и технологии",
+        "weekNumber": [ 4 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "05.03.2024",
+        "endLessonDate": "28.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "901-5 к." ],
+        "endLessonTime": "22:00",
+        "lessonTypeAbbrev": "Экзамен",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "16:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СПЭ",
+        "subjectFullName": "Современная политэкономия",
+        "weekNumber": [ 4 ],
+        "employees": [
+          {
+            "id": 500955,
+            "firstName": "Елена",
+            "middleName": "Эрнстовна",
+            "lastName": "Титова",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500955",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "titova@bsuir.by",
+            "urlId": "e-titova",
+            "calendarId": "kgj85q5iqs35i8e08s73281drk@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "25.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      }
+    ],
+    "Понедельник": [
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": "27.05 с использованием ИКТ",
+        "numSubgroup": 0,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Инф. час",
+        "subjectFullName": "Информационный час",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "19.02.2024",
+        "endLessonDate": "27.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "418-4 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": "занятие с 03.06 переносится на 26.04 15:50, ауд. 202-4",
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Полит",
+        "subjectFullName": "Политология",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 500346,
+            "firstName": "Инна",
+            "middleName": "Валерьевна",
+            "lastName": "Вашкевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500346",
+            "degree": "кандидат исторических наук",
+            "degreeAbbrev": "к.и.н.",
+            "rank": "доцент",
+            "email": "innavashkevich@bsuir.by",
+            "urlId": "i-vashkevich",
+            "calendarId": "47g58rubt6fj3vu9gm6volsr6s@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "12.02.2024",
+        "endLessonDate": "03.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "202-3 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛК",
+        "note": " 27.05 с использованием ИКТ",
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ОУИС",
+        "subjectFullName": "Основы управления интеллектуальной собственностью",
+        "weekNumber": [ 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 504498,
+            "firstName": "Галина",
+            "middleName": "Александровна",
+            "lastName": "Пухир",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/504498",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "puhir@bsuir.by",
+            "urlId": "g-pukhir",
+            "calendarId": "6ofruhfaisatko07qdqsislj3s@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "19.02.2024",
+        "endLessonDate": "27.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ФизК",
+        "subjectFullName": "Физическая культура",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "12.02.2024",
+        "endLessonDate": "03.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "209-4 к." ],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ЛК",
+        "note": " 27.05 занятия не будет; 03.06 с использованием ИКТ ",
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "Философ",
+        "subjectFullName": "Философия",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 500629,
+            "firstName": "Виктор",
+            "middleName": "Иванович",
+            "lastName": "Чуешов",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500629",
+            "degree": "доктор философских наук",
+            "degreeAbbrev": "д.ф.н.",
+            "rank": "профессор",
+            "email": "v.chueshov@bsuir.by",
+            "urlId": "v-chueshov",
+            "calendarId": "j1k705fg1i5hgt9ja1rep7u7hc@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "12.02.2024",
+        "endLessonDate": "03.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "901-5 к." ],
+        "endLessonTime": "16:00",
+        "lessonTypeAbbrev": "Консультация",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "15:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "СПЭ",
+        "subjectFullName": "Современная политэкономия",
+        "weekNumber": [ 4 ],
+        "employees": [
+          {
+            "id": 500955,
+            "firstName": "Елена",
+            "middleName": "Эрнстовна",
+            "lastName": "Титова",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500955",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "titova@bsuir.by",
+            "urlId": "e-titova",
+            "calendarId": "kgj85q5iqs35i8e08s73281drk@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "24.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "310-4 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛК",
+        "note": "27.05 и 03.06 начало в 16:00",
+        "numSubgroup": 0,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "12.02.2024",
+        "endLessonDate": "03.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "22:00",
+        "lessonTypeAbbrev": "Экзамен",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "16:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500381,
+            "firstName": "Владимир",
+            "middleName": "Владимирович",
+            "lastName": "Захаров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500381",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": null,
+            "email": "zakharov@bsuir.by",
+            "urlId": "v-zakharov",
+            "calendarId": "5an78lkd8iq49j7ac867c0gd2o@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "17.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "22:00",
+        "lessonTypeAbbrev": "Экзамен",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "16:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 502183,
+            "firstName": "Даниил",
+            "middleName": "Вячеславович",
+            "lastName": "Шункевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/502183",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "shunkevich@bsuir.by",
+            "urlId": "d-shunkevich",
+            "calendarId": "9fru31v5q3qolefvg67pume680@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "01.07.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      }
+    ],
+    "Среда": [
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 1,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "14.02.2024",
+        "endLessonDate": "05.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "10:20",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 2,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "28.02.2024",
+        "endLessonDate": "22.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "14:00",
+        "lessonTypeAbbrev": "Экзамен",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "09:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 2 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": "12.06.2024",
+        "startLessonDate": null,
+        "endLessonDate": null,
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ЛОИС",
+        "subjectFullName": "Логические основы интеллектуальных систем",
+        "weekNumber": [ 1, 3 ],
+        "employees": [
+          {
+            "id": 500382,
+            "firstName": "Валерьян",
+            "middleName": "Петрович",
+            "lastName": "Ивашенко",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500382",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "ivashenko@bsuir.by",
+            "urlId": "v-ivashenko",
+            "calendarId": "k5k6i0763um84p5urruj8ocdd0@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "14.02.2024",
+        "endLessonDate": "05.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612а-5 к." ],
+        "endLessonTime": "11:55",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "10:35",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ППОИС",
+        "subjectFullName": "Проектирование программного обеспечения интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 525194,
+            "firstName": "Михаил",
+            "middleName": "Ефимович",
+            "lastName": "Садовский",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/525194",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "sadovski@bsuir.by",
+            "urlId": "m-sadovskij",
+            "calendarId": "riruj86qp66nhukosol96bkgok@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "21.02.2024",
+        "endLessonDate": "29.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "214-4 к." ],
+        "endLessonTime": "13:45",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "12:25",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "МаОсИС",
+        "subjectFullName": "Математические основы интеллектуальных систем",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [
+          {
+            "id": 502183,
+            "firstName": "Даниил",
+            "middleName": "Вячеславович",
+            "lastName": "Шункевич",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/502183",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": "доцент",
+            "email": "shunkevich@bsuir.by",
+            "urlId": "d-shunkevich",
+            "calendarId": "9fru31v5q3qolefvg67pume680@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "14.02.2024",
+        "endLessonDate": "05.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [],
+        "endLessonTime": "15:20",
+        "lessonTypeAbbrev": "ПЗ",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "14:00",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ФизК",
+        "subjectFullName": "Физическая культура",
+        "weekNumber": [ 1, 2, 3, 4 ],
+        "employees": [],
+        "dateLesson": null,
+        "startLessonDate": "14.02.2024",
+        "endLessonDate": "05.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 2,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ИГИСиТ",
+        "subjectFullName": "Интеллектуальные геоинформационные системы и технологии",
+        "weekNumber": [ 1 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "14.02.2024",
+        "endLessonDate": "05.06.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "106-4 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛК",
+        "note": null,
+        "numSubgroup": 0,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "АОИС",
+        "subjectFullName": "Аппаратное обеспечение интеллектуальных систем",
+        "weekNumber": [ 2, 4 ],
+        "employees": [
+          {
+            "id": 500381,
+            "firstName": "Владимир",
+            "middleName": "Владимирович",
+            "lastName": "Захаров",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500381",
+            "degree": "кандидат технических наук",
+            "degreeAbbrev": "к.т.н.",
+            "rank": null,
+            "email": "zakharov@bsuir.by",
+            "urlId": "v-zakharov",
+            "calendarId": "5an78lkd8iq49j7ac867c0gd2o@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "21.02.2024",
+        "endLessonDate": "29.05.2024",
+        "announcement": false,
+        "split": false
+      },
+      {
+        "auditories": [ "612-5 к." ],
+        "endLessonTime": "17:10",
+        "lessonTypeAbbrev": "ЛР",
+        "note": null,
+        "numSubgroup": 1,
+        "startLessonTime": "15:50",
+        "studentGroups": [
+          {
+            "specialityName": "Искусственный интеллект",
+            "specialityCode": "1-40 03 01",
+            "numberOfStudents": 25,
+            "name": "221701",
+            "educationDegree": 1
+          }
+        ],
+        "subject": "ИГИСиТ",
+        "subjectFullName": "Интеллектуальные геоинформационные системы и технологии",
+        "weekNumber": [ 3 ],
+        "employees": [
+          {
+            "id": 500391,
+            "firstName": "Сергей",
+            "middleName": "Александрович",
+            "lastName": "Самодумкин",
+            "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/500391",
+            "degree": "",
+            "degreeAbbrev": "",
+            "rank": null,
+            "email": "samodumkin@bsuir.by",
+            "urlId": "s-samodumkin",
+            "calendarId": "28j7ufdj5g6uvt2r62gm1gp5h8@group.calendar.google.com",
+            "jobPositions": null
+          }
+        ],
+        "dateLesson": null,
+        "startLessonDate": "28.02.2024",
+        "endLessonDate": "22.05.2024",
+        "announcement": false,
+        "split": false
+      }
+    ]
+  },
   "previousSchedules": null,
   "currentTerm": null,
   "previousTerm": null,
@@ -226,7 +2281,7 @@
       ],
       "subject": "ТестПредмДлинТекст",
       "subjectFullName": "Lorem ipsum dolor sit amet, очень длинное название предмета которое точно не влезет в одну строку. Нужно предусмотреть переносы строк в таком случае",
-      "weekNumber": [ 2,3,4 ],
+      "weekNumber": [ 2, 3, 4 ],
       "employees": [
         {
           "id": 500629,

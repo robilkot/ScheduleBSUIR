@@ -110,10 +110,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             List<ITimetableItem> newDays = await _timetableItemsGenerator.GenerateMoreItems(Timetable, SelectedTab, SelectedMode, generateTillActive: scrollToNearest ?? false);
 
-            if (newDays.Count != 0)
-            {
-                _loggingService.LogInfo($"GenerateMoreItems returned {newDays.Count} objects", displayCaller: false);
-            }
+            _loggingService.LogInfo($"GenerateMoreItems returned {newDays.Count} objects", displayCaller: false);
 
             foreach (ITimetableItem item in newDays)
             {
@@ -249,19 +246,9 @@ namespace ScheduleBSUIR.Viewmodels
             }
         }
 
-        private int? GetNearestScheduleIndex()
-        {
-            if (Timetable is null)
-                return null;
-
-            var foundSchedule = Schedule?.FirstOrDefault(e => e is Schedule schedule && schedule.DateLesson >= _dateTimeProvider.Now.Date);
-
-            return foundSchedule is null ? null : Schedule?.IndexOf(foundSchedule);
-        }
         private void ScrollToActiveSchedule()
         {
-            // todo: get from generator and not execute linq each time
-            int? nearestScheduleIndex = GetNearestScheduleIndex();
+            int? nearestScheduleIndex = _timetableItemsGenerator.GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)
             {
