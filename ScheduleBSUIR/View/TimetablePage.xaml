@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ScheduleBSUIR.View.TimetablePage"
-             x:DataType="vm:TimetablePageViewModel"
-             xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
-             xmlns:model="clr-namespace:ScheduleBSUIR.Models"
-             xmlns:view="clr-namespace:ScheduleBSUIR.View"
-             xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
-             xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
-             xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
-             xmlns:dx="http://schemas.devexpress.com/maui"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
-             Shell.NavBarIsVisible="False"
-             x:Name="timetablePage">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ScheduleBSUIR.View.TimetablePage"
+    x:DataType="vm:TimetablePageViewModel"
+    xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+    xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+    xmlns:view="clr-namespace:ScheduleBSUIR.View"
+    xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+    xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+    xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
+    xmlns:dx="http://schemas.devexpress.com/maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
+    Shell.NavBarIsVisible="False"
+    x:Name="timetablePage">
 
     <Grid
         Background="{StaticResource PageBackgroundBrush}">
@@ -55,14 +56,22 @@
         
         <!-- Navbar -->
         <Grid
+            Background="{AppThemeBinding Light={StaticResource PageBackgroundBrush}, Dark={StaticResource ModalPageBackgroundBrush}}"
             x:Name="navBar"
             ZIndex="1"
-            Padding="15"
+            Padding="15,15,15,10"
             VerticalOptions="Start"
             ColumnSpacing="10"
             ColumnDefinitions="auto,*,auto,auto">
 
-            <Grid.Background>
+            <Grid.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.1"
+                    Radius="50"/>
+            </Grid.Shadow>
+
+            <!--<Grid.Background>
                 <LinearGradientBrush
                     StartPoint="0,0"
                     EndPoint="0,1">
@@ -73,7 +82,7 @@
                         Color="Transparent"
                         Offset="1.0" />
                 </LinearGradientBrush>
-            </Grid.Background>
+            </Grid.Background>-->
 
             <!-- Navigation button -->
             <Grid
@@ -474,9 +483,20 @@
             HalfExpandedRatio="0.5"
             x:DataType="model:Schedule">
 
+            <dx:BottomSheet.Resources>
+                <ResourceDictionary>
+                    <Style
+                        BasedOn="{StaticResource BaseBorderStyle}"
+                        TargetType="Border">
+                        <Setter
+                            Property="Background"
+                            Value="{AppThemeBinding Dark={StaticResource ControlBackgroundBrush}, Light={StaticResource LightPageBackgroundColor}}"/>
+                    </Style>
+                </ResourceDictionary>
+            </dx:BottomSheet.Resources>
+
             <ScrollView
                 Padding="15,30"
-                Background="{StaticResource PageBackgroundBrush}"
                 VerticalScrollBarVisibility="Never">
                 <VerticalStackLayout
                     x:Name="sheetContent"

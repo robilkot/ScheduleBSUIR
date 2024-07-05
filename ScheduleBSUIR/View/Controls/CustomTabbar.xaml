@@ -16,7 +16,7 @@
     </ContentView.Resources>
 
     <Border
-        Background="{AppThemeBinding Dark={StaticResource ModalPageBackgroundBrush}, Light={StaticResource ControlBackgroundBrush}}">
+        Background="{AppThemeBinding Dark={StaticResource PageBackgroundBrush}, Light={StaticResource ControlBackgroundBrush}}">
         <Grid
             x:Name="selectorGrid"
             Padding="2"
