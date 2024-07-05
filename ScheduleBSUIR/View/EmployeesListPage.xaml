@@ -71,7 +71,7 @@
                             BindableLayout.ItemsSource="{Binding FilteredFavoriteEmployeesIds}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate
-                                    x:DataType="model:StudentGroupId">
+                                    x:DataType="model:EmployeeId">
                                     <Grid
                                         ColumnSpacing="15"
                                         Padding="15,10"

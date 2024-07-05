@@ -1,3 +1,4 @@
+using Microsoft.Maui.Controls;
 using ScheduleBSUIR.Helpers.Constants;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -16,12 +17,12 @@ public partial class CustomTabbar : ContentView
 
             if (value == TimetableTabs.Schedule)
             {
-                secondOption.FadeTo(0.5, easing: Easing.CubicIn);
+                secondOption.FadeTo((double)App.Current.Resources["disabledOpacity"], easing: Easing.CubicIn);
                 firstOption.FadeTo(1, easing: Easing.CubicIn);
             }
             else
             {
-                firstOption.FadeTo(0.5, easing: Easing.CubicIn);
+                firstOption.FadeTo((double)App.Current.Resources["disabledOpacity"], easing: Easing.CubicIn);
                 secondOption.FadeTo(1, easing: Easing.CubicIn);
             }
 

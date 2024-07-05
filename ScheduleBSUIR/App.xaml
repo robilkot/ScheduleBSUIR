@@ -27,7 +27,7 @@
             <toolkit:BoolToObjectConverter
                 x:Key="EnabledOpacityConverter"
                 TrueObject="1"
-                FalseObject="0.5"/>
+                FalseObject="{StaticResource disabledOpacity}"/>
             <toolkit:EnumToIntConverter 
                 x:Key="EnumToIntConverter" />
             <toolkit:MathExpressionConverter 

@@ -71,19 +71,6 @@
                     Radius="50"/>
             </Grid.Shadow>
 
-            <!--<Grid.Background>
-                <LinearGradientBrush
-                    StartPoint="0,0"
-                    EndPoint="0,1">
-                    <GradientStop
-                        Color="{AppThemeBinding Dark='#AA000000', Light='#AAFFFFFF'}"
-                        Offset="0.0" />
-                    <GradientStop 
-                        Color="Transparent"
-                        Offset="1.0" />
-                </LinearGradientBrush>
-            </Grid.Background>-->
-
             <!-- Navigation button -->
             <Grid
                 IsVisible="{Binding IsBackButtonVisible}"
@@ -165,8 +152,7 @@
                     </Image>
                 </Grid>
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Command="{Binding ToggleSubgroupTypePopupCommand}"/>
+                    <TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>
                 </Grid.GestureRecognizers>
             </Grid>
 
@@ -218,29 +204,33 @@
             </Grid>
 
             <!-- Subgroup type popup-->
+                <!--PlacementTarget="{x:Reference navBar}"-->
             <dx:DXPopup
-                PlacementTarget="{x:Reference navBar}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Margin="10,70"
                 IsOpen="{Binding IsSubgroupTypePopupOpen}">
                 <dx:DXPopup.Resources>
                     <ResourceDictionary>
                         <Style TargetType="Grid">
+                            <Setter Property="Padding" Value="20,0"/>
                             <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
                             <Setter Property="ColumnSpacing" Value="15"/>
-                            <Setter Property="HeightRequest" Value="36"/>
+                            <Setter Property="HeightRequest" Value="50"/>
                         </Style>
                     </ResourceDictionary>
                 </dx:DXPopup.Resources>
 
                 <Border
-                    Padding="20,10"
+                    WidthRequest="270"
+                    Padding="0,5"
                     Background="{StaticResource ControlBackgroundBrush}">
-                    <VerticalStackLayout
-                        Spacing="10">
+                    <VerticalStackLayout>
                         <VerticalStackLayout.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Image">
                                     <Setter Property="WidthRequest" Value="20"/>
-                                    <Setter Property="Opacity" Value="0.5"/>
+                                    <Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>
                                 </Style>
 
                                 <Style TargetType="Label">
@@ -253,7 +243,6 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                                 <Image.Triggers>
                                     <DataTrigger
@@ -272,6 +261,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -283,7 +273,6 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
                                 <Image.Triggers>
                                     <DataTrigger
@@ -302,6 +291,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -313,7 +303,6 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_users, Light=light_users}">
                                 <Image.Triggers>
                                     <DataTrigger
@@ -332,6 +321,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -346,28 +336,31 @@
 
             <!-- Timetable state popup-->
             <dx:DXPopup
-                PlacementTarget="{x:Reference navBar}"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Margin="10,70"
                 IsOpen="{Binding IsTimetableStatePopupOpen}">
                 <dx:DXPopup.Resources>
                     <ResourceDictionary>
                         <Style TargetType="Grid">
+                            <Setter Property="Padding" Value="20,0"/>
                             <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
                             <Setter Property="ColumnSpacing" Value="15"/>
-                            <Setter Property="HeightRequest" Value="36"/>
+                            <Setter Property="HeightRequest" Value="50"/>
                         </Style>
                     </ResourceDictionary>
                 </dx:DXPopup.Resources>
 
                 <Border
-                    Padding="20,10"
+                    WidthRequest="270"
+                    Padding="0,5"
                     Background="{StaticResource ControlBackgroundBrush}">
-                    <VerticalStackLayout
-                        Spacing="10">
+                    <VerticalStackLayout>
                         <VerticalStackLayout.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Image">
                                     <Setter Property="WidthRequest" Value="20"/>
-                                    <Setter Property="Opacity" Value="0.5"/>
+                                    <Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>
                                 </Style>
 
                                 <Style TargetType="Label">
@@ -380,7 +373,6 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
                                 <Image.Triggers>
                                     <DataTrigger
@@ -399,6 +391,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Default}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -410,7 +403,6 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_bookmark_active, Light=light_bookmark_active}">
                                 <Image.Triggers>
                                     <DataTrigger
@@ -429,6 +421,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Favorite}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -440,16 +433,15 @@
                         <Grid>
                             <Image
                                 Grid.Column="0"
-                                Opacity="0.5"
                                 Source="{AppThemeBinding Dark=dark_pin, Light=light_pin}">
                                 <Image.Triggers>
                                     <DataTrigger
-                                         TargetType="Image"
-                                         Binding="{Binding TimetableState}"
-                                         Value="{x:Static constants:TimetableState.Pinned}">
+                                            TargetType="Image"
+                                            Binding="{Binding TimetableState}"
+                                            Value="{x:Static constants:TimetableState.Pinned}">
                                         <Setter
-                                             Property="Opacity"
-                                             Value="1.0"/>
+                                                Property="Opacity"
+                                                Value="1.0"/>
                                     </DataTrigger>
                                 </Image.Triggers>
                             </Image>
@@ -459,6 +451,7 @@
                             <Image
                                 Grid.Column="2"
                                 Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+                                Opacity="0.5"
                                 IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Pinned}}"/>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer

@@ -46,6 +46,7 @@
 	</ItemGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
+	  <_MauiForceXamlCForDebug>true</_MauiForceXamlCForDebug>
 	  <PublishTrimmed>False</PublishTrimmed>
 	</PropertyGroup>
 
