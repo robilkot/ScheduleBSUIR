@@ -8,12 +8,15 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     mtk:LeakMonitorBehavior.Cascade="True"
     mtk:TearDownBehavior.Cascade="True"
-    Shell.FlyoutBehavior="Disabled">
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TabBarTitleColor="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor}, Light={StaticResource LightPrimaryTextColor}}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Dark={StaticResource DarkSecondaryTextColor}, Light={StaticResource LightSecondaryTextColor}}"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}">
     
     <!--todo: how to swap without restart?-->
     <Page.Behaviors>
         <toolkit:StatusBarBehavior 
-            StatusBarColor="{AppThemeBinding Dark={StaticResource DarkPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}"
+            StatusBarColor="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}"
             StatusBarStyle="{AppThemeBinding Light=DarkContent, Dark=LightContent}"/>
     </Page.Behaviors>
     

@@ -204,7 +204,6 @@
             </Grid>
 
             <!-- Subgroup type popup-->
-                <!--PlacementTarget="{x:Reference navBar}"-->
             <dx:DXPopup
                 VerticalAlignment="Top"
                 HorizontalAlignment="Right"
