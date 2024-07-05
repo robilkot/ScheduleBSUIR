@@ -72,7 +72,7 @@
                 Grid.Column="1"
                 HeightRequest="30"
                 WidthRequest="30"
-                Source="fire"/>
+                Source="active_fire"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

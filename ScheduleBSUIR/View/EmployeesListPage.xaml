@@ -53,17 +53,27 @@
                                 VerticalOptions="Center"
                                 TextChanged="SearchEntry_textChanged"
                                 Text="{Binding EmployeeFilter}"
-                                Placeholder="Голенков В.В.">
+                                Placeholder="Найти преподавателя">
                             </Entry>
                         </Grid>
                     </Border>
 
                     <!-- Favorite employees -->
-                    <Label
+                    <Grid
                         IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                        Text="Избранное"
                         Margin="15,0,0,-10"
-                        Style="{StaticResource LabelBodySecondaryStyle}"/>
+                        ColumnDefinitions="auto,auto"
+                        ColumnSpacing="8">
+                        <Label
+                            Grid.Column="0"
+                            Text="Избранное"
+                            Style="{StaticResource LabelBodySecondaryStyle}"/>
+                        <Image
+                            Grid.Column="1"
+                            HeightRequest="18"
+                            WidthRequest="18"
+                            Source="active_star"/>
+                    </Grid>
 
                     <Border
                         IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">

@@ -48,7 +48,6 @@
                 ContentTemplate="{DataTemplate view:SettingsPage}"/>
         </Tab>
         <Tab
-            Icon="dark_search"
             Title="Debug">
             <ShellContent
                 ContentTemplate="{DataTemplate view:DebugPage}"/>

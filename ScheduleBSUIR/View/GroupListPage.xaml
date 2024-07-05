@@ -54,17 +54,27 @@
                                 VerticalOptions="Center"
                                 TextChanged="SearchEntry_textChanged"
                                 Text="{Binding GroupName}"
-                                Placeholder="221701">
+                                Placeholder="Найти группу">
                             </Entry>
                         </Grid>
                     </Border>
 
                     <!-- Student groups -->
-                    <Label
+                    <Grid
                         IsVisible="{Binding FilteredFavoriteGroupsIds, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                        Text="Избранное"
                         Margin="15,0,0,-10"
-                        Style="{StaticResource LabelBodySecondaryStyle}"/>
+                        ColumnDefinitions="auto,auto"
+                        ColumnSpacing="8">
+                        <Label
+                            Grid.Column="0"
+                            Text="Избранное"
+                            Style="{StaticResource LabelBodySecondaryStyle}"/>
+                        <Image
+                            Grid.Column="1"
+                            HeightRequest="18"
+                            WidthRequest="18"
+                            Source="active_star"/>
+                    </Grid>
 
                     <Border
                         IsVisible="{Binding FilteredFavoriteGroupsIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">

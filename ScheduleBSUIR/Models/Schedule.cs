@@ -5,7 +5,7 @@ namespace ScheduleBSUIR.Models
 {
     public class Schedule : ITimetableItem, ICloneable
     {
-        public required List<int> WeekNumber { get; set; }
+        public List<int>? WeekNumber { get; set; } // Can be null in announcements
         public required List<StudentGroupDto> StudentGroups { get; set; }
         public SubgroupType NumSubgroup { get; set; }
         public List<string>? Auditories { get; set; }

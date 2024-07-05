@@ -32,7 +32,7 @@
                 x:Key="EnumToIntConverter" />
             <toolkit:MathExpressionConverter 
                 x:Key="MathExpressionConverter" />
-            <toolkit:ListToStringConverter
+            <convertersCommon:ListToStringConverter
                 Separator=", "
                 x:Key="ListToStringConverter" />
             <toolkit:VariableMultiValueConverter 

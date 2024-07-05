@@ -261,6 +261,7 @@
         <Border
             Opacity="0.35"
             StrokeDashArray="16,8"
+            Background="Transparent"
             Stroke="{StaticResource PrimaryTextBrush}"
             StrokeThickness="1"
             HeightRequest="45"
@@ -474,6 +475,7 @@
         x:DataType="model:Schedule">
         <Border
             Opacity="0.35"
+            Background="Transparent"
             StrokeDashArray="16,8"
             Stroke="{StaticResource PrimaryTextBrush}"
             StrokeThickness="1"
