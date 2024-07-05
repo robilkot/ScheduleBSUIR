@@ -239,14 +239,14 @@ namespace ScheduleBSUIR.Viewmodels
 
         private async Task ReloadSchedule()
         {
+            Schedule = [];
+            _scheduleLoaded = false;
+
             if (Timetable is null)
             {
                 _loggingService.LogInfo($"ReloadSchedule timetable was NULL", displayCaller: false);
                 return;
             }
-
-            Schedule = [];
-            _scheduleLoaded = false;
 
             await LoadMoreSchedule();
             await ScrollToActiveSchedule();
