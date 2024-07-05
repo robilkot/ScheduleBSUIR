@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetablePinnedMessage>
+    public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetableStateChangedMessage>
     {
         private readonly TimetableService _timetableService;
         private readonly TimetableItemsGenerator _timetableItemsGenerator;
@@ -33,7 +33,7 @@ namespace ScheduleBSUIR.Viewmodels
 
             SelectedMode = _preferencesService.GetSubgroupTypePreference();
 
-            WeakReferenceMessenger.Default.Register<TimetablePinnedMessage>(this);
+            WeakReferenceMessenger.Default.Register<TimetableStateChangedMessage>(this);
         }
 
         private bool _scheduleLoaded = false;
@@ -61,8 +61,6 @@ namespace ScheduleBSUIR.Viewmodels
         private SubgroupType _selectedMode;
         async partial void OnSelectedModeChanged(SubgroupType value)
         {
-            _preferencesService.SetSubgroupTypePreference(value);
-
             await ReloadSchedule();
         }
 
@@ -83,11 +81,7 @@ namespace ScheduleBSUIR.Viewmodels
         private TypedId? _timetableId = default;
         async partial void OnTimetableIdChanged(TypedId? value)
         {
-            TimetableState = value is null
-                ? TimetableState.Default
-                : await _timetableService.GetState(value);
-
-            _loggingService.LogInfo($"Timetable {value} state: {TimetableState}", displayCaller: false);
+            TimetableState = await _timetableService.GetStateAsync(value);
 
             await GetTimetable(forceReload: true);
         }
@@ -141,12 +135,7 @@ namespace ScheduleBSUIR.Viewmodels
 
                 _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
 
-                var pinnedId = await _timetableService.GetPinnedIdAsync();
-
-                if (pinnedId is not null)
-                {
-                    TimetableId = pinnedId;
-                }
+                TimetableId = await _timetableService.GetPinnedIdAsync();
             }
 
             try
@@ -179,17 +168,10 @@ namespace ScheduleBSUIR.Viewmodels
         [RelayCommand]
         public async Task SetState(TimetableState newState)
         {
-            if (TimetableId is null)
-                return;
-
-            if (newState == TimetableState)
-                return;
-
             TimetableState = newState;
-
             IsTimetableStatePopupOpen = false;
 
-            await _timetableService.ApplyState(TimetableId, newState);
+            await _timetableService.SetStateAsync(TimetableId!, newState);
         }
 
         [RelayCommand]
@@ -204,6 +186,8 @@ namespace ScheduleBSUIR.Viewmodels
         {
             SelectedMode = type;
             IsSubgroupTypePopupOpen = false;
+
+            _preferencesService.SetSubgroupTypePreference(type);
         }
 
         [RelayCommand]
@@ -255,6 +239,12 @@ namespace ScheduleBSUIR.Viewmodels
 
         private async Task ReloadSchedule()
         {
+            if (Timetable is null)
+            {
+                _loggingService.LogInfo($"ReloadSchedule timetable was NULL", displayCaller: false);
+                return;
+            }
+
             Schedule = [];
             _scheduleLoaded = false;
 
@@ -264,9 +254,6 @@ namespace ScheduleBSUIR.Viewmodels
 
         public async Task ScrollToActiveSchedule()
         {
-            if (Timetable is null)
-                return;
-
             int? nearestScheduleIndex = _timetableItemsGenerator.GetNearestScheduleIndex();
 
             if (nearestScheduleIndex is not null)
@@ -283,16 +270,38 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         // If we pin some timetable, pages down the stack should update their state. As well as pinned timetable on separate tab
-        public void Receive(TimetablePinnedMessage message)
+        public void Receive(TimetableStateChangedMessage message)
         {
-            if (TimetableState == TimetableState.Pinned && !(message.Value?.Equals(TimetableId) ?? false))
-            {
-                TimetableState = TimetableState.Favorite;
-            }
+            var msgId = message.Value.Item1;
+            var msgState = message.Value.Item2;
 
-            if (IsPinnedTimetable)
+            if (msgId.Equals(TimetableId))
             {
-                TimetableId = message.Value;
+                if (IsPinnedTimetable)
+                {
+                    if (msgState == TimetableState.Pinned)
+                    {
+                        TimetableId = msgId;
+                    }
+                    else
+                    {
+                        TimetableId = null;
+                    }
+                }
+                else
+                {
+                    TimetableState = msgState;
+                }
+            }
+            else
+            {
+                if (IsPinnedTimetable)
+                {
+                    if (msgState == TimetableState.Pinned)
+                    {
+                        TimetableId = null;
+                    }
+                }
             }
         }
     }

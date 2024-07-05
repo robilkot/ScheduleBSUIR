@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class GroupListPageViewModel : BaseViewModel, IRecipient<TimetableFavoritedMessage>, IRecipient<TimetableUnfavoritedMessage>
+    public partial class GroupListPageViewModel : BaseViewModel, IRecipient<TimetableStateChangedMessage>
     {
         private readonly GroupsService _groupsService;
         private readonly TimetableService _timetableService;
@@ -41,8 +41,7 @@ namespace ScheduleBSUIR.Viewmodels
             _groupsService = groupsService;
             _timetableService = timetableService;
 
-            WeakReferenceMessenger.Default.Register<TimetableFavoritedMessage>(this);
-            WeakReferenceMessenger.Default.Register<TimetableUnfavoritedMessage>(this);
+            WeakReferenceMessenger.Default.Register(this);
 
             RefreshCommand.Execute(string.Empty);
         }
@@ -117,33 +116,35 @@ namespace ScheduleBSUIR.Viewmodels
             _currentGroupFilter = groupNameFilter;
         }
 
-        public void Receive(TimetableFavoritedMessage message)
+        public void Receive(TimetableStateChangedMessage message)
         {
-            if (message.Value is not StudentGroupId studentGroupId)
+            if (message.Value.Item1 is not StudentGroupId studentGroupId)
                 return;
 
-            _favoriteGroupsIds.Add(studentGroupId);
-
-            // Not to perform filtering for whole collection
-            if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+            if (message.Value.Item2 == TimetableState.Default)
             {
-                FilteredFavoriteGroupsIds.Add(studentGroupId);
-                OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
-            }
-        }
+                _favoriteGroupsIds.Remove(studentGroupId);
 
-        public void Receive(TimetableUnfavoritedMessage message)
-        {
-            if (message.Value is not StudentGroupId studentGroupId)
-                return;
-
-            _favoriteGroupsIds.Remove(studentGroupId);
-
-            if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+                if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+                {
+                    FilteredFavoriteGroupsIds.Remove(studentGroupId);
+                }
+            } 
+            else
             {
-                FilteredFavoriteGroupsIds.Remove(studentGroupId);
-                OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
+                if (_favoriteGroupsIds.Contains(studentGroupId))
+                    return;
+
+                _favoriteGroupsIds.Add(studentGroupId);
+
+                // Not to perform filtering for whole collection
+                if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+                {
+                    FilteredFavoriteGroupsIds.Add(studentGroupId);
+                }
             }
+
+            OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
         }
     }
 }

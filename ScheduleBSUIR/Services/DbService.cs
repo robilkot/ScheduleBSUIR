@@ -101,7 +101,7 @@ namespace ScheduleBSUIR.Services
                 }
                 _database.Commit();
 
-                _loggingService.LogInfo($"AddOrUpdate<{typeof(T).Name}> {newObject.PrimaryKey}");
+                //_loggingService.LogInfo($"AddOrUpdate<{typeof(T).Name}> {newObject.PrimaryKey}");
 
                 tcs.SetResult();
             });
@@ -150,7 +150,7 @@ namespace ScheduleBSUIR.Services
 
                 var result = collection.FindById(primaryKey);
 
-                _loggingService.LogInfo($"Get<{typeof(T).Name}> {primaryKey}");
+                //_loggingService.LogInfo($"Get<{typeof(T).Name}> {primaryKey}");
 
                 tcs.SetResult(result);
             });
@@ -194,7 +194,7 @@ namespace ScheduleBSUIR.Services
 
                 _database.Commit();
 
-                _loggingService.LogInfo($"Remove<{typeof(T).Name}> {primaryKey}");
+                //_loggingService.LogInfo($"Remove<{typeof(T).Name}> {primaryKey}");
 
                 tcs.SetResult();
             });

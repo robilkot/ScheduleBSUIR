@@ -23,6 +23,7 @@ namespace ScheduleBSUIR.Services
         private int _currentItemIndex = 0;
         private int? _nearestScheduleIndex = null;
         private bool _endRecordReturned = false;
+        private bool _firstRun = true;
 
         [Time]
         public async Task<List<ITimetableItem>> GenerateMoreItems(
@@ -30,10 +31,9 @@ namespace ScheduleBSUIR.Services
             TimetableTabs timetableTabs = TimetableTabs.Schedule,
             SubgroupType subgroupType = SubgroupType.All)
         {
-            _timetable = timetable;
-
-            if (timetableTabs != _currentTab || subgroupType != _currentSubgroupType)
+            if (_timetable != timetable || timetableTabs != _currentTab || subgroupType != _currentSubgroupType || _firstRun)
             {
+                _timetable = timetable;
                 _currentTab = timetableTabs;
                 _currentSubgroupType = subgroupType;
 
@@ -43,6 +43,8 @@ namespace ScheduleBSUIR.Services
 
                 _endRecordReturned = false;
                 _currentItemIndex = 0;
+
+                _firstRun = false;
             }
 
             _schedulesEnumerator ??= GetEnumeratorForParameters(timetable, timetableTabs, subgroupType);

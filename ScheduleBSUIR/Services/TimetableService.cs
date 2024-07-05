@@ -18,7 +18,7 @@ namespace ScheduleBSUIR.Services
 
         private const string StudentGroupIdType = nameof(StudentGroupIdType);
         private const string EmployeeIdType = nameof(EmployeeIdType);
-        
+
         [Time]
         public async Task<Timetable> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
         {
@@ -78,15 +78,28 @@ namespace ScheduleBSUIR.Services
         }
 
         #region Timetable states
-        public async Task<TimetableState> GetState(TypedId timetableId) =>
-            await IsPinnedAsync(timetableId)
-            ? TimetableState.Pinned
-            : await IsFavoritedAsync(timetableId)
-            ? TimetableState.Favorite
-            : TimetableState.Default;
-        public async Task ApplyState(TypedId timetableId, TimetableState state)
+        public async Task<TimetableState> GetStateAsync(TypedId? timetableId)
         {
-            var currentPinnedId = await GetPinnedIdAsync();
+            var result =
+                timetableId is null
+                ? TimetableState.Default
+                : await IsPinnedAsync(timetableId)
+                ? TimetableState.Pinned
+                : await IsFavoritedAsync(timetableId)
+                ? TimetableState.Favorite
+                : TimetableState.Default;
+
+            _loggingService.LogInfo($"Id {timetableId} GetStateAsync {result}", displayCaller: false);
+
+            return result;
+        }
+
+        public async Task SetStateAsync(TypedId timetableId, TimetableState state)
+        {
+            var previousState = await GetStateAsync(timetableId);
+
+            if (state == previousState)
+                return;
 
             switch (state)
             {
@@ -94,29 +107,43 @@ namespace ScheduleBSUIR.Services
                     {
                         await RemoveFromFavoritesAsync(timetableId);
 
-                        if (timetableId.Equals(currentPinnedId))
+                        if (previousState == TimetableState.Pinned)
                         {
-                            await SetPinnedIdAsync(null);
+                            SetPinnedId(null);
                         }
+
                         break;
                     }
                 case TimetableState.Favorite:
                     {
                         await AddToFavoritesAsync(timetableId);
 
-                        if (timetableId.Equals(currentPinnedId))
+                        if (previousState == TimetableState.Pinned)
                         {
-                            await SetPinnedIdAsync(null);
+                            SetPinnedId(null);
                         }
+
                         break;
                     }
                 case TimetableState.Pinned:
                     {
                         await AddToFavoritesAsync(timetableId);
-                        await SetPinnedIdAsync(timetableId);
+
+                        var previousPinnedId = await GetPinnedIdAsync();
+
+                        if (previousPinnedId is not null)
+                        {
+                            await SetStateAsync(previousPinnedId, TimetableState.Favorite);
+                        }
+
+                        SetPinnedId(timetableId);
                         break;
                     }
             }
+
+            WeakReferenceMessenger.Default.Send(new TimetableStateChangedMessage((timetableId, state)));
+
+            _loggingService.LogInfo($"Id {timetableId} SetStateAsync {state}", displayCaller: false);
         }
 
         #endregion
@@ -142,7 +169,8 @@ namespace ScheduleBSUIR.Services
 
             return result;
         }
-        public Task SetPinnedIdAsync(TypedId? id)
+        public async Task<bool> IsPinnedAsync(TypedId? id) => (await GetPinnedIdAsync())?.Equals(id) ?? false;
+        private void SetPinnedId(TypedId? id)
         {
             string preference = id switch
             {
@@ -155,46 +183,30 @@ namespace ScheduleBSUIR.Services
             _preferencesService.SetPinnedIdPreference(preference);
 
             _loggingService.LogInfo($"SetPinnedTimetableId {id} ", displayCaller: false);
-
-            WeakReferenceMessenger.Default.Send(new TimetablePinnedMessage(id));
-
-            return Task.FromResult(true);
         }
-        public async Task<bool> IsPinnedAsync(TypedId? id) => (await GetPinnedIdAsync())?.Equals(id) ?? false;
 
         #endregion
 
         #region Favorite timetables
-        public async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
+        private async Task AddToFavoritesAsync<T>(T timetableId) where T : TypedId
         {
-            bool alreadyFavorited;
-
             switch (timetableId)
             {
                 case StudentGroupId studentGroupId:
                     {
-                        alreadyFavorited = await _dbService.GetAsync<StudentGroupId>(studentGroupId.PrimaryKey) is not null;
                         await _dbService.AddOrUpdateAsync(studentGroupId);
                         break;
                     }
                 case EmployeeId employeeId:
                     {
-                        alreadyFavorited = await _dbService.GetAsync<EmployeeId>(employeeId.PrimaryKey) is not null;
                         await _dbService.AddOrUpdateAsync(employeeId);
                         break;
                     }
                 default: throw new UnreachableException();
             }
-
-            if (!alreadyFavorited)
-            {
-                WeakReferenceMessenger.Default.Send(new TimetableFavoritedMessage(timetableId));
-
-                _loggingService.LogInfo($"Id {timetableId} added to favorites", displayCaller: false);
-            }
         }
 
-        public async Task RemoveFromFavoritesAsync<T>(T timetableId) where T : TypedId
+        private async Task RemoveFromFavoritesAsync<T>(T timetableId) where T : TypedId
         {
             switch (timetableId)
             {
@@ -210,8 +222,6 @@ namespace ScheduleBSUIR.Services
                     }
                 default: throw new UnreachableException();
             }
-
-            WeakReferenceMessenger.Default.Send(new TimetableUnfavoritedMessage(timetableId));
 
             _loggingService.LogInfo($"Id {timetableId} removed from favorites", displayCaller: false);
         }
