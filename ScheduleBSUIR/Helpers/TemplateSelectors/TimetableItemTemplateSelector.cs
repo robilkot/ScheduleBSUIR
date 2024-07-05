@@ -16,7 +16,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         // Benchmarks:
         // ELAPSED FOR 1000 CALLS: 00:00:00.0506691 without cache
         // ELAPSED FOR 1000 CALLS: 00:00:00.0168000 with cache
-        private readonly Dictionary<ITimetableItem, DataTemplate> _cachedResults = [];
+        private readonly Dictionary<object, DataTemplate> _cachedResults = [];
 
         public TimetableItemTemplateSelector()
         {
@@ -33,17 +33,13 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
 
         protected override DataTemplate? OnSelectTemplate(object item, BindableObject container)
         {
-            Debug.WriteLine("ONSELECTTEMPLATE");
-
-            if (item is not ITimetableItem timetableItem)
-                return null;
-
-            ref var cachedTemplate = ref CollectionsMarshal.GetValueRefOrNullRef(_cachedResults, timetableItem);
+            // Avoid double hashing
+            ref var cachedTemplate = ref CollectionsMarshal.GetValueRefOrNullRef(_cachedResults, item);
 
             if (!Unsafe.IsNullRef(in cachedTemplate))
                 return cachedTemplate;
 
-            DataTemplate template = timetableItem switch
+            DataTemplate template = item switch
             {
                 Schedule schedule =>
                     schedule.DateLesson >= _dateTimeProvider.Now.Date
@@ -57,7 +53,7 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
                 _ => throw new UnreachableException(),
             };
 
-            _cachedResults.Add(timetableItem, template);
+            _cachedResults.Add(item, template);
 
             return template;
         }

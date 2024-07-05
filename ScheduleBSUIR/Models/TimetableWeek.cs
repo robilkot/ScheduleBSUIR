@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
@@ -34,6 +35,7 @@ namespace ScheduleBSUIR.Models
             DayOfWeek.Friday => Friday,
             DayOfWeek.Saturday => Saturday,
             DayOfWeek.Sunday => Sunday,
+            _ => throw new UnreachableException()
         } ?? [];
     }
 }
