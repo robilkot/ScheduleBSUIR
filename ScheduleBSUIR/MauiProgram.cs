@@ -5,6 +5,7 @@ using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using MemoryToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.Services.Mock;
@@ -28,6 +29,10 @@ namespace ScheduleBSUIR
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                })
+                .ConfigureEssentials(essentials =>
+                {
+                    essentials.UseVersionTracking();
                 });
 
 #if DEBUG
@@ -61,16 +66,22 @@ namespace ScheduleBSUIR
             builder.Services.AddSingleton<GroupsService>();
             builder.Services.AddSingleton<EmployeesService>();
             builder.Services.AddSingleton<TimetableService>();
-
+            builder.Services.AddSingleton<DbService>();
 #if MOCK
             builder.Services.AddSingleton<IDateTimeProvider, MockDateTimeProvider>(); // This breaks caching logic if using real web service to get last update dates
             builder.Services.AddSingleton<IWebService, MockWebService>();
-#else 
+#else
             builder.Services.AddSingleton<IDateTimeProvider, RealDateTimeProvider>();
             builder.Services.AddSingleton<IWebService, WebService>();
 #endif
-            builder.Services.AddSingleton<ILoggingService, LoggingService>();
-            builder.Services.AddSingleton<DbService>();
+            if (ApplicationConstants.IsDev)
+            {
+                builder.Services.AddSingleton<ILoggingService, LoggingService>();
+            }
+            else
+            {
+                builder.Services.AddSingleton<ILoggingService, DummyLoggingService>();
+            }
 
             return builder.Build();
         }

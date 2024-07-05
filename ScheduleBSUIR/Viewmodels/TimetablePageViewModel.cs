@@ -279,11 +279,7 @@ namespace ScheduleBSUIR.Viewmodels
             {
                 if (IsPinnedTimetable)
                 {
-                    if (msgState == TimetableState.Pinned)
-                    {
-                        TimetableId = msgId;
-                    }
-                    else
+                    if (msgState != TimetableState.Pinned)
                     {
                         TimetableId = null;
                     }

@@ -48,6 +48,7 @@
                 ContentTemplate="{DataTemplate view:SettingsPage}"/>
         </Tab>
         <Tab
+            x:Name="DebugTab"
             Title="Debug">
             <ShellContent
                 ContentTemplate="{DataTemplate view:DebugPage}"/>

@@ -1,5 +1,4 @@
-﻿using DevExpress.Maui.Core.Internal;
-using ScheduleBSUIR.Helpers.Constants;
+﻿using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.View;
 
 namespace ScheduleBSUIR
@@ -12,6 +11,8 @@ namespace ScheduleBSUIR
 
             Routing.RegisterRoute(nameof(GroupListPage), typeof(GroupListPage));
             Routing.RegisterRoute(nameof(TimetablePage), typeof(TimetablePage));
+
+            DebugTab.IsVisible = ApplicationConstants.IsDev;
         }
     }
 }

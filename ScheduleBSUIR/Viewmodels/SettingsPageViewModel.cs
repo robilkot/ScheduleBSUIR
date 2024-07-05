@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
@@ -19,6 +20,20 @@ namespace ScheduleBSUIR.Viewmodels
 
         [ObservableProperty]
         private List<ITimetableItem> _exampleItems = [];
+
+        [RelayCommand]
+        public async Task OpenGithub()
+        {
+            try
+            {
+                Uri uri = new("https://github.com/robilkot/ScheduleBSUIR");
+                await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+            }
+            catch (Exception ex)
+            {
+                // An unexpected error occurred. No browser may be installed on the device.
+            }
+        }
 
         private void InitExampleItems()
         {

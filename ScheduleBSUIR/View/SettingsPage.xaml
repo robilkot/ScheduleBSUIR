@@ -136,7 +136,44 @@
                         ItemsSource="{x:Static constants:ColorsHelper.AvailableColors}"/>
                 </Border>
             </dx:DXPopup>
-            
+
+            <!-- App info -->
+            <Label
+                Text="О приложении"
+                Margin="15,0,0,-10"
+                Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+            <Border
+                Padding="15"
+                Background="{StaticResource ControlBackgroundBrush}">
+                <VerticalStackLayout
+                    Spacing="20">
+
+                    <Grid>                        <Label							Grid.Column="0"							Style="{StaticResource LabelBodyPrimaryStyle}"							Text="Версия"/>                        <Label							Grid.Column="1"							HorizontalTextAlignment="End"							Style="{StaticResource LabelBodySecondaryStyle}"							Text="{Binding Source={x:Static constants:ApplicationConstants.CurrentVersion}}"/>                    </Grid>
+
+                    <Grid>                        <Label					        Grid.Column="0"					        Style="{StaticResource LabelBodyPrimaryStyle}"					        Text="Проект на GitHub"/>                        <Label					        Grid.Column="1"					        HorizontalTextAlignment="End"                            TextDecorations="Underline"					        Style="{StaticResource LabelBodySecondaryStyle}"					        Text="Перейти">                            <Label.GestureRecognizers>                                <TapGestureRecognizer Command="{Binding OpenGithubCommand}"/>                            </Label.GestureRecognizers>                        </Label>                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid
+                HorizontalOptions="Center"
+                ColumnDefinitions="auto,auto,auto"
+                ColumnSpacing="5">
+                <Label
+                    Grid.Column="0"
+                    Text="with"
+                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+                <Image
+                    Grid.Column="1"
+                    HeightRequest="18"
+                    WidthRequest="18"
+                    Source="active_heart"/>
+                <Label
+                    Grid.Column="2"
+                    Text="by robilkot"
+                    Style="{StaticResource LabelBodySecondaryStyle}"/>
+            </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

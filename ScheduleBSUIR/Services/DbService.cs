@@ -1,10 +1,7 @@
-﻿using DevExpress.Xpo.DB;
-using LiteDB;
+﻿using LiteDB;
 using MethodTimer;
-using ScheduleBSUIR.Helpers.Constants;
 using ScheduleBSUIR.Interfaces;
 using ScheduleBSUIR.Models;
-using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace ScheduleBSUIR.Services
@@ -28,14 +25,26 @@ namespace ScheduleBSUIR.Services
 
             _database = new LiteDatabase(databasePath);
 
-            _ = ClearCacheIfNeeded();
+
+
+            bool firstInstallForVersion = VersionTracking.Default.IsFirstLaunchForCurrentVersion;
+
+            if (firstInstallForVersion)
+            {
+                _ = ClearDatabase();
+            }
+            else
+            {
+                _ = ClearCacheIfNeeded();
+            }
+
         }
 
         [Time]
         private async Task ClearCacheIfNeeded()
         {
             double clearInterval = _preferencesService.GetClearCacheInterval();
-            
+
             // Clearing is disabled
             if (clearInterval == 0)
             {
@@ -45,10 +54,10 @@ namespace ScheduleBSUIR.Services
             DateTime dateToClear = _dateTimeProvider.Now - TimeSpan.FromDays(clearInterval);
 
             // Last clear was too recently
-            
+
             var lastClearDate = _preferencesService.GetClearCacheLastDate();
 
-            if(lastClearDate is not null && lastClearDate > dateToClear)
+            if (lastClearDate is not null && lastClearDate > dateToClear)
             {
                 _loggingService.LogInfo($"ClearCacheIfNeeded no clearing needed");
                 return;
