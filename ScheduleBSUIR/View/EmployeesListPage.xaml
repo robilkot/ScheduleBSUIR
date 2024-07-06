@@ -53,7 +53,6 @@
         Background="{StaticResource PageBackgroundBrush}"
         Command="{Binding RefreshCommand}"
         CommandParameter=""
-        Margin="15,0"
         IsRefreshing="{Binding IsRefreshing}">
         
         <dx:DXCollectionView
@@ -67,7 +66,7 @@
 
             <dx:DXCollectionView.Header>
                 <VerticalStackLayout
-                    Margin="0,100,0,20"
+                    Margin="15,100,15,20"
                     Spacing="20">
                     <Label
                         Style="{StaticResource LabelHeaderStyle}"
@@ -115,10 +114,15 @@
 
                     <Border
                         IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">
-                        <VerticalStackLayout
-                            BindableLayout.ItemsSource="{Binding FilteredFavoriteEmployeesIds}"
-                            BindableLayout.ItemTemplate="{StaticResource EmployeeTimetableHeaderTemplate}">
-                        </VerticalStackLayout>
+                        <dx:DXCollectionView
+                            Margin="15,0"
+                            UseRippleEffect="True"
+                            ReduceSizeToContent="True"
+                            ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
+                            ItemSeparatorThickness="1"
+                            ItemsSource="{Binding FilteredFavoriteEmployeesIds}"
+                            ItemTemplate="{StaticResource EmployeeTimetableHeaderTemplate}">
+                        </dx:DXCollectionView>
                     </Border>
                 </VerticalStackLayout>
             </dx:DXCollectionView.Header>
@@ -133,7 +137,7 @@
                 <DataTemplate
                     x:DataType="dx:GroupInfo">
                     <Label
-                        Margin="15,20,15,10"
+                        Margin="30,20,30,10"
                         Grid.Row="0"
                         Style="{StaticResource LabelBodySecondaryStyle}"
                         Text="{Binding GroupValue}"/>

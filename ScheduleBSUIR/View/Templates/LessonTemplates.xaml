@@ -100,45 +100,12 @@
         </toolkit:AvatarView>
     </DataTemplate>
 
-    <!-- SkeletonLessonTemplate -->
-    <DataTemplate
-        x:Key="SkeletonLessonTemplate"
-        x:DataType="model:Schedule">
-        <Border
-            Background="{StaticResource ControlBackgroundBrush}"
-            HeightRequest="70"
-            Padding="10,5">
-            <Grid
-                ColumnSpacing="10"
-                ColumnDefinitions="*, auto">
-                <Grid
-                    VerticalOptions="Center"
-                    Grid.Column="0"
-                    RowSpacing="10"
-                    RowDefinitions="auto,auto">
-                    <Border
-                        Grid.Row="0"
-                        Background="{StaticResource SecondaryTextBrush}"
-                        HeightRequest="16"/>
-                    <Border
-                        Grid.Row="1"
-                        Background="{StaticResource SecondaryTextBrush}"
-                        HeightRequest="16"/>
-                </Grid>
-                <Ellipse
-                    Grid.Column="1"
-                    Background="{StaticResource ModalPageBackgroundBrush}"
-                    WidthRequest="50"
-                    HeightRequest="50"/>
-            </Grid>
-        </Border>
-    </DataTemplate>
-
     <!-- ActiveLessonTemplate -->
     <DataTemplate
         x:Key="ActiveLessonTemplate"
         x:DataType="model:Schedule">
         <Border
+            Margin="15,0"
             StrokeThickness="0"
             MinimumHeightRequest="70"
             Background="{StaticResource ControlBackgroundBrush}"
@@ -259,6 +226,7 @@
         x:Key="InactiveLessonTemplate"
         x:DataType="model:Schedule">
         <Border
+            Margin="15,0"
             Opacity="0.35"
             StrokeDashArray="16,8"
             Background="Transparent"
@@ -334,6 +302,7 @@
         x:Key="ActiveAnnouncementTemplate"
         x:DataType="model:Schedule">
         <Border
+            Margin="15,0"
             StrokeThickness="0"
             MinimumHeightRequest="70"
             Background="{StaticResource ControlBackgroundBrush}"
@@ -474,6 +443,7 @@
         x:Key="InactiveAnnouncementTemplate"
         x:DataType="model:Schedule">
         <Border
+            Margin="15,0"
             Opacity="0.35"
             Background="Transparent"
             StrokeDashArray="16,8"

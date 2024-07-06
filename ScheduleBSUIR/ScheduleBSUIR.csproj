@@ -49,8 +49,8 @@
 	  <_MauiForceXamlCForDebug>True</_MauiForceXamlCForDebug>
 	  <PublishTrimmed>False</PublishTrimmed>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
@@ -58,40 +58,37 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
-	  <ApplicationVersion>3</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
+	  <ApplicationVersion>4</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.65" Color="#253582" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -113,15 +110,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Images\party.png" />
 	  <None Remove="Resources\Raw\MockData\Responses\MockEmployees.json" />
 	  <None Remove="Resources\Raw\MockData\Responses\MockGroupsHeaders.json" />
 	  <None Remove="Resources\Raw\MockData\Responses\Timetable000001.json" />
 	  <None Remove="Resources\Raw\MockData\Responses\Timetable000003.json" />
+	  <None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Resources\Raw\MockData\Responses\Timetable221701.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -144,9 +145,6 @@
 	  </Compile>
 	  <Compile Update="View\EmployeesListPage.xaml.cs">
 	    <DependentUpon>EmployeesListPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\Templates\HelperTemplates.xaml.cs">
-	    <DependentUpon>HelperTemplates.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

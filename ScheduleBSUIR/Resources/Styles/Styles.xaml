@@ -10,6 +10,10 @@
         <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" />
     </Style>
 
+    <Style TargetType="RefreshView">
+        <Setter Property="RefreshColor" Value="{AppThemeBinding Dark={StaticResource LightPageBackgroundColor}, Light={StaticResource DarkModalPageBackgroundColor}}" />
+    </Style>
+
     <Style
         x:Key="BaseLabelStyle"
         TargetType="Label">

@@ -34,6 +34,7 @@
                 Style="{StaticResource LabelBodySecondaryStyle}"/>-->
 
             <dx:DXStackLayout
+                Padding="-15,0"
                 ItemSpacing="5"
                 ItemsSource="{Binding ExampleItems}"
                 ItemTemplateSelector="{StaticResource LessonTemplateSelector}">

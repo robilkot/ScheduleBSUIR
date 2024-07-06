@@ -22,6 +22,7 @@ namespace ScheduleBSUIR.Services
 
         private int _currentItemIndex = 0;
         private int? _nearestScheduleIndex = null;
+        private DateTime? _nearestScheduleDate = null;
         private bool _endRecordReturned = false;
         private bool _firstRun = true;
 
@@ -40,6 +41,7 @@ namespace ScheduleBSUIR.Services
                 _schedulesEnumerator?.Dispose();
                 _schedulesEnumerator = null;
                 _nearestScheduleIndex = null;
+                _nearestScheduleDate = null;
 
                 _endRecordReturned = false;
                 _currentItemIndex = 0;
@@ -54,7 +56,7 @@ namespace ScheduleBSUIR.Services
 
             await Task.Run(() =>
             {
-                DateTime? _nearestScheduleDate = GetNearestScheduleDate(timetable, timetableTabs, subgroupType);
+                _nearestScheduleDate ??= GetNearestScheduleDate(timetable, timetableTabs, subgroupType);
 
                 DailySchedule? lastObtainedSchedule = null;
 
@@ -154,7 +156,7 @@ namespace ScheduleBSUIR.Services
                 var schedulesOnThisDay = timetable.Schedules!.GetByDayOfWeek(currentDate.DayOfWeek);
 
                 var schedules = schedulesOnThisDay
-                    .Where(schedule => schedule.WeekNumber.Contains(currentWeekNumber))
+                    .Where(schedule => schedule.WeekNumber?.Contains(currentWeekNumber) ?? true) // No weeks may occur in announcement. Monitor if bug appears
                     .Where(schedule => schedule.EndLessonDate >= currentDate)
                     .OnlySubgroup(subgroupType)
                     .Select(schedule =>

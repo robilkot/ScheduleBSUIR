@@ -451,7 +451,6 @@
 			x:Name="dayScheduleCollectionView"
 			Grid.Row="1"
 			ItemSpacing="5"
-			Margin="15,0"
 			ItemsSource="{Binding Schedule}"
 			Tap="dayScheduleCollectionView_Tap"
 			Scrolled="dayScheduleCollectionView_Scrolled"
@@ -479,7 +478,7 @@
 
             <dx:DXCollectionView.Header>
                 <Grid
-                    Margin="0,25,0,20"
+                    Margin="15,25"
                     RowSpacing="10"
                     RowDefinitions="auto,auto">
                     <Grid
