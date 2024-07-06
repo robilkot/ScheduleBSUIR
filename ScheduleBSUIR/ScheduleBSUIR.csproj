@@ -139,9 +139,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="View\Controls\TimetableHeading.xaml.cs">
-	    <DependentUpon>TimetableHeading.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="View\DebugPage.xaml.cs">
 	    <DependentUpon>DebugPage.xaml</DependentUpon>
 	  </Compile>
@@ -170,9 +167,6 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="View\Controls\CustomTabbar.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="View\Controls\TimetableHeading.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\DebugPage.xaml">

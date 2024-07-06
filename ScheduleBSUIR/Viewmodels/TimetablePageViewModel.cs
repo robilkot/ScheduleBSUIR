@@ -119,6 +119,7 @@ namespace ScheduleBSUIR.Viewmodels
             IsLoadingMoreSchedule = false;
         }
 
+        [RelayCommand]
         public async Task GetTimetable(bool forceReload)
         {
             if (IsBusy)

@@ -14,106 +14,35 @@
 	xmlns:dx="http://schemas.devexpress.com/maui"
 	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
 	xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
-	Shell.NavBarIsVisible="False"
-	x:Name="timetablePage">
+    Shell.NavBarHasShadow="True"
+    x:Name="timetablePage">
 
-    <Grid
-		Background="{StaticResource PageBackgroundBrush}">
-        <!-- Timetable collectionview -->
-        <dx:DXCollectionView
-			x:Name="dayScheduleCollectionView"
-			Grid.Row="1"
-			ItemSpacing="5"
-			Margin="15,20,15,0"
-			ItemsSource="{Binding Schedule}"
-			Tap="dayScheduleCollectionView_Tap"
-			Scrolled="dayScheduleCollectionView_Scrolled"
-			ItemTemplate="{StaticResource LessonTemplateSelector}"
-			AllowCascadeUpdate="False"
-			SelectionMode="None">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior
+            IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+    
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior Command="{Binding GetTimetableCommand}" CommandParameter="{x:Boolean }" EventName="Appearing"/>
+    </ContentPage.Behaviors>
 
-            <dx:DXCollectionView.Resources>
-                <ResourceDictionary>
-                    <templateSelectors:TimetableItemTemplateSelector
-						ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
-						InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
-						ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
-						InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
-						ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
-						InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
-						TimetableEndTemplate="{StaticResource TimetableEndTemplate}"
-						x:Key="LessonTemplateSelector"/>
-                    <converters:TimetableToDaterangeTextConverter
-						x:Key="TimetableToDaterangeTextConverter"/>
-                    <converters:TimetableToSubheaderTextConverter
-						x:Key="TimetableToSubheaderTextConverter"/>
-                </ResourceDictionary>
-            </dx:DXCollectionView.Resources>
-
-            <dx:DXCollectionView.Header>
-                <Grid
-                    Margin="0,85,0,20"
-                    RowSpacing="10"
-                    RowDefinitions="auto,auto">
-                    <Grid
-                        Grid.Row="0"
-                        ColumnSpacing="10"
-                        ColumnDefinitions="auto,auto">
-                        <Label
-                            Grid.Column="0"
-                            VerticalOptions="Center"
-                            Style="{StaticResource LabelHeaderStyle}"
-                            Text="{Binding TimetableId.HeaderText}"/>
-                        <Label
-                            Grid.Column="1"
-                            VerticalOptions="Center"
-                            LineBreakMode="WordWrap"
-                            WidthRequest="220"
-                            Style="{StaticResource LabelBodySecondaryStyle}"
-                            Text="{Binding Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
-                    </Grid>
-
-                    <Label
-                        x:Name="datesLabel"
-                        IsVisible="{Binding Source={x:RelativeSource Mode=Self}, Path=Text, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                        Grid.Row="1"
-                        Style="{StaticResource LabelBodySecondaryStyle}">
-                        <Label.Text>
-                            <MultiBinding Converter="{StaticResource TimetableToDaterangeTextConverter}">
-                                <Binding Path="Timetable" />
-                                <Binding Path="SelectedTab" />
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </Grid>
-            </dx:DXCollectionView.Header>
-        </dx:DXCollectionView>
-
+    <Shell.TitleView>
         <!-- Navbar -->
         <Grid
-			Background="{AppThemeBinding Light={StaticResource PageBackgroundBrush}, Dark={StaticResource ModalPageBackgroundBrush}}"
+            Background="Transparent"
 			x:Name="navBar"
-			ZIndex="1"
-			Padding="15,15,15,10"
-			VerticalOptions="Start"
+			Padding="0,8,8,8"
+            HorizontalOptions="Fill"
 			ColumnSpacing="14"
-			ColumnDefinitions="auto,*,auto,auto">
-
-            <Grid.Shadow>
-                <Shadow
-					Brush="Black"
-					Opacity="0.1"
-					Radius="50"/>
-            </Grid.Shadow>
-
+            VerticalOptions="Fill"
+			ColumnDefinitions="auto,*,40,40">
+            
             <!-- Navigation button -->
             <Grid
 				IsVisible="{Binding IsBackButtonVisible}"
 				Grid.Column="0"
 				ColumnDefinitions="auto,auto"
-				MinimumWidthRequest="40"
-				Padding="0,0,10,0"
-				HeightRequest="40">
+				Padding="0,0,10,0">
                 <Image
 					Grid.Column="0"
 					Margin="0,10,0,10"
@@ -150,11 +79,26 @@
 				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
 				Grid.Column="2"
 				Padding="8"
-				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
-				WidthRequest="40"
-				HeightRequest="40">
+                HorizontalOptions="Center"
+				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}">
                 <Grid
-					ColumnDefinitions="auto,auto">
+                    HorizontalOptions="Center"
+                    ColumnDefinitions="auto,auto">
+                    <Image
+						Grid.Column="0"
+                        HorizontalOptions="Center"
+						Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                        <Image.Triggers>
+                            <DataTrigger
+								TargetType="Image"
+								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+								Value="True">
+                                <Setter
+									Property="Source"
+									Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
+                            </DataTrigger>
+                        </Image.Triggers>
+                    </Image>
                     <Label
 						Grid.Column="1"
 						IsVisible="True"
@@ -171,20 +115,6 @@
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
-                    <Image
-						Grid.Column="0"
-						Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
-                        <Image.Triggers>
-                            <DataTrigger
-								TargetType="Image"
-								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
-								Value="True">
-                                <Setter
-									Property="Source"
-									Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
-                            </DataTrigger>
-                        </Image.Triggers>
-                    </Image>
                 </Grid>
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>
@@ -196,9 +126,7 @@
 				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
 				Grid.Column="3"
 				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
-				Padding="8"
-				WidthRequest="40"
-				HeightRequest="40">
+				Padding="8">
                 <Image
 					Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
                     <Image.Triggers>
@@ -242,7 +170,7 @@
             <dx:DXPopup
 				VerticalAlignment="Top"
 				HorizontalAlignment="Right"
-				Margin="10,70"
+				Margin="10,65"
 				IsOpen="{Binding IsSubgroupTypePopupOpen}">
                 <dx:DXPopup.Resources>
                     <ResourceDictionary>
@@ -381,7 +309,7 @@
             <dx:DXPopup
 				VerticalAlignment="Top"
 				HorizontalAlignment="Right"
-				Margin="10,70"
+				Margin="10,65"
 				IsOpen="{Binding IsTimetableStatePopupOpen}">
                 <dx:DXPopup.Resources>
                     <ResourceDictionary>
@@ -513,11 +441,84 @@
                 </Border>
             </dx:DXPopup>
         </Grid>
+        
+    </Shell.TitleView>
+
+    <Grid
+		Background="{StaticResource PageBackgroundBrush}">
+        <!-- Timetable collectionview -->
+        <dx:DXCollectionView
+			x:Name="dayScheduleCollectionView"
+			Grid.Row="1"
+			ItemSpacing="5"
+			Margin="15,0"
+			ItemsSource="{Binding Schedule}"
+			Tap="dayScheduleCollectionView_Tap"
+			Scrolled="dayScheduleCollectionView_Scrolled"
+			ItemTemplate="{StaticResource LessonTemplateSelector}"
+			AllowCascadeUpdate="False"
+			SelectionMode="None">
+
+            <dx:DXCollectionView.Resources>
+                <ResourceDictionary>
+                    <templateSelectors:TimetableItemTemplateSelector
+						ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+						InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+						ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+						InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+						ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
+						InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
+						TimetableEndTemplate="{StaticResource TimetableEndTemplate}"
+						x:Key="LessonTemplateSelector"/>
+                    <converters:TimetableToDaterangeTextConverter
+						x:Key="TimetableToDaterangeTextConverter"/>
+                    <converters:TimetableToSubheaderTextConverter
+						x:Key="TimetableToSubheaderTextConverter"/>
+                </ResourceDictionary>
+            </dx:DXCollectionView.Resources>
+
+            <dx:DXCollectionView.Header>
+                <Grid
+                    Margin="0,25,0,20"
+                    RowSpacing="10"
+                    RowDefinitions="auto,auto">
+                    <Grid
+                        Grid.Row="0"
+                        ColumnSpacing="10"
+                        ColumnDefinitions="auto,auto">
+                        <Label
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            Style="{StaticResource LabelHeaderStyle}"
+                            Text="{Binding TimetableId.HeaderText}"/>
+                        <Label
+                            Grid.Column="1"
+                            VerticalOptions="Center"
+                            LineBreakMode="WordWrap"
+                            WidthRequest="220"
+                            Style="{StaticResource LabelBodySecondaryStyle}"
+                            Text="{Binding Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
+                    </Grid>
+
+                    <Label
+                        x:Name="datesLabel"
+                        IsVisible="{Binding Source={x:RelativeSource Mode=Self}, Path=Text, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodySecondaryStyle}">
+                        <Label.Text>
+                            <MultiBinding Converter="{StaticResource TimetableToDaterangeTextConverter}">
+                                <Binding Path="Timetable" />
+                                <Binding Path="SelectedTab" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+            </dx:DXCollectionView.Header>
+        </dx:DXCollectionView>
 
         <!-- Bottom sheet with schedule details -->
         <dx:BottomSheet 
 			x:Name="scheduleDetailSheet" 
-			ZIndex="2"
 			ShowGrabber="True" 
 			AllowDismiss="True" 
 			StateChanged="scheduleDetailSheet_StateChanged"

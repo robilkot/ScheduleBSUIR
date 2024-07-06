@@ -36,13 +36,6 @@ public partial class TimetablePage : ContentPage
         });
     }
 
-    protected async override void OnAppearing()
-    {
-        base.OnAppearing();
-
-        await _viewmodel.GetTimetable(forceReload: false);
-    }
-
     private void scheduleDetailSheet_StateChanged(object sender, DevExpress.Maui.Core.ValueChangedEventArgs<BottomSheetState> e)
     {
         if (e.NewValue == BottomSheetState.Hidden)

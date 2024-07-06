@@ -19,7 +19,7 @@
         Background="{AppThemeBinding Dark={StaticResource PageBackgroundBrush}, Light={StaticResource ControlBackgroundBrush}}">
         <Grid
             x:Name="selectorGrid"
-            Padding="2"
+            Padding="3"
             ColumnSpacing="5"
             ColumnDefinitions="auto,auto,auto">
 

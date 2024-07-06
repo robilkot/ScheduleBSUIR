@@ -15,11 +15,11 @@
     
     <!--todo: how to swap without restart?-->
     <Page.Behaviors>
-        <toolkit:StatusBarBehavior 
-            StatusBarColor="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}"
-            StatusBarStyle="{AppThemeBinding Light=DarkContent, Dark=LightContent}"/>
+        <toolkit:StatusBarBehavior
+        StatusBarColor="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}"
+        StatusBarStyle="{AppThemeBinding Light=DarkContent, Dark=LightContent}"/>
     </Page.Behaviors>
-    
+
     <TabBar
         CurrentItem="{Reference pinnedPage}">
         <Tab

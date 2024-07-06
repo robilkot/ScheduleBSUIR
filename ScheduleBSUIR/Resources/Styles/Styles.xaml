@@ -5,7 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <x:Double x:Key="disabledOpacity">0.25</x:Double>
-    
+
+    <Style TargetType="Shell" ApplyToDerivedTypes="True">
+        <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Dark={StaticResource DarkModalPageBackgroundColor}, Light={StaticResource LightPageBackgroundColor}}" />
+    </Style>
+
     <Style
         x:Key="BaseLabelStyle"
         TargetType="Label">
