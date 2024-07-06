@@ -9,6 +9,7 @@ using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
+using static ScheduleBSUIR.Viewmodels.StudentGroupTimetableHeaderExtensions;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -17,17 +18,17 @@ namespace ScheduleBSUIR.Viewmodels
         private readonly GroupsService _groupsService;
         private readonly TimetableService _timetableService;
 
-        private List<StudentGroupHeader> _allGroupsHeaders = [];
+        private List<StudentGroupTimetableHeader> _allHeaders = [];
 
         private string _currentGroupFilter = string.Empty;
 
         [ObservableProperty]
-        private List<StudentGroupHeader> _filteredGroups = [];
+        private List<StudentGroupTimetableHeader> _filteredHeaders = [];
 
-        private List<StudentGroupId> _favoriteGroupsIds = [];
+        private List<StudentGroupTimetableHeader> _favoriteHeaders = [];
 
         [ObservableProperty]
-        private ObservableCollection<StudentGroupId> _filteredFavoriteGroupsIds = [];
+        private ObservableCollection<StudentGroupTimetableHeader> _filteredFavoriteHeaders = [];
 
         [ObservableProperty]
         private string _groupName = string.Empty;
@@ -47,22 +48,16 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public async Task SelectGroup(object selection)
+        public async Task SelectGroup(StudentGroupTimetableHeader selectedHeader)
         {
             if (IsBusy)
                 return;
 
             IsBusy = true;
 
-            TypedId groupId = selection switch
-            {
-                TypedId id => id,
-                _ => TypedId.Create(selection),
-            };
-
             Dictionary<string, object> navigationParameters = new()
             {
-                { NavigationKeys.TimetableId, groupId },
+                { NavigationKeys.TimetableHeader, selectedHeader },
                 { NavigationKeys.IsBackButtonVisible, true },
             };
 
@@ -82,11 +77,12 @@ namespace ScheduleBSUIR.Viewmodels
             try
             {
                 var groupHeaders = await _groupsService.GetGroupHeadersAsync(cancellationToken);
-                _allGroupsHeaders = groupHeaders.ToList();
-                FilteredGroups = _allGroupsHeaders;
 
-                _favoriteGroupsIds = await _timetableService.GetFavoriteGroupsTimetablesIdsAsync();
-                FilteredFavoriteGroupsIds = _favoriteGroupsIds.ToObservableCollection();
+                _allHeaders = groupHeaders.ToTimetableHeaders().Cast<StudentGroupTimetableHeader>().ToList();
+                FilteredHeaders = _allHeaders;
+
+                _favoriteHeaders = await _timetableService.GetFavoriteGroupsTimetablesHeadersAsync();
+                FilteredFavoriteHeaders = _favoriteHeaders.ToObservableCollection();
 
                 GroupName = string.Empty;
             }
@@ -103,14 +99,14 @@ namespace ScheduleBSUIR.Viewmodels
             // Filter narrowed => can search in already filtered collection
             if (groupNameFilter.Length > _currentGroupFilter.Length)
             {
-                FilteredGroups = FilteredGroups.Where(header => header.Name.StartsWith(groupNameFilter)).ToList();
-                FilteredFavoriteGroupsIds = FilteredFavoriteGroupsIds.Where(id => id.DisplayName.StartsWith(groupNameFilter)).ToObservableCollection();
+                FilteredHeaders = FilteredHeaders.FilteredBy(groupNameFilter).ToList();
+                FilteredFavoriteHeaders = FilteredFavoriteHeaders.FilteredBy(groupNameFilter).ToObservableCollection();
             }
             // Else we have to search in all headers :(
             else
             {
-                FilteredGroups = _allGroupsHeaders.Where(header => header.Name.StartsWith(groupNameFilter)).ToList();
-                FilteredFavoriteGroupsIds = _favoriteGroupsIds.Where(id => id.DisplayName.StartsWith(groupNameFilter)).ToObservableCollection();
+                FilteredHeaders = _allHeaders.FilteredBy(groupNameFilter).ToList();
+                FilteredFavoriteHeaders = _favoriteHeaders.FilteredBy(groupNameFilter).ToObservableCollection();
             }
 
             _currentGroupFilter = groupNameFilter;
@@ -118,33 +114,40 @@ namespace ScheduleBSUIR.Viewmodels
 
         public void Receive(TimetableStateChangedMessage message)
         {
-            if (message.Value.Item1 is not StudentGroupId studentGroupId)
+            if (message.Value.Item1 is not StudentGroupTimetableHeader studentGroupTimetableHeader)
                 return;
 
             if (message.Value.Item2 == TimetableState.Default)
             {
-                _favoriteGroupsIds.Remove(studentGroupId);
+                _favoriteHeaders.Remove(studentGroupTimetableHeader);
 
-                if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+                if (GroupFilterPredicate(studentGroupTimetableHeader, _currentGroupFilter))
                 {
-                    FilteredFavoriteGroupsIds.Remove(studentGroupId);
+                    FilteredFavoriteHeaders.Remove(studentGroupTimetableHeader);
                 }
-            } 
+            }
             else
             {
-                if (_favoriteGroupsIds.Contains(studentGroupId))
+                if (_favoriteHeaders.Contains(studentGroupTimetableHeader))
                     return;
 
-                _favoriteGroupsIds.Add(studentGroupId);
+                _favoriteHeaders.Add(studentGroupTimetableHeader);
 
                 // Not to perform filtering for whole collection
-                if (studentGroupId.DisplayName.StartsWith(_currentGroupFilter))
+                if (GroupFilterPredicate(studentGroupTimetableHeader, _currentGroupFilter))
                 {
-                    FilteredFavoriteGroupsIds.Add(studentGroupId);
+                    FilteredFavoriteHeaders.Add(studentGroupTimetableHeader);
                 }
             }
 
-            OnPropertyChanged(nameof(FilteredFavoriteGroupsIds)); // Otherwise converter won't catch up
+            OnPropertyChanged(nameof(FilteredFavoriteHeaders)); // Otherwise converter won't catch up
         }
+    }
+
+    public static class StudentGroupTimetableHeaderExtensions
+    {
+        public static bool GroupFilterPredicate(StudentGroupTimetableHeader header, string filter) => header.HeaderText.StartsWith(filter);
+        public static IEnumerable<StudentGroupTimetableHeader> FilteredBy(this IEnumerable<StudentGroupTimetableHeader> headers, string groupNameFilter) =>
+            headers.Where(header => GroupFilterPredicate(header, groupNameFilter));
     }
 }

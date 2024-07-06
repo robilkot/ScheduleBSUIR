@@ -9,6 +9,7 @@ using ScheduleBSUIR.Models.Messaging;
 using ScheduleBSUIR.Services;
 using ScheduleBSUIR.View;
 using System.Collections.ObjectModel;
+using static ScheduleBSUIR.Viewmodels.EmployeeTimetableHeaderExtensions;
 
 namespace ScheduleBSUIR.Viewmodels
 {
@@ -17,17 +18,17 @@ namespace ScheduleBSUIR.Viewmodels
         private readonly EmployeesService _employeesService;
         private readonly TimetableService _timetableService;
 
-        private List<Employee> _allEmployees = [];
+        private List<EmployeeTimetableHeader> _allEmployees = [];
 
         private string _currentEmployeeFilter = string.Empty;
 
         [ObservableProperty]
-        private List<Employee> _filteredEmployees = [];
+        private List<EmployeeTimetableHeader> _filteredEmployees = [];
 
-        private List<EmployeeId> _favoriteEmployeesIds = [];
+        private List<EmployeeTimetableHeader> _favoriteEmployeesIds = [];
 
         [ObservableProperty]
-        private ObservableCollection<EmployeeId> _filteredFavoriteEmployeesIds = [];
+        private ObservableCollection<EmployeeTimetableHeader> _filteredFavoriteEmployeesIds = [];
 
         [ObservableProperty]
         private string _employeeFilter = string.Empty;
@@ -47,22 +48,16 @@ namespace ScheduleBSUIR.Viewmodels
         }
 
         [RelayCommand]
-        public async Task SelectEmployee(object selection)
+        public async Task SelectEmployee(EmployeeTimetableHeader selectedHeader)
         {
             if (IsBusy)
                 return;
 
             IsBusy = true;
 
-            TypedId employeeId = selection switch
-            {
-                TypedId id => id,
-                _ => TypedId.Create(selection),
-            };
-
             Dictionary<string, object> navigationParameters = new()
             {
-                { NavigationKeys.TimetableId, employeeId },
+                { NavigationKeys.TimetableHeader, selectedHeader },
                 { NavigationKeys.IsBackButtonVisible, true },
             };
 
@@ -82,10 +77,11 @@ namespace ScheduleBSUIR.Viewmodels
             try
             {
                 var employees = await _employeesService.GetEmployeesAsync(cancellationToken);
-                _allEmployees = employees.ToList();
+
+                _allEmployees = employees.ToTimetableHeaders().Cast<EmployeeTimetableHeader>().ToList();
                 FilteredEmployees = _allEmployees;
 
-                _favoriteEmployeesIds = await _timetableService.GetFavoriteEmployeesTimetablesIdsAsync();
+                _favoriteEmployeesIds = await _timetableService.GetFavoriteEmployeesTimetablesHeadersAsync();
                 FilteredFavoriteEmployeesIds = _favoriteEmployeesIds.ToObservableCollection();
 
                 EmployeeFilter = string.Empty;
@@ -97,29 +93,27 @@ namespace ScheduleBSUIR.Viewmodels
             }
         }
 
-        // todo: make better + optimise?
-        private static Func<Employee, bool> SearchPredicate(string filter) => new((employee) =>
-        {
-            return employee.FullName.Contains(filter, StringComparison.InvariantCultureIgnoreCase);
-        });
-
         [RelayCommand]
         public void FilterEmployees(string employeeNameFilter = "")
         {
             // Filter narrowed => can search in already filtered collection
             if (employeeNameFilter.Length > _currentEmployeeFilter.Length)
             {
-                FilteredEmployees = FilteredEmployees.Where(SearchPredicate(employeeNameFilter)).ToList();
+                FilteredEmployees = FilteredEmployees
+                    .FilteredBy(employeeNameFilter)
+                    .ToList();
                 FilteredFavoriteEmployeesIds = FilteredFavoriteEmployeesIds
-                    .Where(id => id.DisplayName.Contains(employeeNameFilter, StringComparison.InvariantCultureIgnoreCase))
+                    .FilteredBy(employeeNameFilter)
                     .ToObservableCollection();
             }
             // Else we have to search in all list :(
             else
             {
-                FilteredEmployees = _allEmployees.Where(SearchPredicate(employeeNameFilter)).ToList();
+                FilteredEmployees = _allEmployees
+                    .FilteredBy(employeeNameFilter)
+                    .ToList();
                 FilteredFavoriteEmployeesIds = _favoriteEmployeesIds
-                    .Where(id => id.DisplayName.Contains(employeeNameFilter, StringComparison.InvariantCultureIgnoreCase))
+                    .FilteredBy(employeeNameFilter)
                     .ToObservableCollection();
             }
 
@@ -128,33 +122,39 @@ namespace ScheduleBSUIR.Viewmodels
 
         public void Receive(TimetableStateChangedMessage message)
         {
-            if (message.Value.Item1 is not EmployeeId employeeId)
+            if (message.Value.Item1 is not EmployeeTimetableHeader employeeTimetableHeader)
                 return;
 
             if (message.Value.Item2 == TimetableState.Default)
             {
-                _favoriteEmployeesIds.Remove(employeeId);
+                _favoriteEmployeesIds.Remove(employeeTimetableHeader);
 
-                if (employeeId.DisplayName.Contains(_currentEmployeeFilter, StringComparison.InvariantCultureIgnoreCase))
+                if (EmployeePredicate((IEmployee)employeeTimetableHeader.TimetableOwner, _currentEmployeeFilter))
                 {
-                    FilteredFavoriteEmployeesIds.Remove(employeeId);
+                    FilteredFavoriteEmployeesIds.Remove(employeeTimetableHeader);
                 }
             }
             else
             {
-                if (_favoriteEmployeesIds.Contains(employeeId))
+                if (_favoriteEmployeesIds.Contains(employeeTimetableHeader))
                     return;
 
-                _favoriteEmployeesIds.Add(employeeId);
+                _favoriteEmployeesIds.Add(employeeTimetableHeader);
 
                 // Not to perform filtering for whole collection
-                if (employeeId.DisplayName.Contains(_currentEmployeeFilter, StringComparison.InvariantCultureIgnoreCase))
+                if (EmployeePredicate((IEmployee)employeeTimetableHeader.TimetableOwner, _currentEmployeeFilter))
                 {
-                    FilteredFavoriteEmployeesIds.Add(employeeId);
+                    FilteredFavoriteEmployeesIds.Add(employeeTimetableHeader);
                 }
             }
 
             OnPropertyChanged(nameof(FilteredFavoriteEmployeesIds)); // Otherwise converter won't catch up
         }
+    }
+    public static class EmployeeTimetableHeaderExtensions
+    {
+        public static bool EmployeePredicate(IEmployee employee, string filter) => employee.FullName.Contains(filter, StringComparison.InvariantCultureIgnoreCase);
+        public static IEnumerable<EmployeeTimetableHeader> FilteredBy(this IEnumerable<EmployeeTimetableHeader> headers, string employeeFilter) =>
+            headers.Where(header => EmployeePredicate((IEmployee)header.TimetableOwner, employeeFilter));
     }
 }

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class Employee : ICacheable, IUpdateDateAware, IAvatarDisplaying
+    public class Employee : IEmployee, ICacheable, IUpdateDateAware
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -18,30 +18,22 @@ namespace ScheduleBSUIR.Models
         public string UrlId { get; set; } = string.Empty;
         public List<string>? AcademicDepartment { get; set; }
         public string Fio { get; set; } = string.Empty;
-        [BsonIgnore]
-        [JsonIgnore]
-        public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
+
         [BsonId]
         [JsonIgnore]
-        public string PrimaryKey => UrlId.ToString();
+        public string PrimaryKey => UrlId;
         [JsonIgnore]
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public DateTime AccessedAt { get; set; }
-
-        [JsonIgnore]
         [BsonIgnore]
+        [JsonIgnore]
         public string AvatarText => $"{FirstName?.FirstOrDefault()}{MiddleName?.FirstOrDefault()}";
-        [JsonIgnore]
         [BsonIgnore]
+        [JsonIgnore]
         public string? AvatarUrl => PhotoLink;
-
-        public override string ToString()
-        {
-            string? firstNameSymbol = string.IsNullOrEmpty(FirstName) ? null : FirstName[0] + ".";
-            string? middleNameSymbol = string.IsNullOrEmpty(MiddleName) ? null : MiddleName[0] + "." ;
-
-            return string.Join(' ', LastName, firstNameSymbol, middleNameSymbol);
-        }
+        [BsonIgnore]
+        [JsonIgnore]
+        public string TimetableId => UrlId;
     }
 }

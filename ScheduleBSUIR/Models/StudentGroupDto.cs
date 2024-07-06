@@ -1,8 +1,10 @@
-﻿using ScheduleBSUIR.Interfaces;
+﻿using LiteDB;
+using ScheduleBSUIR.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class StudentGroupDto : IAvatarDisplaying
+    public class StudentGroupDto : IAvatarDisplaying, IStudentGroup
     {
         public string Name { get; set; } = string.Empty;
         public int FacultyId { get; set; }
@@ -14,7 +16,17 @@ namespace ScheduleBSUIR.Models
         public int Id { get; set; }
         public string? CalendarId { get; set; }
         public int EducationDegree { get; set; }
+        [BsonIgnore]
+        [JsonIgnore]
         public string AvatarText => $"{Name[0..3]}\n{Name[3..6]}";
+        [BsonIgnore]
+        [JsonIgnore]
         public string? AvatarUrl => null;
+        [BsonIgnore]
+        [JsonIgnore]
+        public string? SpecialityAbbreviation => SpecialityAbbrev;
+        [BsonIgnore]
+        [JsonIgnore]
+        public string TimetableId => Name;
     }
 }

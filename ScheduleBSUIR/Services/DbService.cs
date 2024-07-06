@@ -86,8 +86,8 @@ namespace ScheduleBSUIR.Services
 
         public async Task ClearDatabase()
         {
-            await RemoveAllAsync<StudentGroupId>();
-            await RemoveAllAsync<EmployeeId>();
+            await RemoveAllAsync<StudentGroupTimetableHeader>();
+            await RemoveAllAsync<EmployeeTimetableHeader>();
             await RemoveAllAsync<Timetable>();
             await RemoveAllAsync<Employee>();
             await RemoveAllAsync<StudentGroupHeader>();

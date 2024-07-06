@@ -46,11 +46,11 @@
 	</ItemGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
-	  <_MauiForceXamlCForDebug>true</_MauiForceXamlCForDebug>
+	  <_MauiForceXamlCForDebug>True</_MauiForceXamlCForDebug>
 	  <PublishTrimmed>False</PublishTrimmed>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
@@ -58,32 +58,32 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.2</ApplicationDisplayVersion>
-	  <ApplicationVersion>2</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.3</ApplicationDisplayVersion>
+	  <ApplicationVersion>3</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -139,6 +139,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\Controls\TimetableHeading.xaml.cs">
+	    <DependentUpon>TimetableHeading.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\DebugPage.xaml.cs">
 	    <DependentUpon>DebugPage.xaml</DependentUpon>
 	  </Compile>
@@ -147,9 +150,6 @@
 	  </Compile>
 	  <Compile Update="View\Templates\HelperTemplates.xaml.cs">
 	    <DependentUpon>HelperTemplates.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="View\TimetablePage.xaml.cs">
-	    <DependentUpon>TimetablePage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -172,7 +172,7 @@
 	  <MauiXaml Update="View\Controls\CustomTabbar.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Controls\TimetableHeader.xaml">
+	  <MauiXaml Update="View\Controls\TimetableHeading.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\DebugPage.xaml">

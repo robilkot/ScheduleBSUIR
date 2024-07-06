@@ -24,14 +24,14 @@ namespace ScheduleBSUIR.Services
             _deserializeOptions.Converters.Add(new JsonDateTimeConverter());
         }
 
-        public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TimetableHeader id, CancellationToken cancellationToken)
         {
             string requestUrl = UrlGenerator.TimetableLastUpdate(id);
 
             return GetDeserializedDataAsync<LastUpdateResponse>(requestUrl, cancellationToken);
         }
 
-        public Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<Timetable?> GetTimetableAsync(TimetableHeader id, CancellationToken cancellationToken)
         {
             string requestUrl = UrlGenerator.Timetable(id);
 

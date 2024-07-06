@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:ScheduleBSUIR.Viewmodels"
              xmlns:view="clr-namespace:ScheduleBSUIR.View"
+             xmlns:interfaces="clr-namespace:ScheduleBSUIR.Interfaces"
              xmlns:model="clr-namespace:ScheduleBSUIR.Models"
              xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
              xmlns:dx="http://schemas.devexpress.com/maui"
@@ -13,18 +14,55 @@
              mtk:TearDownBehavior.Cascade="False"
              Shell.NavBarIsVisible="False">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate
+                x:Key="EmployeeTimetableHeaderTemplate"
+                x:DataType="model:EmployeeTimetableHeader">
+                <Grid
+                    Background="{StaticResource ControlBackgroundBrush}"
+                    ColumnSpacing="15"
+                    Padding="15,10"
+                    ColumnDefinitions="*,auto">
+
+                    <Label
+                        Grid.Column="0"
+                        VerticalOptions="Center"
+                        LineBreakMode="NoWrap"
+                        Text="{Binding LongHeaderText}"
+                        Style="{StaticResource LabelBodyPrimaryStyle}">
+                    </Label>
+
+                    <Image
+                        Grid.Column="1"
+                        HeightRequest="16"
+                        Opacity="0.5"
+                        Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:EmployeesListPageViewModel}}, Path=SelectEmployeeCommand}"
+                            CommandParameter="{Binding .}"/>
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <RefreshView
         Background="{StaticResource PageBackgroundBrush}"
         Command="{Binding RefreshCommand}"
         CommandParameter=""
         Margin="15,0"
         IsRefreshing="{Binding IsRefreshing}">
+        
         <dx:DXCollectionView
             AllowCascadeUpdate="False"
             AllowGroupCollapse="False"
             UseRippleEffect="True"
             ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
             ItemSeparatorThickness="1"
+            ItemTemplate="{StaticResource EmployeeTimetableHeaderTemplate}"
             ItemsSource="{Binding FilteredEmployees}">
 
             <dx:DXCollectionView.Header>
@@ -78,37 +116,8 @@
                     <Border
                         IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                         <VerticalStackLayout
-                            BindableLayout.ItemsSource="{Binding FilteredFavoriteEmployeesIds}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate
-                                    x:DataType="model:EmployeeId">
-                                    <Grid
-                                        ColumnSpacing="15"
-                                        Padding="15,10"
-                                        ColumnDefinitions="*,auto">
-
-                                        <Label
-                                            Grid.Column="0"
-                                            VerticalOptions="Center"
-                                            LineBreakMode="NoWrap"
-                                            Text="{Binding DisplayName}"
-                                            Style="{StaticResource LabelBodyPrimaryStyle}">
-                                        </Label>
-
-                                        <Image
-                                            Grid.Column="1"
-                                            HeightRequest="16"
-                                            Opacity="0.5"
-                                            Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
-
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:EmployeesListPageViewModel}}, Path=SelectEmployeeCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Grid.GestureRecognizers>
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                            BindableLayout.ItemsSource="{Binding FilteredFavoriteEmployeesIds}"
+                            BindableLayout.ItemTemplate="{StaticResource EmployeeTimetableHeaderTemplate}">
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -116,7 +125,7 @@
 
             <dx:DXCollectionView.GroupDescription>
                 <dx:GroupDescription 
-                    FieldName="LastName"
+                    FieldName="GroupingText"
                     GroupInterval="Alphabetical"/>
             </dx:DXCollectionView.GroupDescription>
 
@@ -130,38 +139,6 @@
                         Text="{Binding GroupValue}"/>
                 </DataTemplate>
             </dx:DXCollectionView.GroupHeaderTemplate>
-
-            <dx:DXCollectionView.ItemTemplate>
-                <DataTemplate
-                    x:DataType="model:Employee">
-                    <Border
-                        StrokeThickness="0"
-                        Padding="15,10"
-                        StrokeShape="Rectangle">
-
-                        <Grid
-                            ColumnSpacing="10"
-                            ColumnDefinitions="*,auto">
-                            <Label
-                                Grid.Column="0"
-                                VerticalOptions="Center"
-                                Style="{StaticResource LabelBodyPrimaryStyle}"
-                                Text="{Binding FullName}"/>
-                            <Image
-                                Grid.Column="1"
-                                HeightRequest="16"
-                                Opacity="0.5"
-                                Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
-                        </Grid>
-
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EmployeesListPageViewModel}}, Path=SelectEmployeeCommand}"
-                                CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </DataTemplate>
-            </dx:DXCollectionView.ItemTemplate>
         </dx:DXCollectionView>
     </RefreshView>
 </ContentPage>

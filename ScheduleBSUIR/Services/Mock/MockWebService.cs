@@ -49,14 +49,14 @@ namespace ScheduleBSUIR.Services.Mock
             _deserializeOptions.Converters.Add(new JsonDateTimeConverter());
         }
 
-        public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<LastUpdateResponse?> GetTimetableLastUpdateAsync(TimetableHeader id, CancellationToken cancellationToken)
         {
             var response = new LastUpdateResponse(_dateTimeProvider.Now.Date.AddDays(-2));
 
             return Task.FromResult<LastUpdateResponse?>(response);
         }
 
-        public Task<Timetable?> GetTimetableAsync(TypedId id, CancellationToken cancellationToken)
+        public Task<Timetable?> GetTimetableAsync(TimetableHeader id, CancellationToken cancellationToken)
         {
             string requestUrl = UrlGenerator.Timetable(id);
 

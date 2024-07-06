@@ -30,18 +30,21 @@
                 ContentTemplate="{DataTemplate view:TimetablePage}"/>
         </Tab>
         <Tab
+            x:Name="groupsPage"
             Icon="dark_users"
             Title="Группы">
             <ShellContent
                 ContentTemplate="{DataTemplate view:GroupListPage}"/>
         </Tab>
         <Tab
+            x:Name="lecturersPage"
             Icon="dark_lecturer"
             Title="Преподаватели">
             <ShellContent
                 ContentTemplate="{DataTemplate view:EmployeesListPage}"/>
         </Tab>
         <Tab
+            x:Name="settingsPage"
             Icon="dark_settings"
             Title="Настройки">
             <ShellContent

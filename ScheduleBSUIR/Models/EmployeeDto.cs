@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ScheduleBSUIR.Models
 {
-    public class EmployeeDto : IAvatarDisplaying
+    public class EmployeeDto : IEmployee
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
@@ -20,20 +20,12 @@ namespace ScheduleBSUIR.Models
         public List<string>? JobPositions { get; set; }
         [BsonIgnore]
         [JsonIgnore]
-        public string FullName => string.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
-        [JsonIgnore]
-        [BsonIgnore]
         public string AvatarText => $"{FirstName?.FirstOrDefault()}{MiddleName?.FirstOrDefault()}";
-        [JsonIgnore]
         [BsonIgnore]
+        [JsonIgnore]
         public string? AvatarUrl => PhotoLink;
-
-        public override string ToString()
-        {
-            string? firstNameSymbol = string.IsNullOrEmpty(FirstName) ? null : FirstName[0] + ".";
-            string? middleNameSymbol = string.IsNullOrEmpty(MiddleName) ? null : MiddleName[0] + ".";
-
-            return string.Join(' ', LastName, firstNameSymbol, middleNameSymbol);
-        }
+        [BsonIgnore]
+        [JsonIgnore]
+        public string TimetableId => UrlId;
     }
 }

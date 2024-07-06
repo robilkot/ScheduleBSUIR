@@ -78,16 +78,16 @@ namespace ScheduleBSUIR.Viewmodels
         private ObservableCollection<ITimetableItem> _schedule = [];
 
         [ObservableProperty]
-        private TypedId? _timetableId = default;
-        async partial void OnTimetableIdChanged(TypedId? value)
+        private TimetableHeader? _timetableId = default;
+        async partial void OnTimetableIdChanged(TimetableHeader? value)
         {
-            TimetableState = await _timetableService.GetStateAsync(value);
+            TimetableState = await _timetableService.GetTimetableStateAsync(value);
 
             await GetTimetable(forceReload: true);
         }
 
         [ObservableProperty]
-        private TypedId? _previousTimetableId;
+        private TimetableHeader? _previousTimetableId;
 
         [ObservableProperty]
         private bool _isBackButtonVisible = false;
@@ -135,7 +135,7 @@ namespace ScheduleBSUIR.Viewmodels
 
                 _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
 
-                TimetableId = await _timetableService.GetPinnedIdAsync();
+                TimetableId = await _timetableService.GetPinnedTimetableAsync();
             }
 
             try
@@ -197,13 +197,12 @@ namespace ScheduleBSUIR.Viewmodels
             IsSubgroupTypePopupOpen = !IsSubgroupTypePopupOpen;
         }
 
-        // Accepts studentgroup dto or employeedto
         [RelayCommand]
-        public async Task NavigateToTimetable(object dto)
+        public async Task NavigateToTimetable(ITimetableOwner owner)
         {
-            var timetableId = TypedId.Create(dto);
+            var header = TimetableHeader.FromOwner(owner);
 
-            if (timetableId.Equals(PreviousTimetableId))
+            if (header.Equals(PreviousTimetableId))
             {
                 await NavigateBack();
                 return;
@@ -211,8 +210,8 @@ namespace ScheduleBSUIR.Viewmodels
 
             Dictionary<string, object> navigationParameters = new()
             {
-                { NavigationKeys.TimetableId, timetableId },
-                { NavigationKeys.PreviousTimetableId, TimetableId! },
+                { NavigationKeys.TimetableHeader, header },
+                { NavigationKeys.PreviousTimetableHeader, TimetableId! },
                 { NavigationKeys.IsBackButtonVisible, true },
             };
 
@@ -223,13 +222,13 @@ namespace ScheduleBSUIR.Viewmodels
         }
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.TryGetValue(NavigationKeys.TimetableId, out var id))
+            if (query.TryGetValue(NavigationKeys.TimetableHeader, out var id))
             {
-                TimetableId = (TypedId)id;
+                TimetableId = id as TimetableHeader;
             }
-            if (query.TryGetValue(NavigationKeys.PreviousTimetableId, out var prevId))
+            if (query.TryGetValue(NavigationKeys.PreviousTimetableHeader, out var prevId))
             {
-                PreviousTimetableId = (TypedId?)prevId;
+                PreviousTimetableId = prevId as TimetableHeader;
             }
             if (query.TryGetValue(NavigationKeys.IsBackButtonVisible, out var isBackButtonVisible))
             {

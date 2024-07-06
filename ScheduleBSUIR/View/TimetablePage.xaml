@@ -1,1 +1,825 @@
-<?xml version="1.0" encoding="utf-8" ?><ContentPage 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"	x:Class="ScheduleBSUIR.View.TimetablePage"	x:DataType="vm:TimetablePageViewModel"	xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"	xmlns:model="clr-namespace:ScheduleBSUIR.Models"	xmlns:view="clr-namespace:ScheduleBSUIR.View"	xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"	xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"	xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"	xmlns:dx="http://schemas.devexpress.com/maui"	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"	xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"	Shell.NavBarIsVisible="False"	x:Name="timetablePage">	<Grid		Background="{StaticResource PageBackgroundBrush}">		<!-- Timetable collectionview -->		<dx:DXCollectionView			x:Name="dayScheduleCollectionView"			Grid.Row="1"			ItemSpacing="5"			Margin="15,20,15,0"			ItemsSource="{Binding Schedule}"			Tap="dayScheduleCollectionView_Tap"			Scrolled="dayScheduleCollectionView_Scrolled"			ItemTemplate="{StaticResource LessonTemplateSelector}"			AllowCascadeUpdate="False"			SelectionMode="None">			<dx:DXCollectionView.Resources>				<ResourceDictionary>					<templateSelectors:TimetableItemTemplateSelector						ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"						InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"						ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"						InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"						ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"						InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"						TimetableEndTemplate="{StaticResource TimetableEndTemplate}"						x:Key="LessonTemplateSelector"/>				</ResourceDictionary>			</dx:DXCollectionView.Resources>			<dx:DXCollectionView.Header>				<controls:TimetableHeader					Margin="0,85,0,20"					Tab="{Binding SelectedTab}"					Timetable="{Binding Timetable}"					TimetableId="{Binding TimetableId}"/>			</dx:DXCollectionView.Header>		</dx:DXCollectionView>				<!-- Navbar -->		<Grid			Background="{AppThemeBinding Light={StaticResource PageBackgroundBrush}, Dark={StaticResource ModalPageBackgroundBrush}}"			x:Name="navBar"			ZIndex="1"			Padding="15,15,15,10"			VerticalOptions="Start"			ColumnSpacing="14"			ColumnDefinitions="auto,*,auto,auto">			<Grid.Shadow>				<Shadow					Brush="Black"					Opacity="0.1"					Radius="50"/>			</Grid.Shadow>			<!-- Navigation button -->			<Grid				IsVisible="{Binding IsBackButtonVisible}"				Grid.Column="0"				ColumnDefinitions="auto,auto"				MinimumWidthRequest="40"				Padding="0,0,10,0"				HeightRequest="40">				<Image					Grid.Column="0"					Margin="0,10,0,10"					Source="{AppThemeBinding Dark=dark_arrow_left, Light=light_arrow_left}"/>				<Label					Grid.Column="1"					VerticalOptions="Center"					IsVisible="{Binding PreviousTimetableId.DisplayName.Length, Converter={StaticResource SmallerThanConverter}}"					Style="{StaticResource LabelBodySecondaryStyle}"					Text="{Binding PreviousTimetableId.DisplayName}">					<Label.Resources>						<ResourceDictionary>							<x:Int32 x:Key="Threshold">7</x:Int32>							<toolkit:CompareConverter								x:Key="SmallerThanConverter"								ComparisonOperator="Smaller"								ComparingValue="{x:StaticResource Threshold}"/>						</ResourceDictionary>					</Label.Resources>				</Label>				<Grid.GestureRecognizers>					<TapGestureRecognizer Command="{Binding NavigateBackCommand}"/>				</Grid.GestureRecognizers>			</Grid>			<controls:CustomTabbar				HorizontalOptions="Center"				Grid.Column="1"				Tab="{Binding SelectedTab, Mode=TwoWay}">			</controls:CustomTabbar>			<!-- Subgroup type toggle -->			<Grid				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"				Grid.Column="2"				Padding="8"				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"				WidthRequest="40"				HeightRequest="40">				<Grid					ColumnDefinitions="auto,auto">					<Label						Grid.Column="1"						IsVisible="True"						Style="{StaticResource LabelBodyPrimaryStyle}"						Text="{Binding SelectedMode, Converter={StaticResource EnumToIntConverter}}">						<Label.Triggers>							<DataTrigger								TargetType="Label"								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"								Value="True">								<Setter									Property="IsVisible"									Value="False"/>							</DataTrigger>						</Label.Triggers>					</Label>					<Image						Grid.Column="0"						Source="{AppThemeBinding Dark=dark_user, Light=light_user}">						<Image.Triggers>							<DataTrigger								TargetType="Image"								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"								Value="True">								<Setter									Property="Source"									Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>							</DataTrigger>						</Image.Triggers>					</Image>				</Grid>				<Grid.GestureRecognizers>					<TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>				</Grid.GestureRecognizers>			</Grid>			<!-- Timetable state toggle -->			<Grid				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"				Grid.Column="3"				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"				Padding="8"				WidthRequest="40"				HeightRequest="40">				<Image					Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">					<Image.Triggers>						<DataTrigger							TargetType="Image"							Binding="{Binding TimetableState}"							Value="{x:Static constants:TimetableState.Favorite}">							<Setter								Property="Source"								Value="active_star"/>						</DataTrigger>						<DataTrigger							TargetType="Image"							Binding="{Binding TimetableState}"							Value="{x:Static constants:TimetableState.Pinned}">							<Setter								Property="Source"								Value="active_pin"/>						</DataTrigger>					</Image.Triggers>				</Image>				<Grid.Triggers>					<DataTrigger						TargetType="Grid"						Binding="{Binding Timetable}"						Value="{x:Null}">						<Setter							Property="IsEnabled"							Value="False"/>						<Setter							Property="Opacity"							Value="0.5"/>					</DataTrigger>				</Grid.Triggers>				<Grid.GestureRecognizers>					<TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>				</Grid.GestureRecognizers>			</Grid>			<!-- Subgroup type popup-->			<dx:DXPopup				VerticalAlignment="Top"				HorizontalAlignment="Right"				Margin="10,70"				IsOpen="{Binding IsSubgroupTypePopupOpen}">				<dx:DXPopup.Resources>					<ResourceDictionary>						<Style TargetType="Grid">							<Setter Property="Padding" Value="20,0"/>							<Setter Property="ColumnDefinitions" Value="auto,*,auto"/>							<Setter Property="ColumnSpacing" Value="15"/>							<Setter Property="HeightRequest" Value="50"/>						</Style>					</ResourceDictionary>				</dx:DXPopup.Resources>				<Border					WidthRequest="270"					Padding="0,5"					Background="{StaticResource ControlBackgroundBrush}">					<VerticalStackLayout>						<VerticalStackLayout.Resources>							<ResourceDictionary>								<Style TargetType="Image">									<Setter Property="WidthRequest" Value="24"/>									<Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>								</Style>								<Style TargetType="Label">									<Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>									<Setter Property="VerticalOptions" Value="Center"/>								</Style>							</ResourceDictionary>						</VerticalStackLayout.Resources>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_user, Light=light_user}">								<Image.Triggers>									<DataTrigger										TargetType="Image"										Binding="{Binding SelectedMode}"										Value="{x:Static constants:SubgroupType.FirstSubgroup}">										<Setter											Property="Opacity"											Value="1.0"/>										<Setter											Property="Source"											Value="{AppThemeBinding Dark=dark_active_user, Light=light_active_user}"/>									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetSubgroupTypeCommand}"									CommandParameter="{x:Static constants:SubgroupType.FirstSubgroup}"/>							</Grid.GestureRecognizers>						</Grid>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_user, Light=light_user}">								<Image.Triggers>									<DataTrigger										TargetType="Image"										Binding="{Binding SelectedMode}"										Value="{x:Static constants:SubgroupType.SecondSubgroup}">										<Setter											Property="Opacity"											Value="1.0"/>										<Setter											Property="Source"											Value="{AppThemeBinding Dark=dark_active_user, Light=light_active_user}"/>									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:SubgroupType.SecondSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetSubgroupTypeCommand}"									CommandParameter="{x:Static constants:SubgroupType.SecondSubgroup}"/>							</Grid.GestureRecognizers>						</Grid>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_users, Light=light_users}">								<Image.Triggers>									<DataTrigger										TargetType="Image"										Binding="{Binding SelectedMode}"										Value="{x:Static constants:SubgroupType.All}">										<Setter											Property="Opacity"											Value="1.0"/>										<Setter											Property="Source"											Value="{AppThemeBinding Dark=dark_active_users, Light=light_active_users}"/>									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:SubgroupType.All}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetSubgroupTypeCommand}"									CommandParameter="{x:Static constants:SubgroupType.All}"/>							</Grid.GestureRecognizers>						</Grid>					</VerticalStackLayout>				</Border>			</dx:DXPopup>			<!-- Timetable state popup-->			<dx:DXPopup				VerticalAlignment="Top"				HorizontalAlignment="Right"				Margin="10,70"				IsOpen="{Binding IsTimetableStatePopupOpen}">				<dx:DXPopup.Resources>					<ResourceDictionary>						<Style TargetType="Grid">							<Setter Property="Padding" Value="20,0"/>							<Setter Property="ColumnDefinitions" Value="auto,*,auto"/>							<Setter Property="ColumnSpacing" Value="15"/>							<Setter Property="HeightRequest" Value="50"/>						</Style>					</ResourceDictionary>				</dx:DXPopup.Resources>				<Border					WidthRequest="270"					Padding="0,5"					Background="{StaticResource ControlBackgroundBrush}">					<VerticalStackLayout>						<VerticalStackLayout.Resources>							<ResourceDictionary>								<Style TargetType="Image">									<Setter Property="WidthRequest" Value="24"/>									<Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>								</Style>								<Style TargetType="Label">									<Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>									<Setter Property="VerticalOptions" Value="Center"/>								</Style>							</ResourceDictionary>						</VerticalStackLayout.Resources>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">								<Image.Triggers>									<DataTrigger										TargetType="Image"										Binding="{Binding TimetableState}"										Value="{x:Static constants:TimetableState.Default}">										<Setter											Property="Opacity"											Value="1.0"/>									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:TimetableState.Default}, Converter={StaticResource TimetableStateToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Default}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetStateCommand}"									CommandParameter="{x:Static constants:TimetableState.Default}"/>							</Grid.GestureRecognizers>						</Grid>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_star, Light=light_star}">								<Image.Triggers>									<DataTrigger										TargetType="Image"										Binding="{Binding TimetableState}"										Value="{x:Static constants:TimetableState.Favorite}">										<Setter											Property="Opacity"											Value="1.0"/>										<Setter											Property="Source"											Value="active_star"/>       									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:TimetableState.Favorite}, Converter={StaticResource TimetableStateToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Favorite}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetStateCommand}"									CommandParameter="{x:Static constants:TimetableState.Favorite}"/>							</Grid.GestureRecognizers>						</Grid>						<Grid>							<Image								Grid.Column="0"								Source="{AppThemeBinding Dark=dark_pin, Light=light_pin}">								<Image.Triggers>									<DataTrigger											TargetType="Image"											Binding="{Binding TimetableState}"											Value="{x:Static constants:TimetableState.Pinned}">										<Setter											Property="Opacity"											Value="1.0"/>										<Setter											Property="Source"											Value="active_pin"/>									</DataTrigger>								</Image.Triggers>							</Image>							<Label								Grid.Column="1"								Text="{Binding Source={x:Static constants:TimetableState.Pinned}, Converter={StaticResource TimetableStateToStringConverter}}"/>							<Image								Grid.Column="2"								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"								Opacity="0.5"								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Pinned}}"/>							<Grid.GestureRecognizers>								<TapGestureRecognizer									Command="{Binding SetStateCommand}"									CommandParameter="{x:Static constants:TimetableState.Pinned}"/>							</Grid.GestureRecognizers>						</Grid>					</VerticalStackLayout>				</Border>			</dx:DXPopup>		</Grid>		<!-- Bottom sheet with schedule details -->		<dx:BottomSheet 			x:Name="scheduleDetailSheet" 			ZIndex="2"			ShowGrabber="True" 			AllowDismiss="True" 			StateChanged="scheduleDetailSheet_StateChanged"			CornerRadius="12"			HalfExpandedRatio="0.5"			x:DataType="model:Schedule">			<dx:BottomSheet.Resources>				<ResourceDictionary>					<Style						BasedOn="{StaticResource BaseBorderStyle}"						TargetType="Border">						<Setter							Property="Background"							Value="{AppThemeBinding Dark={StaticResource ControlBackgroundBrush}, Light={StaticResource LightPageBackgroundColor}}"/>					</Style>				</ResourceDictionary>			</dx:BottomSheet.Resources>			<ScrollView				Padding="15,30"				VerticalScrollBarVisibility="Never">				<VerticalStackLayout					x:Name="sheetContent"					Spacing="20">					<VerticalStackLayout.Resources>						<ResourceDictionary>							<Style								TargetType="Grid">								<Setter									Property="ColumnDefinitions"									Value="auto, *"/>								<Setter									Property="ColumnSpacing"									Value="10"/>							</Style>						</ResourceDictionary>					</VerticalStackLayout.Resources>					<Label						Margin="0,0,0,-5"						LineBreakMode="WordWrap"						Style="{StaticResource LabelBodyHeaderStyle}"						Text="{Binding SubjectFullName, TargetNullValue={x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}}"/>					<!--Schedule details-->					<Border						Padding="15">						<VerticalStackLayout							Spacing="20">							<!--type-->							<Grid								IsVisible="{Binding Subject, Converter={StaticResource IsNotNullOrEmptyConverter}}">								<Label									Grid.Column="0"									Style="{StaticResource LabelBodyPrimaryStyle}"									Text="Тип"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}"									Text="{Binding LessonTypeAbbrev}"/>							</Grid>							<!-- Subgroup (if not whole group) -->							<Grid								IsVisible="{Binding NumSubgroup, Converter={toolkit:IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}">								<Label								Grid.Column="0"								Style="{StaticResource LabelBodyPrimaryStyle}"								Text="Подгруппа"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}"									Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>							</Grid>							<!--date-->							<Grid>								<Label									Grid.Column="0"									Style="{StaticResource LabelBodyPrimaryStyle}"									Text="Дата"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}"									Text="{Binding DateLesson, StringFormat='{}{0:dd MMMM yyyy г.}'}"/>							</Grid>							<!--time-->							<Grid>								<Label									Grid.Column="0"									Style="{StaticResource LabelBodyPrimaryStyle}"									Text="Время"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}">									<Label.Text>										<MultiBinding											StringFormat="{}{0} - {1}">											<Binding												Path="StartLessonTime"												StringFormat="{}{0:HH:mm}"/>											<Binding												Path="EndLessonTime"												StringFormat="{}{0:HH:mm}"/>										</MultiBinding>									</Label.Text>								</Label>							</Grid>							<!--auditories-->							<Grid>								<Label									Grid.Column="0"									Style="{StaticResource LabelBodyPrimaryStyle}"									Text="Аудитория"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}"									Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}">									<Label.Triggers>										<DataTrigger											Binding="{Binding Auditories, Converter={StaticResource IsEmptyConverter}}"											Value="True"											TargetType="Label">											<Setter												Property="Text"												Value="Не указана"/>										</DataTrigger>									</Label.Triggers>								</Label>							</Grid>							<!-- Weeks -->							<Grid								IsVisible="{Binding WeekNumber, Converter={StaticResource IsNotNullOrEmptyConverter}}">								<Label									Grid.Column="0"									Style="{StaticResource LabelBodyPrimaryStyle}"									Text="Недели"/>								<Label									Grid.Column="1"									HorizontalTextAlignment="End"									Style="{StaticResource LabelBodySecondaryStyle}"									Text="{Binding WeekNumber, Converter={StaticResource ListToStringConverter}}"/>							</Grid>						</VerticalStackLayout>					</Border>					<!--Remarks (if present)-->					<Label						IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"						Text="Примечания"						Margin="15,0,0,-10"						Style="{StaticResource LabelBodySecondaryStyle}"/>					<Border						IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"						Padding="15">						<Label							Text="{Binding Note}"							Style="{StaticResource LabelBodyPrimaryStyle}"/>					</Border>					<!-- Lecturers -->					<Label						IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"						Text="Преподаватели"						Margin="15,0,0,-10"						Style="{StaticResource LabelBodySecondaryStyle}"/>					<Border						IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}">						<dx:DXCollectionView							UseRippleEffect="True"							ReduceSizeToContent="True"							ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"							ItemSeparatorThickness="1"							ItemsSource="{Binding Employees}">							<dx:DXCollectionView.ItemTemplate>								<DataTemplate									x:DataType="model:EmployeeDto">									<Grid										ColumnSpacing="15"										HeightRequest="70"										Padding="15,10"										ColumnDefinitions="auto,*,auto">										<toolkit:AvatarView											Grid.Column="0"											VerticalOptions="Center"											HeightRequest="50"											WidthRequest="50"											CornerRadius="25"											BorderWidth="0"											FontAttributes="Bold"											Background="{StaticResource ModalPageBackgroundBrush}"											TextColor="{AppThemeBinding Dark={StaticResource DarkSecondaryTextColor}, Light={StaticResource LightSecondaryTextColor}}"											Text="{Binding AvatarText, Mode=OneTime}"											ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>										<Label											Grid.Column="1"											VerticalOptions="Center"											MaxLines="2"											Text="{Binding FullName, Mode=OneTime}"											LineHeight="1.1"											LineBreakMode="WordWrap"											Style="{StaticResource LabelBodyPrimaryStyle}"/>										<Image											Grid.Column="2"											HeightRequest="16"											Opacity="0.5"											Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>										<Grid.GestureRecognizers>											<TapGestureRecognizer												Tapped="employee_tapped"												Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"												CommandParameter="{Binding .}"/>										</Grid.GestureRecognizers>									</Grid>								</DataTemplate>							</dx:DXCollectionView.ItemTemplate>						</dx:DXCollectionView>					</Border>					<!-- Student groups -->					<Label						Text="Группы"						Margin="15,0,0,-10"						Style="{StaticResource LabelBodySecondaryStyle}">						<Label.IsVisible>							<MultiBinding Converter="{StaticResource VariableMultiValueConverter}">								<Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>								<Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>							</MultiBinding>						</Label.IsVisible>					</Label>					<Border>						<Border.IsVisible>							<MultiBinding Converter="{StaticResource VariableMultiValueConverter}">								<Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>								<Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>							</MultiBinding>						</Border.IsVisible>						<dx:DXCollectionView							UseRippleEffect="True"							ReduceSizeToContent="True"							ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"							ItemSeparatorThickness="1"							ItemsSource="{Binding StudentGroups}">							<dx:DXCollectionView.ItemTemplate>								<DataTemplate									x:DataType="model:StudentGroupDto">									<Grid										ColumnSpacing="15"										Padding="15,10"										ColumnDefinitions="*,auto">										<Label											Grid.Column="0"											VerticalOptions="Center"											LineBreakMode="NoWrap"											Text="{Binding Name, Mode=OneTime}"											Style="{StaticResource LabelBodyPrimaryStyle}">										</Label>										<Image											Grid.Column="1"											HeightRequest="16"											Opacity="0.5"											Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>										<Grid.GestureRecognizers>											<TapGestureRecognizer												Tapped="employee_tapped"												Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"												CommandParameter="{Binding .}"/>										</Grid.GestureRecognizers>									</Grid>								</DataTemplate>							</dx:DXCollectionView.ItemTemplate>						</dx:DXCollectionView>					</Border>								</VerticalStackLayout>			</ScrollView>		</dx:BottomSheet>	</Grid></ContentPage>
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="ScheduleBSUIR.View.TimetablePage"
+	x:DataType="vm:TimetablePageViewModel"
+	xmlns:vm="clr-namespace:ScheduleBSUIR.Viewmodels"
+	xmlns:model="clr-namespace:ScheduleBSUIR.Models"
+	xmlns:interfaces="clr-namespace:ScheduleBSUIR.Interfaces"
+	xmlns:view="clr-namespace:ScheduleBSUIR.View"
+	xmlns:converters="clr-namespace:ScheduleBSUIR.Helpers.Converters"
+	xmlns:constants="clr-namespace:ScheduleBSUIR.Helpers.Constants"
+	xmlns:controls="clr-namespace:ScheduleBSUIR.View.Controls"
+	xmlns:dx="http://schemas.devexpress.com/maui"
+	xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+	xmlns:templateSelectors="clr-namespace:ScheduleBSUIR.Helpers.TemplateSelectors"
+	Shell.NavBarIsVisible="False"
+	x:Name="timetablePage">
+
+    <Grid
+		Background="{StaticResource PageBackgroundBrush}">
+        <!-- Timetable collectionview -->
+        <dx:DXCollectionView
+			x:Name="dayScheduleCollectionView"
+			Grid.Row="1"
+			ItemSpacing="5"
+			Margin="15,20,15,0"
+			ItemsSource="{Binding Schedule}"
+			Tap="dayScheduleCollectionView_Tap"
+			Scrolled="dayScheduleCollectionView_Scrolled"
+			ItemTemplate="{StaticResource LessonTemplateSelector}"
+			AllowCascadeUpdate="False"
+			SelectionMode="None">
+
+            <dx:DXCollectionView.Resources>
+                <ResourceDictionary>
+                    <templateSelectors:TimetableItemTemplateSelector
+						ActiveScheduleTemplate="{StaticResource ActiveLessonTemplate}"
+						InactiveScheduleTemplate="{StaticResource InactiveLessonTemplate}"
+						ActiveScheduleDayTemplate="{StaticResource ActiveHeaderTemplate}"
+						InactiveScheduleDayTemplate="{StaticResource InactiveHeaderTemplate}"
+						ActiveAnnouncementTemplate="{StaticResource ActiveAnnouncementTemplate}"
+						InactiveAnnouncementTemplate="{StaticResource InactiveAnnouncementTemplate}"
+						TimetableEndTemplate="{StaticResource TimetableEndTemplate}"
+						x:Key="LessonTemplateSelector"/>
+                    <converters:TimetableToDaterangeTextConverter
+						x:Key="TimetableToDaterangeTextConverter"/>
+                    <converters:TimetableToSubheaderTextConverter
+						x:Key="TimetableToSubheaderTextConverter"/>
+                </ResourceDictionary>
+            </dx:DXCollectionView.Resources>
+
+            <dx:DXCollectionView.Header>
+                <Grid
+                    Margin="0,85,0,20"
+                    RowSpacing="10"
+                    RowDefinitions="auto,auto">
+                    <Grid
+                        Grid.Row="0"
+                        ColumnSpacing="10"
+                        ColumnDefinitions="auto,auto">
+                        <Label
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            Style="{StaticResource LabelHeaderStyle}"
+                            Text="{Binding TimetableId.HeaderText}"/>
+                        <Label
+                            Grid.Column="1"
+                            VerticalOptions="Center"
+                            LineBreakMode="WordWrap"
+                            WidthRequest="220"
+                            Style="{StaticResource LabelBodySecondaryStyle}"
+                            Text="{Binding Timetable, Converter={StaticResource TimetableToSubheaderTextConverter}}"/>
+                    </Grid>
+
+                    <Label
+                        x:Name="datesLabel"
+                        IsVisible="{Binding Source={x:RelativeSource Mode=Self}, Path=Text, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Grid.Row="1"
+                        Style="{StaticResource LabelBodySecondaryStyle}">
+                        <Label.Text>
+                            <MultiBinding Converter="{StaticResource TimetableToDaterangeTextConverter}">
+                                <Binding Path="Timetable" />
+                                <Binding Path="SelectedTab" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </Grid>
+            </dx:DXCollectionView.Header>
+        </dx:DXCollectionView>
+
+        <!-- Navbar -->
+        <Grid
+			Background="{AppThemeBinding Light={StaticResource PageBackgroundBrush}, Dark={StaticResource ModalPageBackgroundBrush}}"
+			x:Name="navBar"
+			ZIndex="1"
+			Padding="15,15,15,10"
+			VerticalOptions="Start"
+			ColumnSpacing="14"
+			ColumnDefinitions="auto,*,auto,auto">
+
+            <Grid.Shadow>
+                <Shadow
+					Brush="Black"
+					Opacity="0.1"
+					Radius="50"/>
+            </Grid.Shadow>
+
+            <!-- Navigation button -->
+            <Grid
+				IsVisible="{Binding IsBackButtonVisible}"
+				Grid.Column="0"
+				ColumnDefinitions="auto,auto"
+				MinimumWidthRequest="40"
+				Padding="0,0,10,0"
+				HeightRequest="40">
+                <Image
+					Grid.Column="0"
+					Margin="0,10,0,10"
+					Source="{AppThemeBinding Dark=dark_arrow_left, Light=light_arrow_left}"/>
+                <Label
+					Grid.Column="1"
+					VerticalOptions="Center"
+					IsVisible="{Binding PreviousTimetableId.HeaderText.Length, Converter={StaticResource SmallerThanConverter}}"
+					Style="{StaticResource LabelBodySecondaryStyle}"
+					Text="{Binding PreviousTimetableId.HeaderText}">
+                    <Label.Resources>
+                        <ResourceDictionary>
+                            <x:Int32 x:Key="Threshold">7</x:Int32>
+                            <toolkit:CompareConverter
+								x:Key="SmallerThanConverter"
+								ComparisonOperator="Smaller"
+								ComparingValue="{x:StaticResource Threshold}"/>
+                        </ResourceDictionary>
+                    </Label.Resources>
+                </Label>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateBackCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <controls:CustomTabbar
+				HorizontalOptions="Center"
+				Grid.Column="1"
+				Tab="{Binding SelectedTab, Mode=TwoWay}">
+            </controls:CustomTabbar>
+
+            <!-- Subgroup type toggle -->
+            <Grid
+				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+				Grid.Column="2"
+				Padding="8"
+				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
+				WidthRequest="40"
+				HeightRequest="40">
+                <Grid
+					ColumnDefinitions="auto,auto">
+                    <Label
+						Grid.Column="1"
+						IsVisible="True"
+						Style="{StaticResource LabelBodyPrimaryStyle}"
+						Text="{Binding SelectedMode, Converter={StaticResource EnumToIntConverter}}">
+                        <Label.Triggers>
+                            <DataTrigger
+								TargetType="Label"
+								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+								Value="True">
+                                <Setter
+									Property="IsVisible"
+									Value="False"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Image
+						Grid.Column="0"
+						Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                        <Image.Triggers>
+                            <DataTrigger
+								TargetType="Image"
+								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+								Value="True">
+                                <Setter
+									Property="Source"
+									Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
+                            </DataTrigger>
+                        </Image.Triggers>
+                    </Image>
+                </Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- Timetable state toggle -->
+            <Grid
+				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+				Grid.Column="3"
+				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
+				Padding="8"
+				WidthRequest="40"
+				HeightRequest="40">
+                <Image
+					Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
+                    <Image.Triggers>
+                        <DataTrigger
+							TargetType="Image"
+							Binding="{Binding TimetableState}"
+							Value="{x:Static constants:TimetableState.Favorite}">
+                            <Setter
+								Property="Source"
+								Value="active_star"/>
+                        </DataTrigger>
+                        <DataTrigger
+							TargetType="Image"
+							Binding="{Binding TimetableState}"
+							Value="{x:Static constants:TimetableState.Pinned}">
+                            <Setter
+								Property="Source"
+								Value="active_pin"/>
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Grid.Triggers>
+                    <DataTrigger
+						TargetType="Grid"
+						Binding="{Binding Timetable}"
+						Value="{x:Null}">
+                        <Setter
+							Property="IsEnabled"
+							Value="False"/>
+                        <Setter
+							Property="Opacity"
+							Value="0.5"/>
+                    </DataTrigger>
+                </Grid.Triggers>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- Subgroup type popup-->
+            <dx:DXPopup
+				VerticalAlignment="Top"
+				HorizontalAlignment="Right"
+				Margin="10,70"
+				IsOpen="{Binding IsSubgroupTypePopupOpen}">
+                <dx:DXPopup.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Grid">
+                            <Setter Property="Padding" Value="20,0"/>
+                            <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
+                            <Setter Property="ColumnSpacing" Value="15"/>
+                            <Setter Property="HeightRequest" Value="50"/>
+                        </Style>
+                    </ResourceDictionary>
+                </dx:DXPopup.Resources>
+
+                <Border
+					WidthRequest="270"
+					Padding="0,5"
+					Background="{StaticResource ControlBackgroundBrush}">
+                    <VerticalStackLayout>
+                        <VerticalStackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Image">
+                                    <Setter Property="WidthRequest" Value="24"/>
+                                    <Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>
+                                </Style>
+
+                                <Style TargetType="Label">
+                                    <Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>
+                                    <Setter Property="VerticalOptions" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </VerticalStackLayout.Resources>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                                <Image.Triggers>
+                                    <DataTrigger
+										TargetType="Image"
+										Binding="{Binding SelectedMode}"
+										Value="{x:Static constants:SubgroupType.FirstSubgroup}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                        <Setter
+											Property="Source"
+											Value="{AppThemeBinding Dark=dark_active_user, Light=light_active_user}"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:SubgroupType.FirstSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.FirstSubgroup}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetSubgroupTypeCommand}"
+									CommandParameter="{x:Static constants:SubgroupType.FirstSubgroup}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                                <Image.Triggers>
+                                    <DataTrigger
+										TargetType="Image"
+										Binding="{Binding SelectedMode}"
+										Value="{x:Static constants:SubgroupType.SecondSubgroup}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                        <Setter
+											Property="Source"
+											Value="{AppThemeBinding Dark=dark_active_user, Light=light_active_user}"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:SubgroupType.SecondSubgroup}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.SecondSubgroup}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetSubgroupTypeCommand}"
+									CommandParameter="{x:Static constants:SubgroupType.SecondSubgroup}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_users, Light=light_users}">
+                                <Image.Triggers>
+                                    <DataTrigger
+										TargetType="Image"
+										Binding="{Binding SelectedMode}"
+										Value="{x:Static constants:SubgroupType.All}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                        <Setter
+											Property="Source"
+											Value="{AppThemeBinding Dark=dark_active_users, Light=light_active_users}"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:SubgroupType.All}, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetSubgroupTypeCommand}"
+									CommandParameter="{x:Static constants:SubgroupType.All}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+            </dx:DXPopup>
+
+            <!-- Timetable state popup-->
+            <dx:DXPopup
+				VerticalAlignment="Top"
+				HorizontalAlignment="Right"
+				Margin="10,70"
+				IsOpen="{Binding IsTimetableStatePopupOpen}">
+                <dx:DXPopup.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Grid">
+                            <Setter Property="Padding" Value="20,0"/>
+                            <Setter Property="ColumnDefinitions" Value="auto,*,auto"/>
+                            <Setter Property="ColumnSpacing" Value="15"/>
+                            <Setter Property="HeightRequest" Value="50"/>
+                        </Style>
+                    </ResourceDictionary>
+                </dx:DXPopup.Resources>
+
+                <Border
+					WidthRequest="270"
+					Padding="0,5"
+					Background="{StaticResource ControlBackgroundBrush}">
+                    <VerticalStackLayout>
+                        <VerticalStackLayout.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Image">
+                                    <Setter Property="WidthRequest" Value="24"/>
+                                    <Setter Property="Opacity" Value="{StaticResource disabledOpacity}"/>
+                                </Style>
+
+                                <Style TargetType="Label">
+                                    <Setter Property="Style" Value="{StaticResource LabelBodyPrimaryStyle}"/>
+                                    <Setter Property="VerticalOptions" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </VerticalStackLayout.Resources>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
+                                <Image.Triggers>
+                                    <DataTrigger
+										TargetType="Image"
+										Binding="{Binding TimetableState}"
+										Value="{x:Static constants:TimetableState.Default}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:TimetableState.Default}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Default}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetStateCommand}"
+									CommandParameter="{x:Static constants:TimetableState.Default}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_star, Light=light_star}">
+                                <Image.Triggers>
+                                    <DataTrigger
+										TargetType="Image"
+										Binding="{Binding TimetableState}"
+										Value="{x:Static constants:TimetableState.Favorite}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                        <Setter
+											Property="Source"
+											Value="active_star"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:TimetableState.Favorite}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Favorite}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetStateCommand}"
+									CommandParameter="{x:Static constants:TimetableState.Favorite}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                        <Grid>
+                            <Image
+								Grid.Column="0"
+								Source="{AppThemeBinding Dark=dark_pin, Light=light_pin}">
+                                <Image.Triggers>
+                                    <DataTrigger
+											TargetType="Image"
+											Binding="{Binding TimetableState}"
+											Value="{x:Static constants:TimetableState.Pinned}">
+                                        <Setter
+											Property="Opacity"
+											Value="1.0"/>
+                                        <Setter
+											Property="Source"
+											Value="active_pin"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                            <Label
+								Grid.Column="1"
+								Text="{Binding Source={x:Static constants:TimetableState.Pinned}, Converter={StaticResource TimetableStateToStringConverter}}"/>
+                            <Image
+								Grid.Column="2"
+								Source="{AppThemeBinding Dark=dark_check, Light=light_check}"
+								Opacity="0.5"
+								IsVisible="{Binding TimetableState, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:TimetableState.Pinned}}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+									Command="{Binding SetStateCommand}"
+									CommandParameter="{x:Static constants:TimetableState.Pinned}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+            </dx:DXPopup>
+        </Grid>
+
+        <!-- Bottom sheet with schedule details -->
+        <dx:BottomSheet 
+			x:Name="scheduleDetailSheet" 
+			ZIndex="2"
+			ShowGrabber="True" 
+			AllowDismiss="True" 
+			StateChanged="scheduleDetailSheet_StateChanged"
+			CornerRadius="12"
+			HalfExpandedRatio="0.5"
+			x:DataType="model:Schedule">
+
+            <dx:BottomSheet.Resources>
+                <ResourceDictionary>
+                    <Style
+						BasedOn="{StaticResource BaseBorderStyle}"
+						TargetType="Border">
+                        <Setter
+							Property="Background"
+							Value="{AppThemeBinding Dark={StaticResource ControlBackgroundBrush}, Light={StaticResource LightPageBackgroundColor}}"/>
+                    </Style>
+                </ResourceDictionary>
+            </dx:BottomSheet.Resources>
+
+            <ScrollView
+				Padding="15,30"
+				VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout
+					x:Name="sheetContent"
+					Spacing="20">
+                    <VerticalStackLayout.Resources>
+                        <ResourceDictionary>
+                            <Style
+								TargetType="Grid">
+                                <Setter
+									Property="ColumnDefinitions"
+									Value="auto, *"/>
+                                <Setter
+									Property="ColumnSpacing"
+									Value="10"/>
+                            </Style>
+                        </ResourceDictionary>
+                    </VerticalStackLayout.Resources>
+
+                    <Label
+						Margin="0,0,0,-5"
+						LineBreakMode="WordWrap"
+						Style="{StaticResource LabelBodyHeaderStyle}"
+						Text="{Binding SubjectFullName, TargetNullValue={x:Static constants:LessonTypesHelper.AnnouncementAbbreviation}}"/>
+
+                    <!--Schedule details-->
+                    <Border
+						Padding="15">
+
+                        <VerticalStackLayout
+							Spacing="20">
+                            <!--type-->
+                            <Grid
+								IsVisible="{Binding Subject, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                                <Label
+									Grid.Column="0"
+									Style="{StaticResource LabelBodyPrimaryStyle}"
+									Text="Тип"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}"
+									Text="{Binding LessonTypeAbbrev}"/>
+                            </Grid>
+
+                            <!-- Subgroup (if not whole group) -->
+                            <Grid
+								IsVisible="{Binding NumSubgroup, Converter={toolkit:IsNotEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}">
+                                <Label
+								Grid.Column="0"
+								Style="{StaticResource LabelBodyPrimaryStyle}"
+								Text="Подгруппа"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}"
+									Text="{Binding NumSubgroup, Converter={StaticResource SubgroupTypeToStringConverter}}"/>
+                            </Grid>
+
+                            <!--date-->
+                            <Grid>
+                                <Label
+									Grid.Column="0"
+									Style="{StaticResource LabelBodyPrimaryStyle}"
+									Text="Дата"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}"
+									Text="{Binding DateLesson, StringFormat='{}{0:dd MMMM yyyy г.}'}"/>
+                            </Grid>
+
+                            <!--time-->
+                            <Grid>
+                                <Label
+									Grid.Column="0"
+									Style="{StaticResource LabelBodyPrimaryStyle}"
+									Text="Время"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}">
+                                    <Label.Text>
+                                        <MultiBinding
+											StringFormat="{}{0} - {1}">
+                                            <Binding
+												Path="StartLessonTime"
+												StringFormat="{}{0:HH:mm}"/>
+                                            <Binding
+												Path="EndLessonTime"
+												StringFormat="{}{0:HH:mm}"/>
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </Grid>
+
+                            <!--auditories-->
+                            <Grid>
+                                <Label
+									Grid.Column="0"
+									Style="{StaticResource LabelBodyPrimaryStyle}"
+									Text="Аудитория"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}"
+									Text="{Binding Auditories, Converter={StaticResource ListToStringConverter}}">
+                                    <Label.Triggers>
+                                        <DataTrigger
+											Binding="{Binding Auditories, Converter={StaticResource IsEmptyConverter}}"
+											Value="True"
+											TargetType="Label">
+                                            <Setter
+												Property="Text"
+												Value="Не указана"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Grid>
+
+                            <!-- Weeks -->
+                            <Grid
+								IsVisible="{Binding WeekNumber, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                                <Label
+									Grid.Column="0"
+									Style="{StaticResource LabelBodyPrimaryStyle}"
+									Text="Недели"/>
+                                <Label
+									Grid.Column="1"
+									HorizontalTextAlignment="End"
+									Style="{StaticResource LabelBodySecondaryStyle}"
+									Text="{Binding WeekNumber, Converter={StaticResource ListToStringConverter}}"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!--Remarks (if present)-->
+                    <Label
+						IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+						Text="Примечания"
+						Margin="15,0,0,-10"
+						Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                    <Border
+						IsVisible="{Binding Note, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
+						Padding="15">
+                        <Label
+							Text="{Binding Note}"
+							Style="{StaticResource LabelBodyPrimaryStyle}"/>
+                    </Border>
+
+                    <!-- Lecturers -->
+                    <Label
+						IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}"
+						Text="Преподаватели"
+						Margin="15,0,0,-10"
+						Style="{StaticResource LabelBodySecondaryStyle}"/>
+
+                    <Border
+						IsVisible="{Binding Employees, Converter={StaticResource IsNotNullOrEmptyConverter}, Mode=OneTime}">
+
+                        <dx:DXCollectionView
+							UseRippleEffect="True"
+							ReduceSizeToContent="True"
+							ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
+							ItemSeparatorThickness="1"
+							ItemsSource="{Binding Employees}">
+                            <dx:DXCollectionView.ItemTemplate>
+                                <DataTemplate
+									x:DataType="model:EmployeeDto">
+                                    <Grid
+										ColumnSpacing="15"
+										HeightRequest="70"
+										Padding="15,10"
+										ColumnDefinitions="auto,*,auto">
+
+                                        <toolkit:AvatarView
+                                            x:DataType="interfaces:IAvatarDisplaying"
+											Grid.Column="0"
+											VerticalOptions="Center"
+											HeightRequest="50"
+											WidthRequest="50"
+											CornerRadius="25"
+											BorderWidth="0"
+											FontAttributes="Bold"
+											Background="{StaticResource ModalPageBackgroundBrush}"
+											TextColor="{AppThemeBinding Dark={StaticResource DarkSecondaryTextColor}, Light={StaticResource LightSecondaryTextColor}}"
+											Text="{Binding AvatarText, Mode=OneTime}"
+											ImageSource="{Binding AvatarUrl, Mode=OneTime}"/>
+
+                                        <Label
+                                            x:DataType="interfaces:IEmployee"
+											Grid.Column="1"
+											VerticalOptions="Center"
+											MaxLines="2"
+											Text="{Binding FullName, Mode=OneTime}"
+											LineHeight="1.1"
+											LineBreakMode="WordWrap"
+											Style="{StaticResource LabelBodyPrimaryStyle}"/>
+
+                                        <Image
+											Grid.Column="2"
+											HeightRequest="16"
+											Opacity="0.5"
+											Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+												Tapped="employee_tapped"
+												Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
+												CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </DataTemplate>
+                            </dx:DXCollectionView.ItemTemplate>
+
+                        </dx:DXCollectionView>
+                    </Border>
+
+                    <!-- Student groups -->
+                    <Label
+						Text="Группы"
+						Margin="15,0,0,-10"
+						Style="{StaticResource LabelBodySecondaryStyle}">
+                        <Label.IsVisible>
+                            <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                                <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                                <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                            </MultiBinding>
+                        </Label.IsVisible>
+                    </Label>
+
+                    <Border>
+                        <Border.IsVisible>
+                            <MultiBinding Converter="{StaticResource VariableMultiValueConverter}">
+                                <Binding Path="StudentGroups" Converter="{StaticResource IsNotNullOrEmptyConverter}" Mode="OneTime"/>
+                                <Binding Path="Timetable.StudentGroupDto" Source="{x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}" Converter="{toolkit:IsNullConverter}"/>
+                            </MultiBinding>
+                        </Border.IsVisible>
+
+                        <dx:DXCollectionView
+							UseRippleEffect="True"
+							ReduceSizeToContent="True"
+							ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
+							ItemSeparatorThickness="1"
+							ItemsSource="{Binding StudentGroups}">
+                            <dx:DXCollectionView.ItemTemplate>
+                                <DataTemplate
+									x:DataType="model:StudentGroupDto">
+                                    <Grid
+										ColumnSpacing="15"
+										Padding="15,10"
+										ColumnDefinitions="*,auto">
+
+                                        <Label
+											Grid.Column="0"
+											VerticalOptions="Center"
+											LineBreakMode="NoWrap"
+											Text="{Binding Name, Mode=OneTime}"
+											Style="{StaticResource LabelBodyPrimaryStyle}">
+                                        </Label>
+
+                                        <Image
+											Grid.Column="1"
+											HeightRequest="16"
+											Opacity="0.5"
+											Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
+
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+												Tapped="employee_tapped"
+												Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:TimetablePageViewModel}}, Path=NavigateToTimetableCommand}"
+												CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </DataTemplate>
+                            </dx:DXCollectionView.ItemTemplate>
+                        </dx:DXCollectionView>
+                    </Border>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </dx:BottomSheet>
+    </Grid>
+</ContentPage>
