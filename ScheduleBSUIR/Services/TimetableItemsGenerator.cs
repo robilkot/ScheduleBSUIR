@@ -12,7 +12,7 @@ namespace ScheduleBSUIR.Services
         private readonly ILoggingService _loggingService = loggingService;
         private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
-        private const int DaysPerLoad = 5;
+        private const int DaysPerLoad = 6;
 
         private IEnumerator<DailySchedule>? _schedulesEnumerator = null;
 
@@ -22,7 +22,6 @@ namespace ScheduleBSUIR.Services
 
         private int _currentItemIndex = 0;
         private int? _nearestScheduleIndex = null;
-        private DateTime? _nearestScheduleDate = null;
         private bool _endRecordReturned = false;
         private bool _firstRun = true;
 
@@ -41,7 +40,6 @@ namespace ScheduleBSUIR.Services
                 _schedulesEnumerator?.Dispose();
                 _schedulesEnumerator = null;
                 _nearestScheduleIndex = null;
-                _nearestScheduleDate = null;
 
                 _endRecordReturned = false;
                 _currentItemIndex = 0;
@@ -56,17 +54,13 @@ namespace ScheduleBSUIR.Services
 
             await Task.Run(() =>
             {
-                _nearestScheduleDate ??= GetNearestScheduleDate(timetable, timetableTabs, subgroupType);
+                DailySchedule currentDailySchedule;
 
-                DailySchedule? lastObtainedSchedule = null;
-
-                int currentDayIndex = 0;
-
-                while (currentDayIndex < DaysPerLoad)
+                for (int currentDayIndex = 0; currentDayIndex < DaysPerLoad; currentDayIndex++)
                 {
                     if (!_schedulesEnumerator.MoveNext())
                     {
-                        if(!_endRecordReturned)
+                        if (!_endRecordReturned)
                         {
                             resultList.Add(new TimetableEnd());
                             _endRecordReturned = true;
@@ -75,20 +69,19 @@ namespace ScheduleBSUIR.Services
                         return;
                     }
 
-                    lastObtainedSchedule = _schedulesEnumerator.Current;
+                    currentDailySchedule = _schedulesEnumerator.Current;
 
-                    resultList.Add(new DayHeader(lastObtainedSchedule.Day, lastObtainedSchedule.Week));
+                    resultList.Add(new DayHeader(currentDailySchedule.Day, currentDailySchedule.Week));
 
-                    resultList.AddRange(lastObtainedSchedule);
+                    resultList.AddRange(currentDailySchedule);
 
-                    _currentItemIndex += 1 + lastObtainedSchedule.Count;
-                    currentDayIndex += 1;
-
-                    if(_nearestScheduleIndex is null && _nearestScheduleDate is not null && lastObtainedSchedule.Day >= _nearestScheduleDate.Value.Date)
+                    if (_nearestScheduleIndex is null && currentDailySchedule.Day.Date >= _dateTimeProvider.Now.Date)
                     {
                         _nearestScheduleIndex = _currentItemIndex;
-                        _loggingService.LogInfo($"NearestScheduleIndex set to {_currentItemIndex}");
+                        _loggingService.LogInfo($"NearestScheduleIndex set to {_nearestScheduleIndex}");
                     }
+
+                    _currentItemIndex += 1 + currentDailySchedule.Count;
                 }
             });
 
@@ -96,28 +89,6 @@ namespace ScheduleBSUIR.Services
         }
 
         public int? GetNearestScheduleIndex() => _nearestScheduleIndex;
-
-        // Assuming the list of exams is sorted
-        [Time]
-        private DateTime? GetNearestScheduleDate(
-            Timetable timetable,
-            TimetableTabs timetableTab = TimetableTabs.Schedule,
-            SubgroupType subgroupType = SubgroupType.All)
-        {
-            // We could optimize by not getting dailyschedules
-            var enumerator = GetEnumeratorForParameters(timetable, timetableTab, subgroupType);
-
-            DateTime? result = default;
-
-            if (enumerator.MoveNext())
-            {
-                result = enumerator.Current.First().DateLesson;
-            }
-
-            _loggingService.LogInfo($"GetNearestScheduleDate {result?.ToString("dd.MM") ?? "NULL"}");
-
-            return result;
-        }
 
         private IEnumerator<DailySchedule> GetEnumeratorForParameters(Timetable timetable, TimetableTabs timetableTabs, SubgroupType subgroupType)
         {
@@ -174,7 +145,7 @@ namespace ScheduleBSUIR.Services
                 {
                     currentWeekNumber += 1;
 
-                    if(currentWeekNumber == 5)
+                    if (currentWeekNumber == 5)
                     {
                         currentWeekNumber = 1;
                     }

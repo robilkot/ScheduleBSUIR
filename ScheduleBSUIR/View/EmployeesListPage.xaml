@@ -115,7 +115,6 @@
                     <Border
                         IsVisible="{Binding FilteredFavoriteEmployeesIds, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                         <dx:DXCollectionView
-                            Margin="15,0"
                             UseRippleEffect="True"
                             ReduceSizeToContent="True"
                             ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"

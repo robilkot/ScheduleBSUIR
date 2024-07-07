@@ -16,7 +16,7 @@ namespace ScheduleBSUIR.Helpers.Converters
 
             if (timetable.StudentGroupDto is not null)
             {
-                header = $"{timetable.StudentGroupDto.Course} курс {timetable.StudentGroupDto.SpecialityAbbrev}";
+                header = $"{timetable.StudentGroupDto.Course} курс {timetable.StudentGroupDto.SpecialityAbbreviation}";
             }
 
             return header;

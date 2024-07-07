@@ -2,5 +2,5 @@
 
 namespace ScheduleBSUIR.Models.Messaging
 {
-    sealed class ScrollToIndex(int index) : ValueChangedMessage<int>(index);
+    public sealed class ScrollToIndex(int index) : ValueChangedMessage<int>(index);
 }

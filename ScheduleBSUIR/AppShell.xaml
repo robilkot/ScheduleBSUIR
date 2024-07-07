@@ -27,7 +27,7 @@
             Icon="dark_pin"
             Title="Закреплённое">
             <ShellContent
-                ContentTemplate="{DataTemplate view:TimetablePage}"/>
+                ContentTemplate="{DataTemplate view:PinnedTimetablePage}"/>
         </Tab>
         <Tab
             x:Name="groupsPage"

@@ -38,6 +38,8 @@
             <toolkit:VariableMultiValueConverter 
                 x:Key="VariableMultiValueConverter"
                 ConditionType="All"/>
+            <toolkit:InvertedBoolConverter 
+                x:Key="InvertedBoolConverter"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />

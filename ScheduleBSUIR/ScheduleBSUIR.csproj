@@ -49,8 +49,8 @@
 	  <_MauiForceXamlCForDebug>True</_MauiForceXamlCForDebug>
 	  <PublishTrimmed>False</PublishTrimmed>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
@@ -58,32 +58,32 @@
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationId>com.robilkot.schedulebsuir</ApplicationId>
-	  <ApplicationDisplayVersion>0.0.5</ApplicationDisplayVersion>
-	  <ApplicationVersion>4</ApplicationVersion>
+	  <ApplicationDisplayVersion>0.0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -39,7 +39,7 @@
             
             <!-- Navigation button -->
             <Grid
-				IsVisible="{Binding IsBackButtonVisible}"
+				IsVisible="{Binding IsPinnedTimetable, Converter={StaticResource InvertedBoolConverter}}"
 				Grid.Column="0"
 				ColumnDefinitions="auto,auto"
 				Padding="0,0,10,0">

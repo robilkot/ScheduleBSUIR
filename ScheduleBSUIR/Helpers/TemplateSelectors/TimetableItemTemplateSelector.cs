@@ -9,7 +9,8 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
 {
     class TimetableItemTemplateSelector : DataTemplateSelector
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
+        // Converter is being created before app initializtion, thus DI is not possible in ctor
+        private readonly Lazy<IDateTimeProvider> _lazyDateTimeProvider = new(() => App.Current.Handler?.MauiContext.Services.GetRequiredService<IDateTimeProvider>());
 
         // todo: check this on DXCollectionView
         // OnSelectTemplate gets called on each collectionview actually (even scrolling).
@@ -17,11 +18,6 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
         // ELAPSED FOR 1000 CALLS: 00:00:00.0506691 without cache
         // ELAPSED FOR 1000 CALLS: 00:00:00.0168000 with cache
         private readonly Dictionary<object, DataTemplate> _cachedResults = [];
-
-        public TimetableItemTemplateSelector()
-        {
-            _dateTimeProvider = App.Current!.Handler.MauiContext!.Services.GetRequiredService<IDateTimeProvider>();
-        }
 
         public required DataTemplate ActiveScheduleTemplate { get; init; }
         public required DataTemplate InactiveScheduleTemplate { get; init; }
@@ -42,11 +38,11 @@ namespace ScheduleBSUIR.Helpers.TemplateSelectors
             DataTemplate template = item switch
             {
                 Schedule schedule =>
-                    schedule.DateLesson >= _dateTimeProvider.Now.Date
+                    schedule.DateLesson >= _lazyDateTimeProvider.Value.Now.Date
                     ? (schedule.Announcement ? ActiveAnnouncementTemplate : ActiveScheduleTemplate)
                     : (schedule.Announcement ? InactiveAnnouncementTemplate : InactiveScheduleTemplate),
 
-                DayHeader header => header.Day >= _dateTimeProvider.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
+                DayHeader header => header.Day >= _lazyDateTimeProvider.Value.Now.Date ? ActiveScheduleDayTemplate : InactiveScheduleDayTemplate,
 
                 TimetableEnd => TimetableEndTemplate,
 

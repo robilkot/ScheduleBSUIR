@@ -17,11 +17,7 @@ namespace ScheduleBSUIR.Models
 
         [BsonId]
         [JsonIgnore]
-        public string PrimaryKey => EmployeeDto is not null
-            ? EmployeeDto.UrlId
-            : StudentGroupDto is not null
-            ? StudentGroupDto.Name
-            : String.Empty;
+        public string PrimaryKey => EmployeeDto?.TimetableId ?? StudentGroupDto?.TimetableId ?? String.Empty;
         [JsonIgnore]
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]

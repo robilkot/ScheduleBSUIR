@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace ScheduleBSUIR.Viewmodels
 {
-    public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable, IRecipient<TimetableStateChangedMessage>
+    public partial class TimetablePageViewModel : BaseViewModel, IQueryAttributable
     {
         private readonly TimetableService _timetableService;
         private readonly TimetableItemsGenerator _timetableItemsGenerator;
@@ -32,14 +32,23 @@ namespace ScheduleBSUIR.Viewmodels
             _timetableItemsGenerator = timetableItemsGenerator;
 
             SelectedMode = _preferencesService.GetSubgroupTypePreference();
-
-            WeakReferenceMessenger.Default.Register<TimetableStateChangedMessage>(this);
         }
 
         private bool _scheduleLoaded = false;
 
         [ObservableProperty]
         private bool _isPinnedTimetable = false;
+        async partial void OnIsPinnedTimetableChanged(bool value)
+        {
+            if (value)
+            {
+                TimetableId = await _timetableService.GetPinnedTimetableAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
 
         [ObservableProperty]
         private bool _isLoadingMoreSchedule = false;
@@ -89,22 +98,14 @@ namespace ScheduleBSUIR.Viewmodels
         [ObservableProperty]
         private TimetableHeader? _previousTimetableId;
 
-        [ObservableProperty]
-        private bool _isBackButtonVisible = false;
-
         public async Task LoadMoreSchedule()
         {
-            if (IsLoadingMoreSchedule || _scheduleLoaded)
+            if (_scheduleLoaded || IsLoadingMoreSchedule || Timetable is null)
                 return;
 
             IsLoadingMoreSchedule = true;
 
-            if (Timetable is null)
-                return;
-
             List<ITimetableItem> newItems = await _timetableItemsGenerator.GenerateMoreItems(Timetable, SelectedTab, SelectedMode);
-
-            _loggingService.LogInfo($"GenerateMoreItems returned {newItems.Count} objects", displayCaller: false);
 
             foreach (ITimetableItem item in newItems)
             {
@@ -129,15 +130,6 @@ namespace ScheduleBSUIR.Viewmodels
                 return;
 
             IsBusy = true;
-
-            if (TimetableId is null)
-            {
-                IsPinnedTimetable = true;
-
-                _loggingService.LogInfo($"GetTimetable getting pinned id", displayCaller: false);
-
-                TimetableId = await _timetableService.GetPinnedTimetableAsync();
-            }
 
             try
             {
@@ -213,7 +205,6 @@ namespace ScheduleBSUIR.Viewmodels
             {
                 { NavigationKeys.TimetableHeader, header },
                 { NavigationKeys.PreviousTimetableHeader, TimetableId! },
-                { NavigationKeys.IsBackButtonVisible, true },
             };
 
             // Let bottomsheet close smoothly
@@ -230,10 +221,6 @@ namespace ScheduleBSUIR.Viewmodels
             if (query.TryGetValue(NavigationKeys.PreviousTimetableHeader, out var prevId))
             {
                 PreviousTimetableId = prevId as TimetableHeader;
-            }
-            if (query.TryGetValue(NavigationKeys.IsBackButtonVisible, out var isBackButtonVisible))
-            {
-                IsBackButtonVisible = (bool)isBackButtonVisible;
             }
         }
 
@@ -266,38 +253,6 @@ namespace ScheduleBSUIR.Viewmodels
                 ScrollToIndex message = new(nearestScheduleIndex.Value);
 
                 WeakReferenceMessenger.Default.Send(message);
-            }
-        }
-
-        // If we pin some timetable, pages down the stack should update their state. As well as pinned timetable on separate tab
-        public void Receive(TimetableStateChangedMessage message)
-        {
-            var msgId = message.Value.Item1;
-            var msgState = message.Value.Item2;
-
-            if (msgId.Equals(TimetableId))
-            {
-                if (IsPinnedTimetable)
-                {
-                    if (msgState != TimetableState.Pinned)
-                    {
-                        TimetableId = null;
-                    }
-                }
-                else
-                {
-                    TimetableState = msgState;
-                }
-            }
-            else
-            {
-                if (IsPinnedTimetable)
-                {
-                    if (msgState == TimetableState.Pinned)
-                    {
-                        TimetableId = null;
-                    }
-                }
             }
         }
     }
