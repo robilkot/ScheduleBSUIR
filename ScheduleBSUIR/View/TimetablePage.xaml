@@ -33,9 +33,9 @@
 			x:Name="navBar"
 			Padding="0,8,8,8"
             HorizontalOptions="Fill"
-			ColumnSpacing="14"
+			ColumnSpacing="10"
             VerticalOptions="Fill"
-			ColumnDefinitions="auto,*,40,40">
+			ColumnDefinitions="auto,*,auto">
             
             <!-- Navigation button -->
             <Grid
@@ -74,98 +74,106 @@
 				Tab="{Binding SelectedTab, Mode=TwoWay}">
             </controls:CustomTabbar>
 
-            <!-- Subgroup type toggle -->
-            <Grid
-				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-				Grid.Column="2"
-				Padding="8"
-                HorizontalOptions="Center"
-				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}">
+            <!-- toggles -->
+            <HorizontalStackLayout
+                Grid.Column="2"
+                Spacing="14">
+                <!-- Subgroup type toggle -->
                 <Grid
+                    WidthRequest="40"
+				    IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+				    Grid.Column="2"
+				    Padding="8"
                     HorizontalOptions="Center"
-                    ColumnDefinitions="auto,auto">
-                    <Image
-						Grid.Column="0"
+				    Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}">
+                    <Grid
                         HorizontalOptions="Center"
-						Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                        ColumnDefinitions="auto,auto">
+                        <Image
+						    Grid.Column="0"
+                            HorizontalOptions="Center"
+						    Source="{AppThemeBinding Dark=dark_user, Light=light_user}">
+                            <Image.Triggers>
+                                <DataTrigger
+								    TargetType="Image"
+								    Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+								    Value="True">
+                                    <Setter
+									    Property="Source"
+									    Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                        <Label
+						    Grid.Column="1"
+						    IsVisible="True"
+						    Style="{StaticResource LabelBodyPrimaryStyle}"
+						    Text="{Binding SelectedMode, Converter={StaticResource EnumToIntConverter}}">
+                            <Label.Triggers>
+                                <DataTrigger
+								    TargetType="Label"
+								    Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
+								    Value="True">
+                                    <Setter
+									    Property="IsVisible"
+									    Value="False"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Grid>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <!-- Timetable state toggle -->
+                <Grid
+                    WidthRequest="40"
+				    IsVisible="{Binding IsPinnedTimetable, Converter={StaticResource InvertedBoolConverter}}"
+				    IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+				    Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
+				    Padding="8">
+                    <Image
+					    Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
                         <Image.Triggers>
                             <DataTrigger
-								TargetType="Image"
-								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
-								Value="True">
+							    TargetType="Image"
+							    Binding="{Binding TimetableState}"
+							    Value="{x:Static constants:TimetableState.Favorite}">
                                 <Setter
-									Property="Source"
-									Value="{AppThemeBinding Dark=dark_users, Light=light_users}"/>
+								    Property="Source"
+								    Value="active_star"/>
+                            </DataTrigger>
+                            <DataTrigger
+							    TargetType="Image"
+							    Binding="{Binding TimetableState}"
+							    Value="{x:Static constants:TimetableState.Pinned}">
+                                <Setter
+								    Property="Source"
+								    Value="active_pin"/>
                             </DataTrigger>
                         </Image.Triggers>
                     </Image>
-                    <Label
-						Grid.Column="1"
-						IsVisible="True"
-						Style="{StaticResource LabelBodyPrimaryStyle}"
-						Text="{Binding SelectedMode, Converter={StaticResource EnumToIntConverter}}">
-                        <Label.Triggers>
-                            <DataTrigger
-								TargetType="Label"
-								Binding="{Binding SelectedMode, Converter={toolkit:IsEqualConverter}, ConverterParameter={x:Static constants:SubgroupType.All}}"
-								Value="True">
-                                <Setter
-									Property="IsVisible"
-									Value="False"/>
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
+                    <Grid.Triggers>
+                        <DataTrigger
+						    TargetType="Grid"
+						    Binding="{Binding Timetable}"
+						    Value="{x:Null}">
+                            <Setter
+							    Property="IsEnabled"
+							    Value="False"/>
+                            <Setter
+							    Property="Opacity"
+							    Value="0.5"/>
+                        </DataTrigger>
+                    </Grid.Triggers>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>
+                    </Grid.GestureRecognizers>
                 </Grid>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleSubgroupTypePopupCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
 
-            <!-- Timetable state toggle -->
-            <Grid
-				IsEnabled="{Binding Timetable, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-				Grid.Column="3"
-				Opacity="{Binding Source={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource EnabledOpacityConverter}}"
-				Padding="8">
-                <Image
-					Source="{AppThemeBinding Dark=dark_bookmark_inactive, Light=light_bookmark_inactive}">
-                    <Image.Triggers>
-                        <DataTrigger
-							TargetType="Image"
-							Binding="{Binding TimetableState}"
-							Value="{x:Static constants:TimetableState.Favorite}">
-                            <Setter
-								Property="Source"
-								Value="active_star"/>
-                        </DataTrigger>
-                        <DataTrigger
-							TargetType="Image"
-							Binding="{Binding TimetableState}"
-							Value="{x:Static constants:TimetableState.Pinned}">
-                            <Setter
-								Property="Source"
-								Value="active_pin"/>
-                        </DataTrigger>
-                    </Image.Triggers>
-                </Image>
-                <Grid.Triggers>
-                    <DataTrigger
-						TargetType="Grid"
-						Binding="{Binding Timetable}"
-						Value="{x:Null}">
-                        <Setter
-							Property="IsEnabled"
-							Value="False"/>
-                        <Setter
-							Property="Opacity"
-							Value="0.5"/>
-                    </DataTrigger>
-                </Grid.Triggers>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleStatePopupCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
-
+            </HorizontalStackLayout>
+            
             <!-- Subgroup type popup-->
             <dx:DXPopup
 				VerticalAlignment="Top"
