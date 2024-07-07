@@ -29,6 +29,36 @@
     "urlId": "ts-ma",
     "fio": "Ма Ц."
   },
+  {
+    "firstName": "Цзюнь",
+    "lastName": "Ма",
+    "middleName": null,
+    "degree": "",
+    "rank": null,
+    "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/550771",
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИКТ"
+    ],
+    "id": 550771,
+    "urlId": "ts-ma",
+    "fio": "Ма Ц."
+  },
+  {
+    "firstName": "Цзюнь",
+    "lastName": "Ма",
+    "middleName": null,
+    "degree": "",
+    "rank": null,
+    "photoLink": "https://iis.bsuir.by/api/v1/employees/photo/550771",
+    "calendarId": "aagiudnpddsv8vg7nmcmpvjoog@group.calendar.google.com",
+    "academicDepartment": [
+      "Каф.ИКТ"
+    ],
+    "id": 550771,
+    "urlId": "ts-ma",
+    "fio": "Ма Ц."
+  },
 
   {
     "firstName": "Расписания",

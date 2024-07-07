@@ -19,32 +19,35 @@
             <DataTemplate
                 x:Key="StudentGroupTimetableHeaderTemplate"
                 x:DataType="model:StudentGroupTimetableHeader">
-                <Grid
-                    Background="{StaticResource ControlBackgroundBrush}"
-                    ColumnSpacing="15"
-                    Padding="15,10"
-                    ColumnDefinitions="*,auto">
+                <Border
+                    Margin="15,0">
+                    <Grid
+                        Background="{StaticResource ControlBackgroundBrush}"
+                        ColumnSpacing="15"
+                        Padding="15,10"
+                        ColumnDefinitions="*,auto">
 
-                    <Label
-                        Grid.Column="0"
-                        VerticalOptions="Center"
-                        LineBreakMode="NoWrap"
-                        Text="{Binding HeaderText}"
-                        Style="{StaticResource LabelBodyPrimaryStyle}">
-                    </Label>
+                            <Label
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            LineBreakMode="NoWrap"
+                            Text="{Binding HeaderText}"
+                            Style="{StaticResource LabelBodyPrimaryStyle}">
+                            </Label>
 
-                    <Image
-                        Grid.Column="1"
-                        HeightRequest="16"
-                        Opacity="0.5"
-                        Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
+                            <Image
+                            Grid.Column="1"
+                            HeightRequest="16"
+                            Opacity="0.5"
+                            Source="{AppThemeBinding Dark=dark_arrow_right, Light=light_arrow_right}"/>
 
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer
-                            Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:GroupListPageViewModel}}, Path=SelectGroupCommand}"
-                            CommandParameter="{Binding .}"/>
-                    </Grid.GestureRecognizers>
-                </Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewmodel:GroupListPageViewModel}}, Path=SelectGroupCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Border>
             </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -58,8 +61,7 @@
             AllowCascadeUpdate="False"
             AllowGroupCollapse="False"
             UseRippleEffect="True"
-            ItemSeparatorColor="{AppThemeBinding Dark={StaticResource DarkSeparatorColor}, Light={StaticResource LightSeparatorColor}}"
-            ItemSeparatorThickness="1"
+            ItemSpacing="5"
             ItemTemplate="{StaticResource StudentGroupTimetableHeaderTemplate}"
             ItemsSource="{Binding FilteredHeaders}">
 
@@ -112,6 +114,7 @@
                     </Grid>
 
                     <Border
+                        Padding="-15,0"
                         IsVisible="{Binding FilteredFavoriteHeaders, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                         <dx:DXCollectionView
                             UseRippleEffect="True"
